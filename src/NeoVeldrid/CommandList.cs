@@ -902,6 +902,8 @@ namespace NeoVeldrid
         /// This maps to push constants on Vulkan, glUniform on OpenGL, and a Map/Discard
         /// constant buffer on D3D11.
         /// A graphics <see cref="Pipeline"/> must be active before this can be called.
+        /// The maximum portable size of all push constant data is 128 bytes, which is the
+        /// minimum guaranteed by the Vulkan specification.
         /// </summary>
         /// <typeparam name="T">The type of data to push. Must be an unmanaged value type.</typeparam>
         /// <param name="offsetInBytes">The offset, in bytes, into the push constant block at which data will be written.</param>
@@ -920,6 +922,8 @@ namespace NeoVeldrid
         /// This maps to push constants on Vulkan, glUniform on OpenGL, and a Map/Discard
         /// constant buffer on D3D11.
         /// A graphics <see cref="Pipeline"/> must be active before this can be called.
+        /// The maximum portable size of all push constant data is 128 bytes, which is the
+        /// minimum guaranteed by the Vulkan specification.
         /// </summary>
         /// <typeparam name="T">The type of data to push. Must be an unmanaged value type.</typeparam>
         /// <param name="offsetInBytes">The offset, in bytes, into the push constant block at which data will be written.</param>
@@ -938,6 +942,8 @@ namespace NeoVeldrid
         /// This maps to push constants on Vulkan, glUniform on OpenGL, and a Map/Discard
         /// constant buffer on D3D11.
         /// A graphics <see cref="Pipeline"/> must be active before this can be called.
+        /// The maximum portable size of all push constant data is 128 bytes, which is the
+        /// minimum guaranteed by the Vulkan specification.
         /// </summary>
         /// <param name="offsetInBytes">The offset, in bytes, into the push constant block at which data will be written.</param>
         /// <param name="source">A pointer to the data to push.</param>
