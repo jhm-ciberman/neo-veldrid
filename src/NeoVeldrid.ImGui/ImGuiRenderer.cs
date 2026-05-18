@@ -52,8 +52,11 @@ namespace NeoVeldrid
         /// <param name="outputDescription">The output format.</param>
         /// <param name="width">The initial width of the rendering target. Can be resized.</param>
         /// <param name="height">The initial height of the rendering target. Can be resized.</param>
-        public ImGuiRenderer(GraphicsDevice gd, OutputDescription outputDescription, int width, int height)
-            : this(gd, outputDescription, width, height, ColorSpaceHandling.Legacy) { }
+        /// <param name="autoInit">When <c>true</c>, opens the first ImGui frame as part of construction.
+        /// Pass <c>false</c> to configure <c>ImGui.GetIO()</c> (docking flags, fonts, style, etc.)
+        /// before the first frame, then call <see cref="Initialize"/>.</param>
+        public ImGuiRenderer(GraphicsDevice gd, OutputDescription outputDescription, int width, int height, bool autoInit = true)
+            : this(gd, outputDescription, width, height, ColorSpaceHandling.Legacy, autoInit) { }
 
         /// <summary>
         /// Constructs a new ImGuiRenderer.
@@ -63,7 +66,10 @@ namespace NeoVeldrid
         /// <param name="width">The initial width of the rendering target. Can be resized.</param>
         /// <param name="height">The initial height of the rendering target. Can be resized.</param>
         /// <param name="colorSpaceHandling">Identifies how the renderer should treat vertex colors.</param>
-        public ImGuiRenderer(GraphicsDevice gd, OutputDescription outputDescription, int width, int height, ColorSpaceHandling colorSpaceHandling)
+        /// <param name="autoInit">When <c>true</c>, opens the first ImGui frame as part of construction.
+        /// Pass <c>false</c> to configure <c>ImGui.GetIO()</c> (docking flags, fonts, style, etc.)
+        /// before the first frame, then call <see cref="Initialize"/>.</param>
+        public ImGuiRenderer(GraphicsDevice gd, OutputDescription outputDescription, int width, int height, ColorSpaceHandling colorSpaceHandling, bool autoInit = true)
         {
             _gd = gd;
             _assembly = typeof(ImGuiRenderer).GetTypeInfo().Assembly;
@@ -80,6 +86,30 @@ namespace NeoVeldrid
             CreateDeviceResources(gd, outputDescription);
 
             SetPerFrameImGuiData(1f / 60f);
+
+            if (autoInit)
+            {
+                Initialize();
+            }
+        }
+
+        /// <summary>
+        /// Opens the first ImGui frame, completing the renderer's setup so it is ready to receive
+        /// ImGui draw commands. Has no effect if a frame is already in progress.
+        /// </summary>
+        /// <remarks>
+        /// Only needed when the renderer was constructed with <c>autoInit: false</c>, which defers
+        /// opening the first frame so that callers can configure ImGui state that must be set before
+        /// the very first <c>NewFrame</c> call (for example <see cref="ImGuiNET.ImGuiConfigFlags.DockingEnable"/>,
+        /// custom fonts loaded via <c>ImGui.GetIO().Fonts</c>, or backend flags). After construction
+        /// with <c>autoInit: true</c> (the default) this is already taken care of.
+        /// </remarks>
+        public void Initialize()
+        {
+            if (_frameBegun)
+            {
+                return;
+            }
 
             ImGui.NewFrame();
             _frameBegun = true;
