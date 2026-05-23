@@ -40,7 +40,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements are equal; false otherswise.</returns>
-        public bool Equals(DeviceBufferRange other)
+        public readonly bool Equals(DeviceBufferRange other)
         {
             return Buffer == other.Buffer && Offset.Equals(other.Offset) && SizeInBytes.Equals(other.SizeInBytes);
         }
@@ -49,7 +49,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             int bufferHash = Buffer?.GetHashCode() ?? 0;
             return HashHelper.Combine(bufferHash, Offset.GetHashCode(), SizeInBytes.GetHashCode());

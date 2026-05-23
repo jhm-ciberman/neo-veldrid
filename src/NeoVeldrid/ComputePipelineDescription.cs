@@ -116,7 +116,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements and all array elements are equal; false otherswise.</returns>
-        public bool Equals(ComputePipelineDescription other)
+        public readonly bool Equals(ComputePipelineDescription other)
         {
             return ComputeShader.Equals(other.ComputeShader)
                 && Util.ArrayEquals(ResourceLayouts, other.ResourceLayouts)
@@ -129,7 +129,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(
                 ComputeShader.GetHashCode(),

@@ -13,12 +13,12 @@ namespace NeoVeldrid.Utilities
             Direction = direction;
         }
 
-        public bool Intersects(BoundingBox box)
+        public readonly bool Intersects(BoundingBox box)
         {
             return Intersects(ref box);
         }
 
-        public bool Intersects(ref BoundingBox box)
+        public readonly bool Intersects(ref BoundingBox box)
         {
             // http://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
@@ -79,7 +79,7 @@ namespace NeoVeldrid.Utilities
             return true;
         }
 
-        void Swap(ref float a, ref float b)
+        readonly void Swap(ref float a, ref float b)
         {
             var temp = a;
             a = b;
@@ -94,7 +94,7 @@ namespace NeoVeldrid.Utilities
         // Ray-Triangle Intersection, using the Möller–Trumbore intersection algorithm.
         // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
 
-        public bool Intersects(ref Vector3 V1, ref Vector3 V2, ref Vector3 V3, out float distance)
+        public readonly bool Intersects(ref Vector3 V1, ref Vector3 V2, ref Vector3 V3, out float distance)
         {
             const float EPSILON = 1E-6f;
 

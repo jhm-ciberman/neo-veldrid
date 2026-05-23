@@ -13,13 +13,13 @@ namespace NeoVeldrid
             Subresource = subresource;
         }
 
-        public bool Equals(MappedResourceCacheKey other)
+        public readonly bool Equals(MappedResourceCacheKey other)
         {
             return Resource.Equals(other.Resource)
                 && Subresource.Equals(other.Subresource);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(Resource.GetHashCode(), Subresource.GetHashCode());
         }

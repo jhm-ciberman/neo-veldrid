@@ -205,8 +205,8 @@ namespace NeoVeldrid.D3D11
                 Size = size;
             }
 
-            public bool Equals(OffsetSizePair other) => Offset.Equals(other.Offset) && Size.Equals(other.Size);
-            public override int GetHashCode() => HashHelper.Combine(Offset.GetHashCode(), Size.GetHashCode());
+            public readonly bool Equals(OffsetSizePair other) => Offset.Equals(other.Offset) && Size.Equals(other.Size);
+            public override readonly int GetHashCode() => HashHelper.Combine(Offset.GetHashCode(), Size.GetHashCode());
         }
     }
 }

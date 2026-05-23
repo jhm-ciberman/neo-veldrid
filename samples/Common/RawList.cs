@@ -265,8 +265,8 @@ namespace Common
                 _currentIndex = 0;
             }
 
-            public T Current => _list._items[_currentIndex];
-            object IEnumerator.Current => Current;
+            public readonly T Current => _list._items[_currentIndex];
+            readonly object IEnumerator.Current => Current;
 
             public bool MoveNext()
             {
@@ -284,7 +284,7 @@ namespace Common
                 _currentIndex = 0;
             }
 
-            public void Dispose() { }
+            public readonly void Dispose() { }
         }
     }
 }

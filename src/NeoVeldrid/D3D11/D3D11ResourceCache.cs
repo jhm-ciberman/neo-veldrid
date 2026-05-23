@@ -327,12 +327,12 @@ namespace NeoVeldrid.D3D11
                 return new InputLayoutCacheKey { VertexLayouts = vertexLayouts };
             }
 
-            public bool Equals(InputLayoutCacheKey other)
+            public readonly bool Equals(InputLayoutCacheKey other)
             {
                 return Util.ArrayEqualsEquatable(VertexLayouts, other.VertexLayouts);
             }
 
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 return HashHelper.Array(VertexLayouts);
             }
@@ -349,13 +349,13 @@ namespace NeoVeldrid.D3D11
                 Multisampled = multisampled;
             }
 
-            public bool Equals(D3D11RasterizerStateCacheKey other)
+            public readonly bool Equals(D3D11RasterizerStateCacheKey other)
             {
                 return NeoVeldridDescription.Equals(other.NeoVeldridDescription)
                     && Multisampled.Equals(other.Multisampled);
             }
 
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 return HashHelper.Combine(NeoVeldridDescription.GetHashCode(), Multisampled.GetHashCode());
             }

@@ -104,10 +104,10 @@ namespace NeoVeldrid.NeoDemo
                 _currentItem = null;
             }
 
-            public Renderable Current => _currentItem;
-            object IEnumerator.Current => _currentItem;
+            public readonly Renderable Current => _currentItem;
+            readonly object IEnumerator.Current => _currentItem;
 
-            public void Dispose()
+            public readonly void Dispose()
             {
             }
 

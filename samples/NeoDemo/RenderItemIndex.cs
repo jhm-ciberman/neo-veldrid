@@ -14,17 +14,17 @@ namespace NeoVeldrid.NeoDemo
             ItemIndex = itemIndex;
         }
 
-        public int CompareTo(object obj)
+        public readonly int CompareTo(object obj)
         {
             return ((IComparable)Key).CompareTo(obj);
         }
 
-        public int CompareTo(RenderItemIndex other)
+        public readonly int CompareTo(RenderItemIndex other)
         {
             return Key.CompareTo(other.Key);
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return string.Format("Index:{0}, Key:{1}", ItemIndex, Key);
         }

@@ -96,7 +96,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements and all array elements are equal; false otherswise.</returns>
-        public bool Equals(BlendStateDescription other)
+        public readonly bool Equals(BlendStateDescription other)
         {
             return BlendFactor.Equals(other.BlendFactor)
                 && AlphaToCoverageEnabled.Equals(other.AlphaToCoverageEnabled)
@@ -107,7 +107,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(
                 BlendFactor.GetHashCode(),
@@ -115,7 +115,7 @@ namespace NeoVeldrid
                 HashHelper.Array(AttachmentStates));
         }
 
-        internal BlendStateDescription ShallowClone()
+        internal readonly BlendStateDescription ShallowClone()
         {
             BlendStateDescription result = this;
             result.AttachmentStates = Util.ShallowClone(result.AttachmentStates);

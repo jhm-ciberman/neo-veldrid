@@ -516,7 +516,7 @@ namespace NeoVeldrid.Utilities
             /// </summary>
             public int TexCoordIndex;
 
-            public override string ToString()
+            public override readonly string ToString()
             {
                 return string.Format("Pos:{0}, Normal:{1}, TexCoord:{2}", PositionIndex, NormalIndex, TexCoordIndex);
             }

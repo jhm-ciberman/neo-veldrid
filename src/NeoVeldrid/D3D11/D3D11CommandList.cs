@@ -1579,7 +1579,7 @@ namespace NeoVeldrid.D3D11
             public readonly uint Offset;
             public readonly uint Size;
 
-            public bool IsFullRange => Offset == 0 && Size == Buffer.SizeInBytes;
+            public readonly bool IsFullRange => Offset == 0 && Size == Buffer.SizeInBytes;
 
             public D3D11BufferRange(D3D11Buffer buffer, uint offset, uint size)
             {
@@ -1588,7 +1588,7 @@ namespace NeoVeldrid.D3D11
                 Size = size;
             }
 
-            public bool Equals(D3D11BufferRange other)
+            public readonly bool Equals(D3D11BufferRange other)
             {
                 return Buffer == other.Buffer && Offset.Equals(other.Offset) && Size.Equals(other.Size);
             }

@@ -127,7 +127,7 @@ namespace NeoVeldrid.Tests
             A = a;
         }
 
-        public bool Equals(WidePixel other)
+        public readonly bool Equals(WidePixel other)
         {
             return R.HasValue == other.R.HasValue && R.GetValueOrDefault().Equals(other.R.GetValueOrDefault())
                 && G.HasValue == other.G.HasValue && G.GetValueOrDefault().Equals(other.G.GetValueOrDefault())
@@ -135,7 +135,7 @@ namespace NeoVeldrid.Tests
                 && A.HasValue == other.A.HasValue && A.GetValueOrDefault().Equals(other.A.GetValueOrDefault());
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"{R}, {G}, {B}, {A}";
         }

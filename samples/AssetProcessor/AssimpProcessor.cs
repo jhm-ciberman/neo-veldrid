@@ -324,19 +324,19 @@ namespace AssetProcessor
                 _vertexSize = vertexSize;
             }
 
-            public void WriteVertexElement<T>(int vertex, int elementOffset, ref T data)
+            public readonly void WriteVertexElement<T>(int vertex, int elementOffset, ref T data)
             {
                 byte* dst = _dataPtr + (_vertexSize * vertex) + elementOffset;
                 Unsafe.Copy(dst, ref data);
             }
 
-            public void WriteVertexElement<T>(int vertex, int elementOffset, T data)
+            public readonly void WriteVertexElement<T>(int vertex, int elementOffset, T data)
             {
                 byte* dst = _dataPtr + (_vertexSize * vertex) + elementOffset;
                 Unsafe.Copy(dst, ref data);
             }
 
-            public void FreeGCHandle()
+            public readonly void FreeGCHandle()
             {
                 _gch.Free();
             }

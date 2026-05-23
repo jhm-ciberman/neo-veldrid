@@ -606,9 +606,9 @@ namespace NeoVeldrid.OpenGL.NoAllocEntryList
             public readonly byte* BasePtr;
 
             private uint _unusedStart;
-            public uint RemainingSize => (uint)_bytes.Length - _unusedStart;
+            public readonly uint RemainingSize => (uint)_bytes.Length - _unusedStart;
 
-            public uint TotalSize => (uint)_bytes.Length;
+            public readonly uint TotalSize => (uint)_bytes.Length;
 
             public bool Alloc(uint size, out void* ptr)
             {
@@ -638,7 +638,7 @@ namespace NeoVeldrid.OpenGL.NoAllocEntryList
                 return new EntryStorageBlock(DefaultStorageBlockSize);
             }
 
-            public void Free()
+            public readonly void Free()
             {
                 _gcHandle.Free();
             }
@@ -649,7 +649,7 @@ namespace NeoVeldrid.OpenGL.NoAllocEntryList
                 Util.ClearArray(_bytes);
             }
 
-            public bool Equals(EntryStorageBlock other)
+            public readonly bool Equals(EntryStorageBlock other)
             {
                 return _bytes == other._bytes;
             }
@@ -664,7 +664,7 @@ namespace NeoVeldrid.OpenGL.NoAllocEntryList
     {
         private readonly int _index;
 
-        public T Get(List<object> list) => (T)list[_index];
+        public readonly T Get(List<object> list) => (T)list[_index];
 
         public Tracked(List<object> list, T item)
         {

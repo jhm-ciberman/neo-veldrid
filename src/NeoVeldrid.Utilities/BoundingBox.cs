@@ -15,7 +15,7 @@ namespace NeoVeldrid.Utilities
             Max = max;
         }
 
-        public ContainmentType Contains(ref BoundingBox other)
+        public readonly ContainmentType Contains(ref BoundingBox other)
         {
             if (Max.X < other.Min.X || Min.X > other.Max.X
                 || Max.Y < other.Min.Y || Min.Y > other.Max.Y
@@ -35,12 +35,12 @@ namespace NeoVeldrid.Utilities
             }
         }
 
-        public Vector3 GetCenter()
+        public readonly Vector3 GetCenter()
         {
             return (Max + Min) / 2f;
         }
 
-        public Vector3 GetDimensions()
+        public readonly Vector3 GetDimensions()
         {
             return Max - Min;
         }
@@ -144,22 +144,22 @@ namespace NeoVeldrid.Utilities
             return !first.Equals(second);
         }
 
-        public bool Equals(BoundingBox other)
+        public readonly bool Equals(BoundingBox other)
         {
             return Min == other.Min && Max == other.Max;
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return string.Format("Min:{0}, Max:{1}", Min, Max);
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return obj is BoundingBox && ((BoundingBox)obj).Equals(this);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             int h1 = Min.GetHashCode();
             int h2 = Max.GetHashCode();
@@ -167,7 +167,7 @@ namespace NeoVeldrid.Utilities
             return ((int)shift5 + h1) ^ h2;
         }
 
-        public AlignedBoxCorners GetCorners()
+        public readonly AlignedBoxCorners GetCorners()
         {
             AlignedBoxCorners corners;
             corners.NearBottomLeft = new Vector3(Min.X, Min.Y, Max.Z);
@@ -183,7 +183,7 @@ namespace NeoVeldrid.Utilities
             return corners;
         }
 
-        public bool ContainsNaN()
+        public readonly bool ContainsNaN()
         {
             return float.IsNaN(Min.X) || float.IsNaN(Min.Y) || float.IsNaN(Min.Z)
                 || float.IsNaN(Max.X) || float.IsNaN(Max.Y) || float.IsNaN(Max.Z);

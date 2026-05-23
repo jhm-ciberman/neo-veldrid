@@ -20,7 +20,7 @@
             Repeat = repeat;
         }
 
-        public override string ToString() => $"{Key} {(Down ? "Down" : "Up")} [{Modifiers}] (repeat={Repeat})";
+        public override readonly string ToString() => $"{Key} {(Down ? "Down" : "Up")} [{Modifiers}] (repeat={Repeat})";
     }
 
     public enum Key

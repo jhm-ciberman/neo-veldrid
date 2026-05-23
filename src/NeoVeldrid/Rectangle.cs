@@ -29,26 +29,26 @@ namespace NeoVeldrid
             Height = size.Y;
         }
 
-        public int Left => X;
-        public int Right => X + Width;
-        public int Top => Y;
-        public int Bottom => Y + Height;
+        public readonly int Left => X;
+        public readonly int Right => X + Width;
+        public readonly int Top => Y;
+        public readonly int Bottom => Y + Height;
 
-        public Vector2 Position => new Vector2(X, Y);
-        public Vector2 Size => new Vector2(Width, Height);
+        public readonly Vector2 Position => new Vector2(X, Y);
+        public readonly Vector2 Size => new Vector2(Width, Height);
 
-        public bool Contains(Point p) => Contains(p.X, p.Y);
-        public bool Contains(int x, int y)
+        public readonly bool Contains(Point p) => Contains(p.X, p.Y);
+        public readonly bool Contains(int x, int y)
         {
             return (X <= x && (X + Width) > x)
                 && (Y <= y && (Y + Height) > y);
         }
 
-        public bool Equals(Rectangle other) => X.Equals(other.X) && Y.Equals(other.Y) && Width.Equals(other.Width) && Height.Equals(other.Height);
+        public readonly bool Equals(Rectangle other) => X.Equals(other.X) && Y.Equals(other.Y) && Width.Equals(other.Width) && Height.Equals(other.Height);
 
-        public override bool Equals(object obj) => obj is Rectangle r && Equals(r);
+        public override readonly bool Equals(object obj) => obj is Rectangle r && Equals(r);
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(X.GetHashCode(), HashHelper.Combine(Y.GetHashCode(), HashHelper.Combine(Width.GetHashCode(), Height.GetHashCode())));
         }

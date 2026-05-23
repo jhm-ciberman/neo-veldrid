@@ -117,7 +117,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements are equal; false otherswise.</returns>
-        public bool Equals(TextureViewDescription other)
+        public readonly bool Equals(TextureViewDescription other)
         {
             return Target.Equals(other.Target)
                 && BaseMipLevel.Equals(other.BaseMipLevel)
@@ -131,7 +131,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(
                 Target.GetHashCode(),

@@ -76,7 +76,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements and all array elements are equal; false otherswise.</returns>
-        public bool Equals(FramebufferAttachmentDescription other)
+        public readonly bool Equals(FramebufferAttachmentDescription other)
         {
             return Target.Equals(other.Target) && ArrayLayer.Equals(other.ArrayLayer) && MipLevel.Equals(other.MipLevel);
         }
@@ -85,7 +85,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(Target.GetHashCode(), ArrayLayer.GetHashCode(), MipLevel.GetHashCode());
         }

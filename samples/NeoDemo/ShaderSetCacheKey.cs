@@ -13,12 +13,12 @@ namespace NeoVeldrid.NeoDemo
             Specializations = specializations;
         }
 
-        public bool Equals(ShaderSetCacheKey other)
+        public readonly bool Equals(ShaderSetCacheKey other)
         {
             return Name.Equals(other.Name) && ArraysEqual(Specializations, other.Specializations);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             int hash = Name.GetHashCode();
             foreach (var specConst in Specializations)
@@ -28,7 +28,7 @@ namespace NeoVeldrid.NeoDemo
             return hash;
         }
 
-        private bool ArraysEqual<T>(T[] a, T[] b) where T : IEquatable<T>
+        private readonly bool ArraysEqual<T>(T[] a, T[] b) where T : IEquatable<T>
         {
             if (a.Length != b.Length) { return false; }
 

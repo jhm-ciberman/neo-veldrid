@@ -270,7 +270,7 @@ namespace SampleBase
         public readonly uint GlBaseInternalFormat;
         public readonly uint PixelWidth;
         private readonly uint _pixelHeight;
-        public uint PixelHeight => Math.Max(1, _pixelHeight);
+        public readonly uint PixelHeight => Math.Max(1, _pixelHeight);
         public readonly uint PixelDepth;
         public readonly uint NumberOfArrayElements;
         public readonly uint NumberOfFaces;

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal
 
 - [Vulkan] Replaced the internal `StackList` stack-buffer helper with `stackalloc`.
+- Marked all non-mutating struct members `readonly` across the codebase.
 
 ## [1.0.0] - 2026-04-25
 

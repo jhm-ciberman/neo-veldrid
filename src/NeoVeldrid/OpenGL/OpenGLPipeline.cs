@@ -469,22 +469,22 @@ namespace NeoVeldrid.OpenGL
             ShaderStorageBufferCount = (uint)storageBufferBindings.Count;
         }
 
-        public bool GetTextureBindingInfo(uint slot, out OpenGLTextureBindingSlotInfo binding)
+        public readonly bool GetTextureBindingInfo(uint slot, out OpenGLTextureBindingSlotInfo binding)
         {
             return _textureBindings.TryGetValue(slot, out binding);
         }
 
-        public bool GetSamplerBindingInfo(uint slot, out OpenGLSamplerBindingSlotInfo binding)
+        public readonly bool GetSamplerBindingInfo(uint slot, out OpenGLSamplerBindingSlotInfo binding)
         {
             return _samplerBindings.TryGetValue(slot, out binding);
         }
 
-        public bool GetUniformBindingForSlot(uint slot, out OpenGLUniformBinding binding)
+        public readonly bool GetUniformBindingForSlot(uint slot, out OpenGLUniformBinding binding)
         {
             return _uniformBindings.TryGetValue(slot, out binding);
         }
 
-        public bool GetStorageBufferBindingForSlot(uint slot, out OpenGLShaderStorageBinding binding)
+        public readonly bool GetStorageBufferBindingForSlot(uint slot, out OpenGLShaderStorageBinding binding)
         {
             return _storageBufferBindings.TryGetValue(slot, out binding);
         }

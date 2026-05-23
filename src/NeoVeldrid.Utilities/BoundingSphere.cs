@@ -15,12 +15,12 @@ namespace NeoVeldrid.Utilities
             Radius = radius;
         }
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return string.Format("Center:{0}, Radius:{1}", Center, Radius);
         }
 
-        public bool Contains(Vector3 point)
+        public readonly bool Contains(Vector3 point)
         {
             return (Center - point).LengthSquared() <= Radius * Radius;
         }

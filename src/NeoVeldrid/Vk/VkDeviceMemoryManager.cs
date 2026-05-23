@@ -494,9 +494,9 @@ namespace NeoVeldrid.Vk
         public ulong Offset;
         public ulong Size;
 
-        public void* BlockMappedPointer => ((byte*)BaseMappedPointer) + Offset;
-        public bool IsPersistentMapped => BaseMappedPointer != null;
-        public ulong End => Offset + Size;
+        public readonly void* BlockMappedPointer => ((byte*)BaseMappedPointer) + Offset;
+        public readonly bool IsPersistentMapped => BaseMappedPointer != null;
+        public readonly ulong End => Offset + Size;
 
         public VkMemoryBlock(
             DeviceMemory memory,
@@ -514,7 +514,7 @@ namespace NeoVeldrid.Vk
             DedicatedAllocation = dedicatedAllocation;
         }
 
-        public bool Equals(VkMemoryBlock other)
+        public readonly bool Equals(VkMemoryBlock other)
         {
             return DeviceMemory.Handle.Equals(other.DeviceMemory.Handle)
                 && Offset.Equals(other.Offset)

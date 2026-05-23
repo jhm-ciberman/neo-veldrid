@@ -26,12 +26,12 @@ namespace NeoVeldrid.NeoDemo
                 cameraDistanceInt);
         }
 
-        public int CompareTo(RenderOrderKey other)
+        public readonly int CompareTo(RenderOrderKey other)
         {
             return Value.CompareTo(other.Value);
         }
 
-        int IComparable.CompareTo(object obj)
+        readonly int IComparable.CompareTo(object obj)
         {
             return Value.CompareTo(obj);
         }

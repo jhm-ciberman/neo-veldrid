@@ -18,7 +18,7 @@ namespace NeoVeldrid.Utilities
             _stride = stride;
         }
 
-        public Enumerator GetEnumerator()
+        public readonly Enumerator GetEnumerator()
         {
             return new Enumerator(_basePtr, _count, _stride);
         }
@@ -38,7 +38,7 @@ namespace NeoVeldrid.Utilities
                 _currentItemIndex = -1;
             }
 
-            public T Current
+            public readonly T Current
             {
                 get
                 {
@@ -49,9 +49,9 @@ namespace NeoVeldrid.Utilities
                     }
                 }
             }
-            object IEnumerator.Current => Current;
+            readonly object IEnumerator.Current => Current;
 
-            public void Dispose()
+            public readonly void Dispose()
             {
             }
 

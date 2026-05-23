@@ -78,7 +78,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements are equal; false otherswise.</returns>
-        public bool Equals(VertexElementDescription other)
+        public readonly bool Equals(VertexElementDescription other)
         {
             return Name.Equals(other.Name)
                 && Format == other.Format
@@ -90,7 +90,7 @@ namespace NeoVeldrid
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(
                 Name.GetHashCode(),

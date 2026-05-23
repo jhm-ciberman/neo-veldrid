@@ -103,7 +103,7 @@ namespace NeoVeldrid
         /// <param name="other">The instance to compare to.</param>
         /// <returns>True if all elements are equal; false otherswise.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(RgbaByte other)
+        public readonly bool Equals(RgbaByte other)
         {
             return R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
         }
@@ -113,7 +113,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="obj">The object to compare with the current object.</param>
         /// <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return obj is RgbaByte other && Equals(other);
         }
@@ -123,7 +123,7 @@ namespace NeoVeldrid
         /// </summary>
         /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashHelper.Combine(R.GetHashCode(), G.GetHashCode(), B.GetHashCode(), A.GetHashCode());
         }
@@ -132,7 +132,7 @@ namespace NeoVeldrid
         /// Returns a string representation of this color.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return string.Format("R:{0}, G:{1}, B:{2}, A:{3}", R, G, B, A);
         }
