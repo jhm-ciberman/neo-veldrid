@@ -109,7 +109,7 @@ namespace NeoVeldrid
             MipLevels = mipLevels;
             BaseArrayLayer = baseArrayLayer;
             ArrayLayers = arrayLayers;
-            Format = target.Format;
+            Format = format;
         }
 
         /// <summary>

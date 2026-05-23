@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `[ImGui]` `ImGuiRenderer` now accepts an `autoInit: false` constructor option and exposes a public `Initialize()` method, so callers can configure `ImGui.GetIO()` (docking flags, custom fonts, etc.) before the first ImGui frame is opened.
 
+### Fixed
+
+- [Core] `TextureViewDescription`'s range-and-format constructor ignoring its format argument and using the target texture's format instead.
+
 ## [1.0.0] - 2026-04-25
 
 First release of NeoVeldrid. A maintained, drop-in replacement for [Veldrid](https://github.com/mellinoe/veldrid) with every native binding replaced by [Silk.NET](https://github.com/dotnet/Silk.NET). If you have a Veldrid project today, migrating is roughly a 5 minute find-and-replace. See the [Migration Guide](docs/articles/prologue/migration.md) for the exact steps.
