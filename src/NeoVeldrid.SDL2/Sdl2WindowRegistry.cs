@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Silk.NET.SDL;
 
 namespace NeoVeldrid.Sdl2
@@ -8,21 +9,33 @@ namespace NeoVeldrid.Sdl2
     internal static class Sdl2WindowRegistry
     {
         public static readonly object Lock = new object();
-        private static readonly Dictionary<uint, Sdl2Window> _eventsByWindowID
-            = new Dictionary<uint, Sdl2Window>();
-        private static bool _firstInit;
+
+        private static readonly Dictionary<uint, Sdl2Window> _eventsByWindowID = new();
+
+        // Subscribe once at type init, outside any lock. The event pump holds Sdl2Events' lock while
+        // calling ProcessWindowEvent, which takes Lock below. Subscribing under Lock would create the
+        // reverse acquisition order (Lock, then Sdl2Events' lock) and risk a deadlock.
+        static Sdl2WindowRegistry()
+        {
+            Sdl2Events.Subscribe(ProcessWindowEvent);
+        }
 
         public static void RegisterWindow(Sdl2Window window)
         {
+            if (window.WindowID == 0)
+            {
+                throw new InvalidOperationException("SDL window creation failed: " + GetSdlError());
+            }
+
             lock (Lock)
             {
                 _eventsByWindowID.Add(window.WindowID, window);
-                if (!_firstInit)
-                {
-                    _firstInit = true;
-                    Sdl2Events.Subscribe(ProcessWindowEvent);
-                }
             }
+        }
+
+        private static unsafe string GetSdlError()
+        {
+            return Marshal.PtrToStringUTF8((nint)Sdl2Window.SdlInstance.GetError()) ?? "unknown SDL error";
         }
 
         public static void RemoveWindow(Sdl2Window window)
@@ -69,9 +82,15 @@ namespace NeoVeldrid.Sdl2
                     break;
             }
 
-            if (handled && _eventsByWindowID.TryGetValue(windowID, out Sdl2Window window))
+            if (handled)
             {
-                window.AddEvent(ev);
+                lock (Lock)
+                {
+                    if (_eventsByWindowID.TryGetValue(windowID, out Sdl2Window window))
+                    {
+                        window.AddEvent(ev);
+                    }
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [Core] `TextureViewDescription`'s range-and-format constructor ignoring its format argument and using the target texture's format instead.
+- [SDL2] `Sdl2WindowRegistry` reading its window dictionary without a lock, racing the SDL event-pump thread.
 
 ### Internal
 
