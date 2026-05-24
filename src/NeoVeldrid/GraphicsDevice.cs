@@ -847,6 +847,11 @@ namespace NeoVeldrid
         }
 
         /// <summary>
+        /// A bool indicating whether this instance has been disposed.
+        /// </summary>
+        public bool IsDisposed => _disposed;
+
+        /// <summary>
         /// Frees unmanaged resources controlled by this device.
         /// All created child resources must be Disposed prior to calling this method.
         /// </summary>
