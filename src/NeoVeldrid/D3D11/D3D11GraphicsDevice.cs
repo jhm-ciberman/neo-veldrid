@@ -226,7 +226,7 @@ namespace NeoVeldrid.D3D11
                 depthClipDisable: true,
                 texture1D: true,
                 independentBlend: true,
-                structuredBuffer: true,
+                structuredBuffer: featureLevel >= D3DFeatureLevel.Level110,
                 subsetTextureView: true,
                 commandListDebugMarkers: featureLevel >= D3DFeatureLevel.Level111,
                 bufferRangeBinding: featureLevel >= D3DFeatureLevel.Level111,
