@@ -14,6 +14,7 @@ namespace NeoVeldrid
         private readonly object _deferredDisposalLock = new object();
         private readonly List<IDisposable> _disposables = new List<IDisposable>();
         private Sampler _aniso4xSampler;
+        private bool _disposed;
 
         internal GraphicsDevice() { }
 
@@ -851,6 +852,12 @@ namespace NeoVeldrid
         /// </summary>
         public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+
             WaitForIdle();
             PointSampler.Dispose();
             LinearSampler.Dispose();

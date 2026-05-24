@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+In addition to SemVer defaults, an "Internal" section is used to denote changes that are not user facing but improve the maintenance state of the package.
+
 ## [Unreleased]
 
 ### Added
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [Core] `TextureViewDescription`'s range-and-format constructor ignoring its format argument and using the target texture's format instead.
+- [Core] `GraphicsDevice.Dispose()` deadlocking or crashing when called more than once.
 - [SDL2] Fix `Sdl2WindowRegistry` race condition in the event-pump thread.
 
 ### Internal
