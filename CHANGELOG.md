@@ -16,6 +16,8 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Fixed
 
+- [OpenGL] Direct-state-access being under-detected on GL 4.5+ drivers that no longer expose the `GL_ARB_direct_state_access` extension string.
+- [OpenGL] Independent blend being under-detected on hardware that exposes it through `GL_ARB_draw_buffers_blend` below GL 4.0.
 - [ImGui] `ImGuiRenderer`'s projection-matrix upload bypassing the command list.
 - [D3D11] `GraphicsDeviceFeatures.StructuredBuffer` reporting `true` on feature levels below 11_0, where D3D11 does not support structured buffers.
 - [Core] `TextureViewDescription`'s range-and-format constructor ignoring its format argument and using the target texture's format instead.
