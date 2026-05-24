@@ -18,6 +18,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 - [Core] `TextureViewDescription`'s range-and-format constructor ignoring its format argument and using the target texture's format instead.
 - [Core] `GraphicsDevice.Dispose()` deadlocking or crashing when called more than once.
+- [Core] `Texture.Dispose()` racing concurrent creation of the texture's default view, which could free the device resource while it was still being used.
 - [SDL2] Fix `Sdl2WindowRegistry` race condition in the event-pump thread.
 
 ### Internal

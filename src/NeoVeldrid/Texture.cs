@@ -96,9 +96,11 @@ namespace NeoVeldrid
             lock (_fullTextureViewLock)
             {
                 _fullTextureView?.Dispose();
-            }
 
-            DisposeCore();
+                // Held through DisposeCore so a concurrent GetFullTextureView can't
+                // build a view on a texture whose device resource is being freed.
+                DisposeCore();
+            }
         }
 
         private protected abstract void DisposeCore();
