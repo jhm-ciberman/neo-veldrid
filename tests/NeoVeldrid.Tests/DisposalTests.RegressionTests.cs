@@ -19,7 +19,8 @@ namespace NeoVeldrid.Tests
         // that thread had already terminated during the first dispose, so the post blocked forever.
         // IDisposable requires Dispose to be safe to call more than once; this verifies the second
         // call returns promptly instead of deadlocking. The timeout turns a regression into a test
-        // failure rather than a hung run.
+        // failure rather than a hung run. It also checks IsDisposed tracks the lifecycle: false
+        // while the device is live, true once disposed.
         [Fact(Timeout = 10000)]
         public Task Dispose_Twice_DoesNotHang()
         {
@@ -29,8 +30,10 @@ namespace NeoVeldrid.Tests
             return Task.Run(() =>
             {
                 Activator.CreateInstance<T>().CreateGraphicsDevice(out Sdl2Window window, out GraphicsDevice gd);
+                Assert.False(gd.IsDisposed);
                 gd.Dispose();
                 gd.Dispose();
+                Assert.True(gd.IsDisposed);
                 window?.Close();
             });
         }
