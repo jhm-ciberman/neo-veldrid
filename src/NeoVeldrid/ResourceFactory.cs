@@ -289,6 +289,7 @@ namespace NeoVeldrid
         /// <param name="description">The desired properties of the created object.</param>
         /// <returns>A new <see cref="DeviceBuffer"/>.</returns>
         public DeviceBuffer CreateBuffer(BufferDescription description) => CreateBuffer(ref description);
+
         /// <summary>
         /// Creates a new <see cref="DeviceBuffer"/>.
         /// </summary>
@@ -311,17 +312,16 @@ namespace NeoVeldrid
                     throw new NeoVeldridException("Structured Buffer objects must have a non-zero StructureByteStride.");
                 }
 
-                if ((usage & BufferUsage.StructuredBufferReadWrite) != 0 && usage != BufferUsage.StructuredBufferReadWrite)
+                if ((usage & BufferUsage.UniformBuffer) != 0)
                 {
                     throw new NeoVeldridException(
-                        $"{nameof(BufferUsage)}.{nameof(BufferUsage.StructuredBufferReadWrite)} cannot be combined with any other flag.");
+                        $"Structured Buffer objects cannot specify {nameof(BufferUsage)}.{nameof(BufferUsage.UniformBuffer)}.");
                 }
-                else if ((usage & BufferUsage.VertexBuffer) != 0
-                    || (usage & BufferUsage.IndexBuffer) != 0
-                    || (usage & BufferUsage.IndirectBuffer) != 0)
+                if (description.UseTypedHlslBinding
+                    && (usage & (BufferUsage.VertexBuffer | BufferUsage.IndexBuffer | BufferUsage.IndirectBuffer)) != 0)
                 {
                     throw new NeoVeldridException(
-                        $"Read-Only Structured Buffer objects cannot specify {nameof(BufferUsage)}.{nameof(BufferUsage.VertexBuffer)}, {nameof(BufferUsage)}.{nameof(BufferUsage.IndexBuffer)}, or {nameof(BufferUsage)}.{nameof(BufferUsage.IndirectBuffer)}.");
+                        $"A structured buffer with {nameof(BufferDescription.UseTypedHlslBinding)} set cannot also specify {nameof(BufferUsage.VertexBuffer)}, {nameof(BufferUsage.IndexBuffer)}, or {nameof(BufferUsage.IndirectBuffer)}. Leave {nameof(BufferDescription.UseTypedHlslBinding)} false (the default) to fill a vertex, index, or indirect buffer from a compute shader.");
                 }
             }
             else if (description.StructureByteStride != 0)

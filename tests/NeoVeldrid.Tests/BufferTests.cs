@@ -457,6 +457,16 @@ namespace NeoVeldrid.Tests
         }
 
         [Theory]
+        [InlineData(BufferUsage.VertexBuffer)]
+        [InlineData(BufferUsage.IndexBuffer)]
+        [InlineData(BufferUsage.IndirectBuffer)]
+        public void CreateBuffer_TypedStructuredWithVertexIndexOrIndirect_Throws(BufferUsage extra)
+        {
+            Assert.Throws<NeoVeldridException>(() => RF.CreateBuffer(new BufferDescription(
+                64, BufferUsage.StructuredBufferReadWrite | extra, 16, useTypedHlslBinding: true)));
+        }
+
+        [Theory]
         [InlineData(BufferUsage.UniformBuffer)]
         [InlineData(BufferUsage.UniformBuffer | BufferUsage.Dynamic)]
         [InlineData(BufferUsage.VertexBuffer)]

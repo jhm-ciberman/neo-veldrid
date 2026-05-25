@@ -524,6 +524,58 @@ void main()
                                 yield return new object[] { srcSetMultiple, srcBindingMultiple, dstSetMultiple, dstBindingMultiple, combinedLayout };
                             }
         }
+
+        [SkippableTheory]
+        [InlineData(BufferUsage.IndirectBuffer)]
+        [InlineData(BufferUsage.IndexBuffer)]
+        [InlineData(BufferUsage.VertexBuffer)]
+        public unsafe void FillBuffer_CombinedWithStructured(BufferUsage dstUsage)
+        {
+            Skip.IfNot(GD.Features.ComputeShader);
+
+            uint stride = (uint)sizeof(IndirectDrawIndexedArguments);
+
+            ResourceLayout layout = RF.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("Params", ResourceKind.StructuredBufferReadOnly, ShaderStages.Compute),
+                new ResourceLayoutElementDescription("Destination", ResourceKind.StructuredBufferReadWrite, ShaderStages.Compute)));
+
+            DeviceBuffer paramsBuffer = RF.CreateBuffer(new BufferDescription(
+                stride, BufferUsage.StructuredBufferReadOnly, stride));
+
+            DeviceBuffer dstBuffer = RF.CreateBuffer(new BufferDescription(
+                stride, dstUsage | BufferUsage.StructuredBufferReadWrite, stride));
+
+            IndirectDrawIndexedArguments paramsValue = new IndirectDrawIndexedArguments
+            {
+                FirstIndex = 1,
+                FirstInstance = 2,
+                IndexCount = 3,
+                InstanceCount = 4,
+                VertexOffset = 5,
+            };
+            GD.UpdateBuffer(paramsBuffer, 0, paramsValue);
+
+            ResourceSet rs = RF.CreateResourceSet(new ResourceSetDescription(layout, paramsBuffer, dstBuffer));
+
+            Pipeline pipeline = RF.CreateComputePipeline(new ComputePipelineDescription(
+                TestShaders.LoadCompute(RF, "FillIndirectBufferComputeTest"),
+                layout,
+                1, 1, 1));
+
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            cl.SetPipeline(pipeline);
+            cl.SetComputeResourceSet(0, rs);
+            cl.Dispatch(1, 1, 1);
+            cl.End();
+            GD.SubmitCommands(cl);
+            GD.WaitForIdle();
+
+            DeviceBuffer dstReadback = GetReadback(dstBuffer);
+            MappedResourceView<IndirectDrawIndexedArguments> dstView = GD.Map<IndirectDrawIndexedArguments>(dstReadback, MapMode.Read);
+            Assert.Equal(paramsValue, dstView[0]);
+            GD.Unmap(dstReadback);
+        }
     }
 
 #if TEST_OPENGL
