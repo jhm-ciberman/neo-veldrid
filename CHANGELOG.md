@@ -9,6 +9,8 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-05-25
+
 ### Added
 
 - [ImGui] `ImGuiRenderer` now accepts an `autoInit: false` constructor option and exposes a public `Initialize()` method, so callers can configure `ImGui.GetIO()` (docking flags, custom fonts, etc.) before the first ImGui frame is opened.
@@ -80,5 +82,6 @@ First release of NeoVeldrid. A maintained, drop-in replacement for [Veldrid](htt
 - [Samples] The AnimatedMesh sample now renders correctly on OpenGL and OpenGL ES.
 - [Samples] The ComputeParticles sample now renders correctly on D3D11.
 
-[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/jhm-ciberman/neo-veldrid/releases/tag/v1.0.0

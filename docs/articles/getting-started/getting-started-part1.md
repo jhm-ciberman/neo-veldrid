@@ -20,9 +20,9 @@ You can add references to these packages using the Visual Studio package manager
 
 ```XML
 <ItemGroup>
-  <PackageReference Include="NeoVeldrid" Version="1.0.0" />
-  <PackageReference Include="NeoVeldrid.StartupUtilities" Version="1.0.0" />
-  <PackageReference Include="NeoVeldrid.SPIRV" Version="1.0.0" />
+  <PackageReference Include="NeoVeldrid" Version="1.1.0" />
+  <PackageReference Include="NeoVeldrid.StartupUtilities" Version="1.1.0" />
+  <PackageReference Include="NeoVeldrid.SPIRV" Version="1.1.0" />
 </ItemGroup>
 ```
 
