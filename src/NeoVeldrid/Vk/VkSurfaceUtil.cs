@@ -38,12 +38,6 @@ namespace NeoVeldrid.Vk
                         throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_WIN32_SURFACE_EXTENSION_NAME}");
                     }
                     return CreateWin32(gd, instance, win32Source);
-                case AndroidSurfaceSwapchainSource androidSource:
-                    if (doCheck && !gd.HasSurfaceExtension(CommonStrings.VK_KHR_ANDROID_SURFACE_EXTENSION_NAME))
-                    {
-                        throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_ANDROID_SURFACE_EXTENSION_NAME}");
-                    }
-                    return CreateAndroidSurface(gd, instance, androidSource);
                 case NSWindowSwapchainSource nsWindowSource:
                     if (doCheck)
                     {
@@ -76,22 +70,6 @@ namespace NeoVeldrid.Vk
                     }
 
                     return CreateNSViewSurface(gd, instance, nsViewSource, false);
-                case UIViewSwapchainSource uiViewSource:
-                    if (doCheck)
-                    {
-                        bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-                        if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_IOS_SURFACE_EXTENSION_NAME))
-                        {
-                            return CreateUIViewSurface(gd, instance, uiViewSource, hasMetalExtension);
-                        }
-                        else
-                        {
-                            throw new NeoVeldridException($"Neither iOS surface extension was available: " +
-                                $"{CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_MVK_IOS_SURFACE_EXTENSION_NAME}");
-                        }
-                    }
-
-                    return CreateUIViewSurface(gd, instance, uiViewSource, false);
                 default:
                     throw new NeoVeldridException($"The provided SwapchainSource cannot be used to create a Vulkan surface.");
             }
@@ -155,13 +133,6 @@ namespace NeoVeldrid.Vk
             Result result = khrWaylandSurface.CreateWaylandSurface(instance, in wsci, null, out surface);
             CheckResult(result);
             return surface;
-        }
-
-        private static SurfaceKHR CreateAndroidSurface(VkGraphicsDevice gd, Instance instance, AndroidSurfaceSwapchainSource androidSource)
-        {
-            // TODO: Android surface creation requires platform-specific ANativeWindow bindings.
-            // Will be re-enabled when Silk.NET.Windowing handles platform surfaces (Phase 2).
-            throw new PlatformNotSupportedException("Android Vulkan surface creation is not yet supported in the Silk.NET port.");
         }
 
         private static unsafe SurfaceKHR CreateNSWindowSurface(VkGraphicsDevice gd, Instance instance, NSWindowSwapchainSource nsWindowSource, bool hasExtMetalSurface)
@@ -232,11 +203,6 @@ namespace NeoVeldrid.Vk
             metalLayer = ObjC.MsgSend(metalLayer, ObjC.Sel("init"));
             ObjC.MsgSendPtr(nsView, ObjC.Sel("setLayer:"), metalLayer);
             return metalLayer;
-        }
-
-        private static SurfaceKHR CreateUIViewSurface(VkGraphicsDevice gd, Instance instance, UIViewSwapchainSource uiViewSource, bool hasExtMetalSurface)
-        {
-            throw new PlatformNotSupportedException("iOS Vulkan surface creation is not yet supported in the Silk.NET port.");
         }
 
         // Minimal ObjC runtime P/Invoke for macOS surface creation.

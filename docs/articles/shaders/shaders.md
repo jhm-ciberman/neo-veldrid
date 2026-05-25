@@ -21,7 +21,7 @@ In most cases, you will want to write your shader code only once, in a single la
 
 ## Specialization Constants
 
-NeoVeldrid 4.4.0 introduces the concept of "Specialization Constants", which enable you to create Shaders with parameterized behavior that can be "specialized" when a [Pipeline](xref:NeoVeldrid.Pipeline) is created, with no runtime overhead. See the [Specialization Constants](xref:specialization-constants) article for more information.
+NeoVeldrid supports "Specialization Constants", which enable you to create Shaders with parameterized behavior that can be "specialized" when a [Pipeline](xref:NeoVeldrid.Pipeline) is created, with no runtime overhead. See the [Specialization Constants](xref:specialization-constants) article for more information.
 
 ## Shader Resources
 

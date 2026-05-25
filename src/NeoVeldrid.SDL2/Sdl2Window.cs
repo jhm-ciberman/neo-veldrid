@@ -1004,8 +1004,6 @@ namespace NeoVeldrid.Sdl2
                     return (IntPtr)wmInfo.Info.Wayland.Surface;
                 case SysWMType.Cocoa:
                     return (IntPtr)wmInfo.Info.Cocoa.Window;
-                case SysWMType.Android:
-                    return (IntPtr)wmInfo.Info.Android.Window;
                 default:
                     return (IntPtr)_window;
             }

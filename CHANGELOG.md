@@ -9,6 +9,14 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+### Removed
+
+- [Core] Mobile-only `SwapchainSource.CreateAndroidSurface`, `SwapchainSource.CreateUIView`, and the `GraphicsDevice.CreateOpenGLES(GraphicsDeviceOptions, SwapchainDescription)` overload. NeoVeldrid targets desktop platforms only.
+
+### Internal
+
+- Removed dead Android and iOS code paths left over from the Silk.NET port.
+
 ## [1.1.0] - 2026-05-25
 
 First minor release for NeoVeldrid. This release comes with a few tiny new features and a lot of bug fixes that improve the stability. Our goal with NeoVeldrid is to make it reliable and rock-solid to ship real high performance applications and games in dotnet.

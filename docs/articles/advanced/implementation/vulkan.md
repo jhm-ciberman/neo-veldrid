@@ -1,6 +1,6 @@
 # Vulkan Backend
 
-The Vulkan backend is a multi-platform backend implemented using the Vulkan API. Vulkan is supported on Windows, Linux, and Android. Vulkan's API is very close to NeoVeldrid's and as such this is a fairly simple, straightforward backend.
+The Vulkan backend is a multi-platform backend implemented using the Vulkan API. Vulkan is supported on Windows, Linux, and macOS (via MoltenVK). Vulkan's API is very close to NeoVeldrid's and as such this is a fairly simple, straightforward backend.
 
 Vulkan [GraphicsDevices](xref:NeoVeldrid.GraphicsDevice) are created from a [VkSurfaceSource](xref:NeoVeldrid.Vk.VkSurfaceSource), which is a platform-specific object used to create a Vulkan surface (VkSurfaceKHR). The following helper functions are available:
 

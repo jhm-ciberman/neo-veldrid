@@ -1,6 +1,6 @@
 # OpenGL Backend
 
-The OpenGL backend is a multi-platform backend implemented using OpenGL. It is supported on most desktop platforms, except for UWP. OpenGL 3.0 or higher is required for an OpenGL [GraphicsDevice](xref:NeoVeldrid.GraphicsDevice).
+The OpenGL backend is a multi-platform backend implemented using OpenGL. It is supported on Windows and Linux. OpenGL 3.0 or higher is required for an OpenGL [GraphicsDevice](xref:NeoVeldrid.GraphicsDevice).
 
 The OpenGL ES backend is more-or-less the same as the OpenGL backend. There exist several minor differences related to how extensions are queried, and the exact names of some GL functions are different. NeoVeldrid requires OpenGL ES 3.0 or higher to create an OpenGL ES GraphicsDevice.
 
