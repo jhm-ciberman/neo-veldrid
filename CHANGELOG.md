@@ -30,6 +30,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Internal
 
+- [Tests] Added negative tests for the `CreateBuffer` usage-validation rules that lacked coverage (structured stride rules, structured + uniform, staging exclusivity, uniform size).
 - [Vulkan] Replaced the internal `StackList` stack-buffer helper with `stackalloc`.
 - Marked all non-mutating struct members `readonly` across the codebase.
 
