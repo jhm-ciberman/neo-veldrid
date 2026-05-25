@@ -467,6 +467,26 @@ namespace NeoVeldrid.Tests
         }
 
         [Theory]
+        [InlineData(BufferUsage.Dynamic | BufferUsage.IndirectBuffer)]
+        [InlineData(BufferUsage.Dynamic | BufferUsage.StructuredBufferReadWrite)]
+        public void CreateBuffer_DynamicWithStructuredRwOrIndirect_Throws(BufferUsage usage)
+        {
+            uint stride = (usage & BufferUsage.StructuredBufferReadWrite) != 0 ? 16u : 0u;
+            Assert.Throws<NeoVeldridException>(() => RF.CreateBuffer(new BufferDescription(64, usage, stride)));
+        }
+
+        [Theory]
+        [InlineData(BufferUsage.StructuredBufferReadOnly, 0u, 64u)]                                  // structured requires a stride
+        [InlineData(BufferUsage.VertexBuffer, 16u, 64u)]                                             // non-structured forbids a stride
+        [InlineData(BufferUsage.StructuredBufferReadOnly | BufferUsage.UniformBuffer, 16u, 64u)]     // structured cannot be a uniform buffer
+        [InlineData(BufferUsage.Staging | BufferUsage.VertexBuffer, 0u, 64u)]                        // staging is exclusive
+        [InlineData(BufferUsage.UniformBuffer, 0u, 20u)]                                             // uniform size must be a multiple of 16
+        public void CreateBuffer_InvalidDescription_Throws(BufferUsage usage, uint stride, uint size)
+        {
+            Assert.Throws<NeoVeldridException>(() => RF.CreateBuffer(new BufferDescription(size, usage, stride)));
+        }
+
+        [Theory]
         [InlineData(BufferUsage.UniformBuffer)]
         [InlineData(BufferUsage.UniformBuffer | BufferUsage.Dynamic)]
         [InlineData(BufferUsage.VertexBuffer)]

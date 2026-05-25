@@ -17,6 +17,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Fixed
 
+- [Core] Missing validation for the unsupported `BufferUsage` combinations `Dynamic | StructuredBufferReadWrite` and `Dynamic | IndirectBuffer`.
 - [OpenGL] Direct-state-access being under-detected on GL 4.5+ drivers that no longer expose the `GL_ARB_direct_state_access` extension string.
 - [OpenGL] Independent blend being under-detected on hardware that exposes it through `GL_ARB_draw_buffers_blend` below GL 4.0.
 - [ImGui] `ImGuiRenderer`'s projection-matrix upload bypassing the command list.
