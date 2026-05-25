@@ -11,7 +11,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Added
 
-- `[ImGui]` `ImGuiRenderer` now accepts an `autoInit: false` constructor option and exposes a public `Initialize()` method, so callers can configure `ImGui.GetIO()` (docking flags, custom fonts, etc.) before the first ImGui frame is opened.
+- [ImGui] `ImGuiRenderer` now accepts an `autoInit: false` constructor option and exposes a public `Initialize()` method, so callers can configure `ImGui.GetIO()` (docking flags, custom fonts, etc.) before the first ImGui frame is opened.
 - [Core] Added `GraphicsDevice.IsDisposed` property, matching the `IsDisposed` already exposed by every device resource.
 - [Core] Structured buffers can now be created combined with `VertexBuffer`, `IndexBuffer`, or `IndirectBuffer` usage, so a compute shader can fill a vertex, index, or indirect buffer directly (GPU-driven rendering).
 
