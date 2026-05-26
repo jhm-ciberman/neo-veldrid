@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "NeoVeldrid.slnx",
+    "projects": [
+      "tests\\NeoVeldrid.SPIRV.Tests\\NeoVeldrid.SPIRV.Tests.csproj",
+      "tests\\NeoVeldrid.Tests\\NeoVeldrid.Tests.csproj"
+    ]
+  }
+}

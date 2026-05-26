@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "NeoVeldrid.slnx",
+    "projects": [
+      "src\\NeoVeldrid.ImGui\\NeoVeldrid.ImGui.csproj",
+      "src\\NeoVeldrid.ImageSharp\\NeoVeldrid.ImageSharp.csproj",
+      "src\\NeoVeldrid.RenderDoc\\NeoVeldrid.RenderDoc.csproj",
+      "src\\NeoVeldrid.SDL2\\NeoVeldrid.SDL2.csproj",
+      "src\\NeoVeldrid.SPIRV\\NeoVeldrid.SPIRV.csproj",
+      "src\\NeoVeldrid.StartupUtilities\\NeoVeldrid.StartupUtilities.csproj",
+      "src\\NeoVeldrid.Utilities\\NeoVeldrid.Utilities.csproj",
+      "src\\NeoVeldrid\\NeoVeldrid.csproj"
+    ]
+  }
+}

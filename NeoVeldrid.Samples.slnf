@@ -1,0 +1,25 @@
+{
+  "solution": {
+    "path": "NeoVeldrid.slnx",
+    "projects": [
+      "samples\\AnimatedMesh\\Application\\AnimatedMesh.csproj",
+      "samples\\AnimatedMesh\\Desktop\\AnimatedMesh.Desktop.csproj",
+      "samples\\AssetPrimitives\\AssetPrimitives.csproj",
+      "samples\\AssetProcessor\\AssetProcessor.csproj",
+      "samples\\ComputeParticles\\Application\\ComputeParticles.csproj",
+      "samples\\ComputeParticles\\Desktop\\ComputeParticles.Desktop.csproj",
+      "samples\\ComputeTexture\\Application\\ComputeTexture.csproj",
+      "samples\\ComputeTexture\\Desktop\\ComputeTexture.Desktop.csproj",
+      "samples\\GettingStarted\\GettingStarted.csproj",
+      "samples\\ImageTint\\ImageTint.csproj",
+      "samples\\Instancing\\Application\\Instancing.csproj",
+      "samples\\Instancing\\Desktop\\Instancing.Desktop.csproj",
+      "samples\\NeoDemo\\NeoDemo.csproj",
+      "samples\\Offscreen\\Application\\Offscreen.csproj",
+      "samples\\Offscreen\\Desktop\\Offscreen.Desktop.csproj",
+      "samples\\SampleBase\\SampleBase.csproj",
+      "samples\\TexturedCube\\Application\\TexturedCube.csproj",
+      "samples\\TexturedCube\\Desktop\\TexturedCube.Desktop.csproj"
+    ]
+  }
+}
