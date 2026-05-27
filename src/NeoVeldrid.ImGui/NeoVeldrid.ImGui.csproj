@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ImGui.NET" Version="$(ImGuiNetVersion)" />
+        <PackageReference Include="ImGui.NET" />
         <ProjectReference Include="..\NeoVeldrid\NeoVeldrid.csproj" />
     </ItemGroup>
 

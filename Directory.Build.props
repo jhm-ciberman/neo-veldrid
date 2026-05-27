@@ -8,13 +8,6 @@
         <UseArtifactsOutput>true</UseArtifactsOutput>
     </PropertyGroup>
 
-    <!-- Centralized package versions -->
-    <PropertyGroup>
-        <SilkNetVersion>2.23.0</SilkNetVersion>
-        <ImGuiNetVersion>1.91.6.1</ImGuiNetVersion>
-        <ImageSharpVersion>3.1.12</ImageSharpVersion>
-    </PropertyGroup>
-
     <!-- Sample assets directory -->
     <PropertyGroup>
         <SamplesAssetsDir>$(MSBuildThisFileDirectory)samples\assets</SamplesAssetsDir>
@@ -67,7 +60,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

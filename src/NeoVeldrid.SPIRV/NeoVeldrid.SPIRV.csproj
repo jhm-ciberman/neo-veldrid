@@ -11,8 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Silk.NET.SPIRV.Cross" Version="$(SilkNetVersion)" />
-        <PackageReference Include="Silk.NET.Shaderc" Version="$(SilkNetVersion)" />
+        <PackageReference Include="Silk.NET.SPIRV.Cross" />
+        <PackageReference Include="Silk.NET.Shaderc" />
     </ItemGroup>
 
 </Project>

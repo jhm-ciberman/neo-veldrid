@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\NeoVeldrid\NeoVeldrid.csproj" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="$(ImageSharpVersion)" />
+        <PackageReference Include="SixLabors.ImageSharp" />
     </ItemGroup>
 
     <ItemGroup>

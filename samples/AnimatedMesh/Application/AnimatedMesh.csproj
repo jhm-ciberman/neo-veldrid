@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SampleBase\SampleBase.csproj" />
     <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
-    <PackageReference Include="Silk.NET.Assimp" Version="$(SilkNetVersion)" />
+    <PackageReference Include="Silk.NET.Assimp" />
   </ItemGroup>
 
 </Project>

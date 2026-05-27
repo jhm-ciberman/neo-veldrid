@@ -10,8 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Silk.NET.Assimp" Version="$(SilkNetVersion)" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+        <PackageReference Include="Silk.NET.Assimp" />
+        <PackageReference Include="SixLabors.ImageSharp" />
         <ProjectReference Include="..\..\src\NeoVeldrid\NeoVeldrid.csproj" />
         <ProjectReference Include="..\AssetPrimitives\AssetPrimitives.csproj" />
     </ItemGroup>

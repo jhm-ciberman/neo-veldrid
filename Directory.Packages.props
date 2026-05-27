@@ -1,0 +1,62 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        
+        <SilkNetVersion>2.23.0</SilkNetVersion>
+        <ImGuiNetVersion>1.91.6.1</ImGuiNetVersion>
+        <ImageSharpVersion>3.1.12</ImageSharpVersion>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.203" />
+    </ItemGroup>
+    
+    <!-- Silk.NET Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="Silk.NET.Core" Version="$(SilkNetVersion)" />
+
+        <PackageVersion Include="Silk.NET.Vulkan" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.Vulkan.Extensions.KHR" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.Vulkan.Extensions.EXT" Version="$(SilkNetVersion)" />
+        
+        <PackageVersion Include="Silk.NET.Direct3D11" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.DXGI" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.Direct3D.Compilers" Version="$(SilkNetVersion)" />
+        
+        <PackageVersion Include="Silk.NET.OpenGL" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.OpenGL.Extensions.EXT" Version="$(SilkNetVersion)" />
+
+        <PackageVersion Include="Silk.NET.MoltenVK.Native" Version="$(SilkNetVersion)" />
+
+        <PackageVersion Include="Silk.NET.SPIRV.Cross" Version="$(SilkNetVersion)" />
+        <PackageVersion Include="Silk.NET.Shaderc" Version="$(SilkNetVersion)" />
+
+        <PackageVersion Include="Silk.NET.SDL" Version="$(SilkNetVersion)" />
+
+        <PackageVersion Include="Silk.NET.Assimp" Version="$(SilkNetVersion)" />
+    </ItemGroup>
+
+    <!-- ImageSharp Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="SixLabors.ImageSharp" Version="$(ImageSharpVersion)" />
+    </ItemGroup>
+
+    <!-- ImGui Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="ImGui.NET" Version="$(ImGuiNetVersion)" />
+    </ItemGroup>
+
+    <!-- Mellinoe Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="NativeLibraryLoader" Version="1.0.13" />
+    </ItemGroup>
+
+    <!-- Unit Testing Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+        <PackageVersion Include="xunit" Version="2.9.3" />
+        <PackageVersion Include="xunit.console" Version="2.9.3" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+        <PackageVersion Include="Xunit.SkippableFact" Version="1.5.61" />
+    </ItemGroup>
+</Project>
