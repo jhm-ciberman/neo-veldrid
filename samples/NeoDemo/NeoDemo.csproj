@@ -7,7 +7,6 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <RootNamespace>NeoVeldrid.NeoDemo</RootNamespace>
-        <IsPackable>false</IsPackable>
         <AssetsDir>$(MSBuildThisFileDirectory)Assets</AssetsDir>
     </PropertyGroup>
 
