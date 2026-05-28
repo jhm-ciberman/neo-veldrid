@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <IsPackable>true</IsPackable>
         <Description>Helper classes for creating and managing application windows and user input.</Description>
         <PackageTags>Core Game Window Input</PackageTags>
     </PropertyGroup>

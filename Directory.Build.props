@@ -10,7 +10,7 @@
 
     <!-- Package Metadata -->
     <PropertyGroup>
-        <IsPackable>true</IsPackable> <!-- Default is true unless overridden. -->
+        <IsPackable>false</IsPackable> <!-- Default is false unless overridden. -->
         
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://jhm-ciberman.github.io/neo-veldrid/</PackageProjectUrl>
