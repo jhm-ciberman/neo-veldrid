@@ -34,6 +34,7 @@
         <Nullable>disable</Nullable>
         <UseArtifactsOutput>true</UseArtifactsOutput>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
         
         <!-- Run IDExxxx code-style analyzers at build time, not just in the IDE. -->
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
