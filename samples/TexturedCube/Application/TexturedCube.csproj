@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
-
     <ItemGroup>
         <Asset Include="$(SamplesAssetsDir)\sponza\spnza_bricks_a_diff.png" />
     </ItemGroup>

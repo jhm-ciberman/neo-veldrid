@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
-
     <ItemGroup>
         <Compile Include="..\..\Common\Model.cs" Link="Model.cs" />
         <Compile Include="..\..\Common\RawList.cs" Link="RawList.cs" />
