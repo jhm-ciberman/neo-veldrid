@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "NeoVeldrid.slnx",
+    "projects": [
+      "samples\\tutorials\\01_GettingStarted\\01_GettingStarted.csproj",
+      "samples\\tutorials\\02_RenderQuad\\02_RenderQuad.csproj"
+    ]
+  }
+}
