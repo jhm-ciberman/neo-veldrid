@@ -1,0 +1,11 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageVersion Include="NeoVeldrid" Version="*" />
+        <PackageVersion Include="NeoVeldrid.SPIRV" Version="*" />
+        <PackageVersion Include="NeoVeldrid.StartupUtilities" Version="*" />
+    </ItemGroup>
+</Project>

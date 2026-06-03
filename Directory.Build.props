@@ -60,10 +60,4 @@
         <ExcludeOpenGL>false</ExcludeOpenGL>
     </PropertyGroup>
 
-    <!-- Sample Assets Directory -->
-    <!-- Will be removed when samples are overhauled. -->
-    <PropertyGroup>
-        <SamplesAssetsDir>$(MSBuildThisFileDirectory)samples\assets</SamplesAssetsDir>
-    </PropertyGroup>
-
 </Project>
