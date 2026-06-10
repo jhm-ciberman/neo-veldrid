@@ -11,11 +11,10 @@
       "samples\\GettingStarted\\GettingStarted.csproj",
       "samples\\ImageTint\\ImageTint.csproj",
       "samples\\Instancing\\Instancing.csproj",
-      "samples\\demos\\NeoDemo\\NeoDemo.csproj",
       "samples\\Offscreen\\Offscreen.csproj",
       "samples\\SampleBase\\SampleBase.csproj",
-      "samples\\TexturedCube\\Application\\TexturedCube.csproj",
-      "samples\\TexturedCube\\Desktop\\TexturedCube.Desktop.csproj"
+      "samples\\TexturedCube\\TexturedCube.csproj",
+	  "samples\\demos\\NeoDemo\\NeoDemo.csproj",
     ]
   }
 }

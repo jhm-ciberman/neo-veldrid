@@ -11,8 +11,7 @@
         <Project Path="samples/Instancing/Instancing.csproj" />
         <Project Path="samples/Offscreen/Offscreen.csproj" />
         <Project Path="samples/SampleBase/SampleBase.csproj" />
-        <Project Path="samples/TexturedCube/Application/TexturedCube.csproj" />
-        <Project Path="samples/TexturedCube/Desktop/TexturedCube.Desktop.csproj" />
+        <Project Path="samples/TexturedCube/TexturedCube.csproj" />
     </Folder>
     <Folder Name="/samples/demos/">
         <Project Path="samples/demos/NeoDemo/NeoDemo.csproj" />
