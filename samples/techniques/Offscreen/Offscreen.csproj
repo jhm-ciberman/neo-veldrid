@@ -5,9 +5,9 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <Compile Include="..\Common\Model.cs" Link="Model.cs" />
-        <Compile Include="..\Common\RawList.cs" Link="RawList.cs" />
-        <Compile Include="..\Common\AssimpHelper.cs" Link="AssimpHelper.cs" />
+        <Compile Include="..\..\common\Model.cs" Link="Model.cs" />
+        <Compile Include="..\..\common\RawList.cs" Link="RawList.cs" />
+        <Compile Include="..\..\common\AssimpHelper.cs" Link="AssimpHelper.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
         <PackageReference Include="Silk.NET.Assimp" />
     </ItemGroup>
 

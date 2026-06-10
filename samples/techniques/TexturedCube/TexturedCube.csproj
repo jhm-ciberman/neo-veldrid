@@ -9,9 +9,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\AssetPrimitives\AssetPrimitives.csproj" />
-        <ProjectReference Include="..\AssetProcessor\AssetProcessor.csproj">
+        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="..\..\common\AssetPrimitives\AssetPrimitives.csproj" />
+        <ProjectReference Include="..\..\common\AssetProcessor\AssetProcessor.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
         </ProjectReference>

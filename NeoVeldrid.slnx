@@ -1,8 +1,8 @@
 <Solution>
     <Folder Name="/samples/">
-        <Project Path="samples/AssetPrimitives/AssetPrimitives.csproj" />
-        <Project Path="samples/AssetProcessor/AssetProcessor.csproj" />
-        <Project Path="samples/SampleBase/SampleBase.csproj" />
+        <Project Path="samples/common/AssetPrimitives/AssetPrimitives.csproj" />
+        <Project Path="samples/common/AssetProcessor/AssetProcessor.csproj" />
+        <Project Path="samples/common/SampleBase/SampleBase.csproj" />
     </Folder>
     <Folder Name="/samples/demos/">
         <Project Path="samples/demos/NeoDemo/NeoDemo.csproj" />

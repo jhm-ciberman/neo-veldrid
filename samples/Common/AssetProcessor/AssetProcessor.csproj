@@ -6,13 +6,13 @@
 
     <ItemGroup>
         <Compile Include="..\SampleBase\KtxFile.cs" Link="KtxFile.cs" />
-        <Compile Include="..\Common\AssimpHelper.cs" Link="AssimpHelper.cs" />
+        <Compile Include="..\AssimpHelper.cs" Link="AssimpHelper.cs" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Silk.NET.Assimp" />
         <PackageReference Include="SixLabors.ImageSharp" />
-        <ProjectReference Include="..\..\src\NeoVeldrid\NeoVeldrid.csproj" />
+        <ProjectReference Include="..\..\..\src\NeoVeldrid\NeoVeldrid.csproj" />
         <ProjectReference Include="..\AssetPrimitives\AssetPrimitives.csproj" />
     </ItemGroup>
 
