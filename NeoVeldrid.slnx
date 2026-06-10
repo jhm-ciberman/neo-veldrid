@@ -1,7 +1,6 @@
 <Solution>
     <Folder Name="/samples/">
-        <Project Path="samples/AnimatedMesh/Application/AnimatedMesh.csproj" />
-        <Project Path="samples/AnimatedMesh/Desktop/AnimatedMesh.Desktop.csproj" />
+        <Project Path="samples/AnimatedMesh/AnimatedMesh.csproj" />
         <Project Path="samples/AssetPrimitives/AssetPrimitives.csproj" />
         <Project Path="samples/AssetProcessor/AssetProcessor.csproj" />
         <Project Path="samples/ComputeParticles/ComputeParticles.csproj" />

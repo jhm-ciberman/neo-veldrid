@@ -2,8 +2,7 @@
   "solution": {
     "path": "NeoVeldrid.slnx",
     "projects": [
-      "samples\\AnimatedMesh\\Application\\AnimatedMesh.csproj",
-      "samples\\AnimatedMesh\\Desktop\\AnimatedMesh.Desktop.csproj",
+      "samples\\AnimatedMesh\\AnimatedMesh.csproj",
       "samples\\AssetPrimitives\\AssetPrimitives.csproj",
       "samples\\AssetProcessor\\AssetProcessor.csproj",
       "samples\\ComputeParticles\\ComputeParticles.csproj",
