@@ -5,23 +5,24 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <Compile Include="..\..\common\Model.cs" Link="Model.cs" />
-        <Compile Include="..\..\common\RawList.cs" Link="RawList.cs" />
-        <Compile Include="..\..\common\AssimpHelper.cs" Link="AssimpHelper.cs" />
+        <Compile Include="$(RootDir)\samples\common\Model.cs" Link="Model.cs" />
+        <Compile Include="$(RootDir)\samples\common\RawList.cs" Link="RawList.cs" />
+        <Compile Include="$(RootDir)\samples\common\AssimpHelper.cs" Link="AssimpHelper.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="$(SamplesAssetsDir)\models\chinesedragon.dae" LogicalName="chinesedragon.dae" />
-        <EmbeddedResource Include="$(SamplesAssetsDir)\models\plane2.dae" LogicalName="plane2.dae" />
-        <EmbeddedResource Include="$(SamplesAssetsDir)\textures\darkmetal_bc3_unorm.ktx" LogicalName="darkmetal_bc3_unorm.ktx" />
+        <EmbeddedResource Include="$(RootDir)\samples\assets\models\chinesedragon.dae" LogicalName="chinesedragon.dae" />
+        <EmbeddedResource Include="$(RootDir)\samples\assets\models\plane2.dae" LogicalName="plane2.dae" />
+        <EmbeddedResource Include="$(RootDir)\samples\assets\textures\darkmetal_bc3_unorm.ktx" LogicalName="darkmetal_bc3_unorm.ktx" />
+        
         <EmbeddedResource Include="Shaders\**">
             <LogicalName>%(Filename)%(Extension)</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\samples\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
         <PackageReference Include="Silk.NET.Assimp" />
     </ItemGroup>
 

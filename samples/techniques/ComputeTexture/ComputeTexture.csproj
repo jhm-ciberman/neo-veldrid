@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="$(RootDir)\samples\common\SampleBase\SampleBase.csproj" />
     </ItemGroup>
 
     <ItemGroup>

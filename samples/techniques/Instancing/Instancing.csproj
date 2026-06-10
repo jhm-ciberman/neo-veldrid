@@ -5,24 +5,25 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\..\common\AssetProcessor\AssetProcessor.csproj">
+        <ProjectReference Include="$(RootDir)\samples\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="$(RootDir)\samples\common\AssetProcessor\AssetProcessor.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
         </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\..\common\RawList.cs" Link="RawList.cs" />
+        <Compile Include="$(RootDir)\samples\common\RawList.cs" Link="RawList.cs" />
         <EmbeddedResource Include="$(MSBuildThisFileDirectory)/Shaders/**">
             <LogicalName>%(FileName)%(Extension)</LogicalName>
         </EmbeddedResource>
-        <Asset Include="$(SamplesAssetsDir)\textures\texturearray_rocks_bc3_unorm.ktx" />
-        <Asset Include="$(SamplesAssetsDir)\textures\lavaplanet_bc3_unorm.ktx" />
-        <Asset Include="$(SamplesAssetsDir)\textures\texturearray_rocks_etc2_unorm.ktx" />
-        <Asset Include="$(SamplesAssetsDir)\textures\lavaplanet_etc2_unorm.ktx" />
-        <Asset Include="$(SamplesAssetsDir)\models\rock01.dae" />
-        <Asset Include="$(SamplesAssetsDir)\models\sphere.obj" />
+        
+        <Asset Include="$(RootDir)\samples\assets\textures\texturearray_rocks_bc3_unorm.ktx" />
+        <Asset Include="$(RootDir)\samples\assets\textures\lavaplanet_bc3_unorm.ktx" />
+        <Asset Include="$(RootDir)\samples\assets\textures\texturearray_rocks_etc2_unorm.ktx" />
+        <Asset Include="$(RootDir)\samples\assets\textures\lavaplanet_etc2_unorm.ktx" />
+        <Asset Include="$(RootDir)\samples\assets\models\rock01.dae" />
+        <Asset Include="$(RootDir)\samples\assets\models\sphere.obj" />
     </ItemGroup>
 
 </Project>

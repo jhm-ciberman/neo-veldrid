@@ -60,10 +60,10 @@
         <ExcludeOpenGL>false</ExcludeOpenGL>
     </PropertyGroup>
 
-    <!-- Sample Assets Directory -->
-    <!-- Will be removed when samples are overhauled. -->
+    <!-- Repository Root Directory -->
+    <!-- Exists to make relative paths easier to read. -->
     <PropertyGroup>
-        <SamplesAssetsDir>$(MSBuildThisFileDirectory)samples\assets</SamplesAssetsDir>
+        <RootDir>$(MSBuildThisFileDirectory)</RootDir>
     </PropertyGroup>
 
 </Project>

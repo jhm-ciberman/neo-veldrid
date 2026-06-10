@@ -5,20 +5,22 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <Compile Include="..\..\common\Model.cs" Link="Model.cs" />
-        <Compile Include="..\..\common\RawList.cs" Link="RawList.cs" />
-        <Compile Include="..\..\common\AssimpHelper.cs" Link="AssimpHelper.cs" />
-        <EmbeddedResource Include="$(SamplesAssetsDir)\models\goblin.dae">
+        <Compile Include="$(RootDir)\samples\common\Model.cs" Link="Model.cs" />
+        <Compile Include="$(RootDir)\samples\common\RawList.cs" Link="RawList.cs" />
+        <Compile Include="$(RootDir)\samples\common\AssimpHelper.cs" Link="AssimpHelper.cs" />
+        
+        <EmbeddedResource Include="$(RootDir)\samples\assets\models\goblin.dae">
             <LogicalName>goblin.dae</LogicalName>
         </EmbeddedResource>
-        <EmbeddedResource Include="$(SamplesAssetsDir)\textures\goblin_bc3_unorm.ktx">
+        
+        <EmbeddedResource Include="$(RootDir)\samples\assets\textures\goblin_bc3_unorm.ktx">
             <LogicalName>goblin_bc3_unorm.ktx</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\samples\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
         <PackageReference Include="Silk.NET.Assimp" />
     </ItemGroup>
 

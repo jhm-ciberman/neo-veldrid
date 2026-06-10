@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\common\SampleBase\SampleBase.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.ImageSharp\NeoVeldrid.ImageSharp.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\samples\common\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.ImageSharp\NeoVeldrid.ImageSharp.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
     </ItemGroup>
 
     <ItemGroup>

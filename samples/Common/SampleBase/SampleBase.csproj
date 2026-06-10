@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\NeoVeldrid\NeoVeldrid.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.StartupUtilities\NeoVeldrid.StartupUtilities.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.Utilities\NeoVeldrid.Utilities.csproj" />
-        <ProjectReference Include="..\..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid\NeoVeldrid.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.StartupUtilities\NeoVeldrid.StartupUtilities.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.Utilities\NeoVeldrid.Utilities.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        
         <ProjectReference Include="..\AssetPrimitives\AssetPrimitives.csproj" />
     </ItemGroup>
 
