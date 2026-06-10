@@ -10,16 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.RenderDoc\NeoVeldrid.RenderDoc.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.StartupUtilities\NeoVeldrid.StartupUtilities.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.Utilities\NeoVeldrid.Utilities.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid\NeoVeldrid.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.console" />
         <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="Xunit.SkippableFact" />
-        <ProjectReference Include="..\..\src\NeoVeldrid.RenderDoc\NeoVeldrid.RenderDoc.csproj" />
-        <ProjectReference Include="..\..\src\NeoVeldrid.StartupUtilities\NeoVeldrid.StartupUtilities.csproj" />
-        <ProjectReference Include="..\..\src\NeoVeldrid.Utilities\NeoVeldrid.Utilities.csproj" />
-        <ProjectReference Include="..\..\src\NeoVeldrid\NeoVeldrid.csproj" />
     </ItemGroup>
 
     <ItemGroup>

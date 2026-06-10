@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
+        <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
     </ItemGroup>
 
     <ItemGroup>
