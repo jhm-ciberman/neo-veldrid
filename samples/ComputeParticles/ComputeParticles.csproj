@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
     <ItemGroup>
-        <ProjectReference Include="..\..\SampleBase\SampleBase.csproj" />
+        <ProjectReference Include="..\SampleBase\SampleBase.csproj" />
     </ItemGroup>
 
     <ItemGroup>

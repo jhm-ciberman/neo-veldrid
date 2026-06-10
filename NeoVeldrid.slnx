@@ -4,8 +4,7 @@
         <Project Path="samples/AnimatedMesh/Desktop/AnimatedMesh.Desktop.csproj" />
         <Project Path="samples/AssetPrimitives/AssetPrimitives.csproj" />
         <Project Path="samples/AssetProcessor/AssetProcessor.csproj" />
-        <Project Path="samples/ComputeParticles/Application/ComputeParticles.csproj" />
-        <Project Path="samples/ComputeParticles/Desktop/ComputeParticles.Desktop.csproj" />
+        <Project Path="samples/ComputeParticles/ComputeParticles.csproj" />
         <Project Path="samples/ComputeTexture/Application/ComputeTexture.csproj" />
         <Project Path="samples/ComputeTexture/Desktop/ComputeTexture.Desktop.csproj" />
         <Project Path="samples/GettingStarted/GettingStarted.csproj" />
