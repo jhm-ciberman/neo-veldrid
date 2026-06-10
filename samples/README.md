@@ -19,12 +19,12 @@ dotnet run --project samples/NeoDemo/NeoDemo.csproj
 |--------|-------------|-------------|
 | **GettingStarted** | Colored quad. Minimal Veldrid usage. | `dotnet run --project samples/GettingStarted/GettingStarted.csproj` |
 | **ImageTint** | Compute shader that tints an image (headless). | `dotnet run --project samples/ImageTint/ImageTint.csproj -- <input.png> <output.png>` |
-| **TexturedCube** | Textured 3D cube with depth buffer. | `dotnet run --project samples/TexturedCube/Desktop/TexturedCube.Desktop.csproj` |
-| **Offscreen** | Render-to-texture using framebuffers. | `dotnet run --project samples/Offscreen/Desktop/Offscreen.Desktop.csproj` |
-| **Instancing** | Instanced drawing with texture arrays. | `dotnet run --project samples/Instancing/Desktop/Instancing.Desktop.csproj` |
-| **ComputeTexture** | Compute shader writing to a texture. | `dotnet run --project samples/ComputeTexture/Desktop/ComputeTexture.Desktop.csproj` |
-| **ComputeParticles** | Compute shader particle simulation. | `dotnet run --project samples/ComputeParticles/Desktop/ComputeParticles.Desktop.csproj` |
-| **AnimatedMesh** | Skeletal animation loaded via Assimp. | `dotnet run --project samples/AnimatedMesh/Desktop/AnimatedMesh.Desktop.csproj` |
+| **TexturedCube** | Textured 3D cube with depth buffer. | `dotnet run --project samples/TexturedCube/TexturedCube.csproj` |
+| **Offscreen** | Render-to-texture using framebuffers. | `dotnet run --project samples/Offscreen/Offscreen.csproj` |
+| **Instancing** | Instanced drawing with texture arrays. | `dotnet run --project samples/Instancing/Instancing.csproj` |
+| **ComputeTexture** | Compute shader writing to a texture. | `dotnet run --project samples/ComputeTexture/ComputeTexture.csproj` |
+| **ComputeParticles** | Compute shader particle simulation. | `dotnet run --project samples/ComputeParticles/ComputeParticles.csproj` |
+| **AnimatedMesh** | Skeletal animation loaded via Assimp. | `dotnet run --project samples/AnimatedMesh/AnimatedMesh.csproj` |
 | **NeoDemo** | Full scene: Sponza atrium, shadow maps, reflections, ImGui overlay. | `dotnet run --project samples/NeoDemo/NeoDemo.csproj` |
 
 ## Support Libraries
