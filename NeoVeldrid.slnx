@@ -12,12 +12,14 @@
         <Project Path="samples/ImageTint/ImageTint.csproj" />
         <Project Path="samples/Instancing/Application/Instancing.csproj" />
         <Project Path="samples/Instancing/Desktop/Instancing.Desktop.csproj" />
-        <Project Path="samples/NeoDemo/NeoDemo.csproj" />
         <Project Path="samples/Offscreen/Application/Offscreen.csproj" />
         <Project Path="samples/Offscreen/Desktop/Offscreen.Desktop.csproj" />
         <Project Path="samples/SampleBase/SampleBase.csproj" />
         <Project Path="samples/TexturedCube/Application/TexturedCube.csproj" />
         <Project Path="samples/TexturedCube/Desktop/TexturedCube.Desktop.csproj" />
+    </Folder>
+    <Folder Name="/samples/demos/">
+        <Project Path="samples/demos/NeoDemo/NeoDemo.csproj" />
     </Folder>
     <Folder Name="/src/">
         <Project Path="src/NeoVeldrid.ImageSharp/NeoVeldrid.ImageSharp.csproj" />

@@ -14,7 +14,7 @@
       "samples\\ImageTint\\ImageTint.csproj",
       "samples\\Instancing\\Application\\Instancing.csproj",
       "samples\\Instancing\\Desktop\\Instancing.Desktop.csproj",
-      "samples\\NeoDemo\\NeoDemo.csproj",
+      "samples\\demos\\NeoDemo\\NeoDemo.csproj",
       "samples\\Offscreen\\Application\\Offscreen.csproj",
       "samples\\Offscreen\\Desktop\\Offscreen.Desktop.csproj",
       "samples\\SampleBase\\SampleBase.csproj",
