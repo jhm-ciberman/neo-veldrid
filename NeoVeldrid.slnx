@@ -8,8 +8,7 @@
         <Project Path="samples/ComputeTexture/ComputeTexture.csproj" />
         <Project Path="samples/GettingStarted/GettingStarted.csproj" />
         <Project Path="samples/ImageTint/ImageTint.csproj" />
-        <Project Path="samples/Instancing/Application/Instancing.csproj" />
-        <Project Path="samples/Instancing/Desktop/Instancing.Desktop.csproj" />
+        <Project Path="samples/Instancing/Instancing.csproj" />
         <Project Path="samples/Offscreen/Application/Offscreen.csproj" />
         <Project Path="samples/Offscreen/Desktop/Offscreen.Desktop.csproj" />
         <Project Path="samples/SampleBase/SampleBase.csproj" />
