@@ -4,16 +4,9 @@ Sample applications demonstrating Veldrid's graphics API. On Windows, samples de
 
 ## Running
 
-```bash
-# From the repo root:
-dotnet run --project samples/<category>/<SampleName>/Desktop/<SampleName>.Desktop.csproj
+## Technique Samples (simplest to most complex)
 
-# Standalone samples (no Desktop subfolder):
-dotnet run --project samples/techniques/GettingStarted/GettingStarted.csproj
-dotnet run --project samples/demos/NeoDemo/NeoDemo.csproj
-```
-
-## Samples (simplest to most complex)
+Simple, focused samples demonstrating specific techniques or API usage patterns. These are a good starting point for learning how to use Veldrid.
 
 | Sample | Description | Run command |
 |--------|-------------|-------------|
@@ -25,6 +18,13 @@ dotnet run --project samples/demos/NeoDemo/NeoDemo.csproj
 | **ComputeTexture** | Compute shader writing to a texture. | `dotnet run --project samples/techniques/ComputeTexture/ComputeTexture.csproj` |
 | **ComputeParticles** | Compute shader particle simulation. | `dotnet run --project samples/techniques/ComputeParticles/ComputeParticles.csproj` |
 | **AnimatedMesh** | Skeletal animation loaded via Assimp. | `dotnet run --project samples/techniques/AnimatedMesh/AnimatedMesh.csproj` |
+
+## Full Demos
+
+More complex, full-featured applications demonstrating multiple techniques and a complete rendering pipeline. These are useful for seeing how different techniques can be combined in a real application.
+
+| Demo | Description | Run command |
+|-----|-------------|-------------|
 | **NeoDemo** | Full scene: Sponza atrium, shadow maps, reflections, ImGui overlay. | `dotnet run --project samples/demos/NeoDemo/NeoDemo.csproj` |
 
 ## Support Libraries
