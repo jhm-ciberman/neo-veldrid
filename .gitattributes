@@ -1,0 +1,52 @@
+# Normalize line endings: store text as LF in the repo, check out native.
+# Explicit rules below override this where a fixed ending is required.
+* text=auto
+
+# C# and .NET project files.
+*.cs        text diff=csharp
+*.csproj    text
+*.props     text
+*.targets   text
+*.slnf      text
+*.slnx      text
+*.config    text
+*.manifest  text
+
+# Shaders and graphics source.
+*.glsl      text
+*.glsles    text
+*.vert      text
+*.frag      text
+*.comp      text
+*.hlsl      text
+
+# 3D model sources (text formats).
+*.obj       text
+*.mtl       text
+*.dae       text
+
+# Docs, data and web assets.
+*.md            text
+*.json          text
+*.yml           text
+*.yaml          text
+*.txt           text
+*.css           text
+*.js            text
+*.svg           text
+*.webmanifest   text
+*.tmpl          text
+*.partial       text
+
+# Scripts: shells must stay LF, Windows scripts stay CRLF.
+*.sh    text eol=lf
+*.ps1   text eol=crlf
+*.bat   text eol=crlf
+
+# Binary assets: no EOL conversion, no text diff.
+*.png   binary
+*.webp  binary
+*.ico   binary
+*.ktx   binary
+*.spv   binary
+*.bytes binary
