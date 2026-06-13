@@ -96,7 +96,7 @@ namespace NeoVeldrid.OpenGL
         /// <summary>
         /// Returns a value indicating whether the given extension is supported.
         /// </summary>
-        /// <param name="extension">The name of the extensions. For example, "</param>
+        /// <param name="extension">The name of the extension.</param>
         /// <returns></returns>
         public bool IsExtensionSupported(string extension)
         {

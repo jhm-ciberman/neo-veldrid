@@ -69,18 +69,18 @@
         BC2_UNorm,
         /// <summary>
         /// A 32-bit packed format. The 10-bit R component occupies bits 0..9, the 10-bit G component occupies bits 10..19,
-        /// the 10-bit A component occupies 20..29, and the 2-bit A component occupies bits 30..31. Each value is an unsigned,
+        /// the 10-bit B component occupies 20..29, and the 2-bit A component occupies bits 30..31. Each value is an unsigned,
         /// normalized integer.
         /// </summary>
         R10_G10_B10_A2_UNorm,
         /// <summary>
         /// A 32-bit packed format. The 10-bit R component occupies bits 0..9, the 10-bit G component occupies bits 10..19,
-        /// the 10-bit A component occupies 20..29, and the 2-bit A component occupies bits 30..31. Each value is an unsigned
+        /// the 10-bit B component occupies 20..29, and the 2-bit A component occupies bits 30..31. Each value is an unsigned
         /// integer.
         /// </summary>
         R10_G10_B10_A2_UInt,
         /// <summary>
-        /// A 32-bit packed format. The 11-bit R componnent occupies bits 0..10, the 11-bit G component occupies bits 11..21,
+        /// A 32-bit packed format. The 11-bit R component occupies bits 0..10, the 11-bit G component occupies bits 11..21,
         /// and the 10-bit B component occupies bits 22..31. Each value is an unsigned floating point value.
         /// </summary>
         R11_G11_B10_Float,

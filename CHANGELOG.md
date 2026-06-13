@@ -17,6 +17,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 - Removed dead Android and iOS code paths left over from the Silk.NET port.
 - Simplified and improved the `samples` directory structure in the repository to make it easier to read and navigate. 
+- Fixed spelling issues across XML-docs.
 
 ## [1.1.0] - 2026-05-25
 

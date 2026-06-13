@@ -58,7 +58,7 @@ namespace NeoVeldrid
                         if (!attachmentState.Equals(description.BlendState.AttachmentStates[i]))
                         {
                             throw new NeoVeldridException(
-                                $"If GraphcsDeviceFeatures.IndependentBlend is false, then all members of BlendState.AttachmentStates must be equal.");
+                                $"If GraphicsDeviceFeatures.IndependentBlend is false, then all members of BlendState.AttachmentStates must be equal.");
                         }
                     }
                 }
@@ -103,14 +103,14 @@ namespace NeoVeldrid
         /// <summary>
         /// Creates a new compute <see cref="Pipeline"/> object.
         /// </summary>
-        /// <param name="description">The desirede properties of the created object.</param>
+        /// <param name="description">The desired properties of the created object.</param>
         /// <returns>A new <see cref="Pipeline"/> which, when bound to a CommandList, is used to dispatch compute commands.</returns>
         public Pipeline CreateComputePipeline(ComputePipelineDescription description) => CreateComputePipeline(ref description);
 
         /// <summary>
         /// Creates a new compute <see cref="Pipeline"/> object.
         /// </summary>
-        /// <param name="description">The desirede properties of the created object.</param>
+        /// <param name="description">The desired properties of the created object.</param>
         /// <returns>A new <see cref="Pipeline"/> which, when bound to a CommandList, is used to dispatch compute commands.</returns>
         public abstract Pipeline CreateComputePipeline(ref ComputePipelineDescription description);
 
@@ -148,7 +148,7 @@ namespace NeoVeldrid
             if ((description.Format == PixelFormat.D24_UNorm_S8_UInt || description.Format == PixelFormat.D32_Float_S8_UInt)
                 && (description.Usage & TextureUsage.DepthStencil) == 0)
             {
-                throw new NeoVeldridException("The givel PixelFormat can only be used in a Texture with DepthStencil usage.");
+                throw new NeoVeldridException("The given PixelFormat can only be used in a Texture with DepthStencil usage.");
             }
             if ((description.Type == TextureType.Texture1D || description.Type == TextureType.Texture3D)
                 && description.SampleCount != TextureSampleCount.Count1)

@@ -50,7 +50,7 @@ namespace NeoVeldrid
         public TextureSampleCount SampleCount;
 
         /// <summary>
-        /// Contsructs a new TextureDescription describing a non-multisampled <see cref="Texture"/>.
+        /// Constructs a new TextureDescription describing a non-multisampled <see cref="Texture"/>.
         /// </summary>
         /// <param name="width">The total width, in texels.</param>
         /// <param name="height">The total height, in texels.</param>
@@ -86,7 +86,7 @@ namespace NeoVeldrid
         }
 
         /// <summary>
-        /// Contsructs a new TextureDescription.
+        /// Constructs a new TextureDescription.
         /// </summary>
         /// <param name="width">The total width, in texels.</param>
         /// <param name="height">The total height, in texels.</param>
@@ -264,7 +264,7 @@ namespace NeoVeldrid
         /// Element-wise equality.
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
-        /// <returns>True if all elements are equal; false otherswise.</returns>
+        /// <returns>True if all elements are equal; false otherwise.</returns>
         public readonly bool Equals(TextureDescription other)
         {
             return Width.Equals(other.Width)

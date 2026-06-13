@@ -54,7 +54,7 @@ namespace NeoVeldrid
         /// <param name="primitiveTopology">The <see cref="PrimitiveTopology"/> to use, which controls how a series of input
         /// vertices is interpreted by the <see cref="Pipeline"/>.</param>
         /// <param name="shaderSet">A description of the shader set to be used.</param>
-        /// <param name="resourceLayouts">An array of <see cref="ResourceLayout"/>, which controls the layout of shader resoruces
+        /// <param name="resourceLayouts">An array of <see cref="ResourceLayout"/>, which controls the layout of shader resources
         /// in the <see cref="Pipeline"/>.</param>
         /// <param name="outputs">A description of the output attachments used by the <see cref="Pipeline"/>.</param>
         public GraphicsPipelineDescription(
@@ -88,7 +88,7 @@ namespace NeoVeldrid
         /// <param name="primitiveTopology">The <see cref="PrimitiveTopology"/> to use, which controls how a series of input
         /// vertices is interpreted by the <see cref="Pipeline"/>.</param>
         /// <param name="shaderSet">A description of the shader set to be used.</param>
-        /// <param name="resourceLayout">A <see cref="ResourceLayout"/>, which controls the layout of shader resoruces in the
+        /// <param name="resourceLayout">A <see cref="ResourceLayout"/>, which controls the layout of shader resources in the
         /// <see cref="Pipeline"/>.</param>
         /// <param name="outputs">A description of the output attachments used by the <see cref="Pipeline"/>.</param>
         public GraphicsPipelineDescription(
@@ -122,7 +122,7 @@ namespace NeoVeldrid
         /// <param name="primitiveTopology">The <see cref="PrimitiveTopology"/> to use, which controls how a series of input
         /// vertices is interpreted by the <see cref="Pipeline"/>.</param>
         /// <param name="shaderSet">A description of the shader set to be used.</param>
-        /// <param name="resourceLayouts">An array of <see cref="ResourceLayout"/>, which controls the layout of shader resoruces
+        /// <param name="resourceLayouts">An array of <see cref="ResourceLayout"/>, which controls the layout of shader resources
         /// in the <see cref="Pipeline"/>.</param>
         /// <param name="outputs">A description of the output attachments used by the <see cref="Pipeline"/>.</param>
         /// <param name="resourceBindingModel">The <see cref="ResourceBindingModel"/> to use for this pipeline. Overrides
@@ -151,7 +151,7 @@ namespace NeoVeldrid
         /// Element-wise equality.
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
-        /// <returns>True if all elements and all array elements are equal; false otherswise.</returns>
+        /// <returns>True if all elements and all array elements are equal; false otherwise.</returns>
         public readonly bool Equals(GraphicsPipelineDescription other)
         {
             return BlendState.Equals(other.BlendState)

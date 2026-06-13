@@ -47,7 +47,7 @@ namespace NeoVeldrid
         /// Element-wise equality.
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
-        /// <returns>True if all elements are equal; false otherswise.</returns>
+        /// <returns>True if all elements are equal; false otherwise.</returns>
         public readonly bool Equals(StencilBehaviorDescription other)
         {
             return Fail == other.Fail && Pass == other.Pass && DepthFail == other.DepthFail && Comparison == other.Comparison;

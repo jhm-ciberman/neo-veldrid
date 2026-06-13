@@ -103,7 +103,7 @@ namespace NeoVeldrid
         /// Element-wise equality.
         /// </summary>
         /// <param name="other">The instance to compare to.</param>
-        /// <returns>True if all elements are equal; false otherswise.</returns>
+        /// <returns>True if all elements are equal; false otherwise.</returns>
         public readonly bool Equals(SpecializationConstant other)
         {
             return ID.Equals(other.ID) && Type == other.Type && Data.Equals(other.Data);
