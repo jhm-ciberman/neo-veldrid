@@ -26,6 +26,7 @@ namespace NeoVeldrid.D3D11
         private readonly D3D11Swapchain _mainSwapchain;
         private readonly bool _supportsConcurrentResources;
         private readonly bool _supportsCommandLists;
+        private readonly bool _debugActive;
         private readonly object _immediateContextLock = new object();
         private readonly BackendInfoD3D11 _d3d11Info;
 
@@ -52,13 +53,13 @@ namespace NeoVeldrid.D3D11
 
         public override bool IsClipSpaceYInverted => false;
 
+        public override bool IsDebugActive => _debugActive;
+
         public override ResourceFactory ResourceFactory => _d3d11ResourceFactory;
 
         public ID3D11Device* Device => _device;
 
         public IDXGIAdapter* Adapter => _dxgiAdapter;
-
-        public bool IsDebugEnabled { get; }
 
         public bool SupportsConcurrentResources => _supportsConcurrentResources;
 
@@ -84,6 +85,7 @@ namespace NeoVeldrid.D3D11
 #pragma warning restore CS0618
 
             var flags = (CreateDeviceFlag)options.DeviceCreationFlags;
+            IsDebugRequested = (flags & CreateDeviceFlag.Debug) != 0;
 #if DEBUG
             flags |= CreateDeviceFlag.Debug;
 #endif
@@ -205,7 +207,7 @@ namespace NeoVeldrid.D3D11
             _supportsConcurrentResources = threadingData.DriverConcurrentCreates;
             _supportsCommandLists = threadingData.DriverCommandLists;
 
-            IsDebugEnabled = (flags & CreateDeviceFlag.Debug) != 0;
+            _debugActive = (flags & CreateDeviceFlag.Debug) != 0;
 
             // Check double precision support
             FeatureDataDoubles doublesData;
@@ -748,7 +750,7 @@ namespace NeoVeldrid.D3D11
             _mainSwapchain?.Dispose();
             _immediateContext.Dispose();
 
-            if (IsDebugEnabled)
+            if (_debugActive)
             {
                 // Release our device reference. If refCount > 0, leaked objects are keeping it alive.
                 ID3D11Device* pRawDevice = _device.Handle;

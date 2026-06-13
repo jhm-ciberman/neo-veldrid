@@ -58,6 +58,20 @@ namespace NeoVeldrid
         public abstract bool IsClipSpaceYInverted { get; }
 
         /// <summary>
+        /// Gets a value indicating whether debug mode was requested when this device was created, as specified by
+        /// <see cref="GraphicsDeviceOptions.Debug"/>. A true value does not guarantee that debugging is actually
+        /// active; see <see cref="IsDebugActive"/> for that.
+        /// </summary>
+        public bool IsDebugRequested { get; protected set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the graphics API's debug or validation facilities are actually active for
+        /// this device. Unlike <see cref="IsDebugRequested"/>, this requires the backend, driver, and any needed SDK or
+        /// validation layers to support and enable debugging, so it can be false even when debug mode was requested.
+        /// </summary>
+        public abstract bool IsDebugActive { get; }
+
+        /// <summary>
         /// Gets the <see cref="ResourceFactory"/> controlled by this instance.
         /// </summary>
         public abstract ResourceFactory ResourceFactory { get; }

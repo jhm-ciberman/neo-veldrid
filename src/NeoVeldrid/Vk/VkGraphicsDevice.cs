@@ -46,6 +46,7 @@ namespace NeoVeldrid.Vk
         private DebugReportCallbackEXT _debugCallbackHandle;
         private PfnDebugReportCallbackEXT _debugCallbackFunc;
         private bool _debugMarkerEnabled;
+        private bool _debugActive;
         private vkDebugMarkerSetObjectNameEXT_t _setObjectNameDelegate;
         private vkCmdDebugMarkerBeginEXT_t _markerBegin;
         private vkCmdDebugMarkerEndEXT_t _markerEnd;
@@ -96,6 +97,8 @@ namespace NeoVeldrid.Vk
 
         public override bool IsClipSpaceYInverted => !_standardClipYDirection;
 
+        public override bool IsDebugActive => _debugActive;
+
         public override Swapchain MainSwapchain => _mainSwapchain;
 
         public override GraphicsDeviceFeatures Features { get; }
@@ -139,6 +142,7 @@ namespace NeoVeldrid.Vk
         public VkGraphicsDevice(GraphicsDeviceOptions options, SwapchainDescription? scDesc, VulkanDeviceOptions vkOptions)
         {
             CreateInstance(options.Debug, vkOptions);
+            IsDebugRequested = options.Debug;
 
             SurfaceKHR surface = default;
             if (scDesc != null)
@@ -570,6 +574,7 @@ namespace NeoVeldrid.Vk
             {
                 if (availableInstanceExtensions.Contains(CommonStrings.VK_EXT_DEBUG_REPORT_EXTENSION_NAME))
                 {
+                    _debugActive = true;
                     debugReportExtensionAvailable = true;
                     instanceExtensions[instanceExtensionCount++] = CommonStrings.VK_EXT_DEBUG_REPORT_EXTENSION_NAME;
                 }

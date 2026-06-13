@@ -42,6 +42,7 @@ namespace NeoVeldrid.OpenGL
         public GL GL { get; private set; }
         private OpenGLExtensions _extensions;
         private bool _isDepthRangeZeroToOne;
+        private bool _debugActive;
 
         // EXT_debug_marker (GLES extension for GPU profiling tools like Xcode GPU debugger).
         internal ExtDebugMarker _extDebugMarker;
@@ -105,6 +106,8 @@ namespace NeoVeldrid.OpenGL
 
         public override bool IsClipSpaceYInverted => false;
 
+        public override bool IsDebugActive => _debugActive;
+
         public override ResourceFactory ResourceFactory => _resourceFactory;
 
         public OpenGLExtensions Extensions => _extensions;
@@ -150,6 +153,7 @@ namespace NeoVeldrid.OpenGL
             uint height,
             bool loadFunctions)
         {
+            IsDebugRequested = options.Debug;
             _syncToVBlank = options.SyncToVerticalBlank;
             _glContext = platformInfo.OpenGLContextHandle;
             _makeCurrent = platformInfo.MakeCurrent;
@@ -253,7 +257,8 @@ namespace NeoVeldrid.OpenGL
             GL.BindVertexArray(_vao);
             CheckLastError();
 
-            if (options.Debug && (_extensions.KHR_Debug || _extensions.ARB_DebugOutput))
+            _debugActive = options.Debug && (_extensions.KHR_Debug || _extensions.ARB_DebugOutput);
+            if (_debugActive)
             {
                 EnableDebugCallback();
             }

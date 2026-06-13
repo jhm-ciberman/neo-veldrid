@@ -9,6 +9,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+### Added
+
+- [Core] `GraphicsDevice.IsDebugRequested` and `GraphicsDevice.IsDebugActive` properties to query whether debug mode was requested and whether the API's debug or validation facilities are actually active.
+
 ### Removed
 
 - [Core] Mobile-only `SwapchainSource.CreateAndroidSurface`, `SwapchainSource.CreateUIView`, and the `GraphicsDevice.CreateOpenGLES(GraphicsDeviceOptions, SwapchainDescription)` overload. NeoVeldrid targets desktop platforms only.
