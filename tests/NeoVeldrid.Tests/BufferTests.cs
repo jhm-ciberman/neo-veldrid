@@ -180,7 +180,7 @@ namespace NeoVeldrid.Tests
             DeviceBuffer buffer = RF.CreateBuffer(new BufferDescription(1024, BufferUsage.Staging));
             MappedResourceView<int> view = GD.Map<int>(buffer, MapMode.ReadWrite);
             int[] data = Enumerable.Range(0, 256).Select(i => 2 * i).ToArray();
-            Assert.Throws<NeoVeldridException>(() => GD.UpdateBuffer(buffer, 0, data));
+            Assert.Throws<NeoVeldridMappedResourceException>(() => GD.UpdateBuffer(buffer, 0, data));
         }
 
         [Fact]
@@ -207,7 +207,31 @@ namespace NeoVeldrid.Tests
             }
             DeviceBuffer buffer = RF.CreateBuffer(new BufferDescription(1024, BufferUsage.Staging));
             MappedResource map = GD.Map(buffer, MapMode.Read);
-            Assert.Throws<NeoVeldridException>(() => GD.Map(buffer, MapMode.Write));
+            var ex = Assert.Throws<NeoVeldridMappedResourceException>(() => GD.Map(buffer, MapMode.Write));
+            Assert.Same(buffer, ex.Resource);
+            Assert.Equal(0u, ex.Subresource);
+        }
+
+        [Fact]
+        public void BindMappedBuffer_Fails()
+        {
+            // The mapped-buffer pipeline check is OpenGL-only.
+            if (GD.BackendType != GraphicsBackend.OpenGL && GD.BackendType != GraphicsBackend.OpenGLES)
+            {
+                return;
+            }
+            DeviceBuffer buffer = RF.CreateBuffer(new BufferDescription(64, BufferUsage.VertexBuffer | BufferUsage.Dynamic));
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            GD.Map(buffer, MapMode.Write);
+            try
+            {
+                Assert.Throws<NeoVeldridMappedResourceException>(() => cl.SetVertexBuffer(0, buffer));
+            }
+            finally
+            {
+                GD.Unmap(buffer);
+            }
         }
 
         [Fact]

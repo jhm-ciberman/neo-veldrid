@@ -25,6 +25,9 @@ namespace NeoVeldrid.OpenGL
 
         public bool Created { get; private set; }
 
+        // Denormalized here so the check is lock-free in the hot path.
+        internal bool IsMapped { get; set; }
+
         public override bool IsDisposed => _disposeRequested;
 
         public OpenGLBuffer(OpenGLGraphicsDevice gd, uint sizeInBytes, BufferUsage usage)

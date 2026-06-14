@@ -114,6 +114,9 @@ namespace NeoVeldrid.OpenGL
 
         private protected override void SetIndexBufferCore(DeviceBuffer buffer, IndexFormat format, uint offset)
         {
+#if VALIDATE_USAGE
+            OpenGLGraphicsDevice.ThrowIfMapped(buffer);
+#endif
             _currentCommands.SetIndexBuffer(buffer, format, offset);
         }
 
@@ -139,6 +142,9 @@ namespace NeoVeldrid.OpenGL
 
         private protected override void SetVertexBufferCore(uint index, DeviceBuffer buffer, uint offset)
         {
+#if VALIDATE_USAGE
+            OpenGLGraphicsDevice.ThrowIfMapped(buffer);
+#endif
             _currentCommands.SetVertexBuffer(index, buffer, offset);
         }
 

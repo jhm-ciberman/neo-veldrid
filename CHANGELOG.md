@@ -12,6 +12,11 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 ### Added
 
 - [Core] `GraphicsDevice.IsDebugRequested` and `GraphicsDevice.IsDebugActive` properties to query whether debug mode was requested and whether the API's debug or validation facilities are actually active.
+- [Core] `NeoVeldridMappedResourceException` (a `NeoVeldridException` subtype) thrown for mapped-resource errors, carrying the offending `Resource`/`Subresource`, so callers can catch and inspect them specifically.
+
+### Changed
+
+- [OpenGL] Binding a currently-mapped buffer as a vertex or index buffer now throws instead of producing undefined behavior.
 
 ### Removed
 

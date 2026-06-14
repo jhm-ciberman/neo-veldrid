@@ -577,7 +577,7 @@ namespace NeoVeldrid.OpenGL
                 {
                     if (info.Mode != mode)
                     {
-                        throw new NeoVeldridException("The given resource was already mapped with a different MapMode.");
+                        throw NeoVeldridMappedResourceException.ConflictingMode(resource, subresource);
                     }
 
                     info.RefCount += 1;
@@ -594,15 +594,18 @@ namespace NeoVeldrid.OpenGL
             _executionThread.Unmap(resource, subresource);
         }
 
+        internal static void ThrowIfMapped(DeviceBuffer buffer)
+        {
+            OpenGLBuffer glBuffer = Util.AssertSubtype<DeviceBuffer, OpenGLBuffer>(buffer);
+            if (glBuffer.IsMapped)
+            {
+                throw NeoVeldridMappedResourceException.Mapped(buffer, 0);
+            }
+        }
+
         private protected override void UpdateBufferCore(DeviceBuffer buffer, uint bufferOffsetInBytes, IntPtr source, uint sizeInBytes)
         {
-            lock (_mappedResourceLock)
-            {
-                if (_mappedResources.ContainsKey(new MappedResourceCacheKey(buffer, 0)))
-                {
-                    throw new NeoVeldridException("Cannot call UpdateBuffer on a currently-mapped Buffer.");
-                }
-            }
+            ThrowIfMapped(buffer);
             StagingBlock sb = _stagingMemoryPool.Stage(source, sizeInBytes);
             _executionThread.UpdateBuffer(buffer, bufferOffsetInBytes, sb);
         }
@@ -1093,6 +1096,7 @@ namespace NeoVeldrid.OpenGL
                             info.RefCount = 1;
                             info.Mode = mode;
                             _gd._mappedResources.Add(key, info);
+                            buffer.IsMapped = true;
                             result->Data = (IntPtr)mappedPtr;
                             result->DataSize = buffer.SizeInBytes;
                             result->RowPitch = 0;
@@ -1331,6 +1335,8 @@ namespace NeoVeldrid.OpenGL
                                 _gd.GL.UnmapBuffer(BufferTargetARB.CopyWriteBuffer);
                                 CheckLastError();
                             }
+
+                            buffer.IsMapped = false;
                         }
                         else
                         {
@@ -1394,7 +1400,7 @@ namespace NeoVeldrid.OpenGL
                 mre.Wait();
                 if (!mrp.Succeeded)
                 {
-                    throw new NeoVeldridException("Failed to map OpenGL resource.");
+                    throw NeoVeldridMappedResourceException.MapFailed(resource, subresource);
                 }
 
                 mre.Dispose();

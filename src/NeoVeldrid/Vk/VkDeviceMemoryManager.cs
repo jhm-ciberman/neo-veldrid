@@ -474,11 +474,10 @@ namespace NeoVeldrid.Vk
             }
         }
 
-        internal IntPtr Map(VkMemoryBlock memoryBlock)
+        internal IntPtr Map(VkMemoryBlock memoryBlock, out Result result)
         {
             void* ret;
-            Result result = _vk.MapMemory(_device, memoryBlock.DeviceMemory, memoryBlock.Offset, memoryBlock.Size, 0, &ret);
-            CheckResult(result);
+            result = _vk.MapMemory(_device, memoryBlock.DeviceMemory, memoryBlock.Offset, memoryBlock.Size, 0, &ret);
             return (IntPtr)ret;
         }
     }

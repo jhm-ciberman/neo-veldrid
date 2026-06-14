@@ -1026,7 +1026,12 @@ namespace NeoVeldrid.Vk
                 }
                 else
                 {
-                    mappedPtr = _memoryManager.Map(memoryBlock);
+                    mappedPtr = _memoryManager.Map(memoryBlock, out Result result);
+                    if (result == Result.ErrorMemoryMapFailed)
+                    {
+                        throw NeoVeldridMappedResourceException.MapFailed(resource, subresource);
+                    }
+                    CheckResult(result);
                 }
             }
 

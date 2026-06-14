@@ -391,7 +391,7 @@ namespace NeoVeldrid.D3D11
                 {
                     if (info.Mode != mode)
                     {
-                        throw new NeoVeldridException("The given resource was already mapped with a different MapMode.");
+                        throw NeoVeldridMappedResourceException.ConflictingMode(resource, subresource);
                     }
 
                     info.RefCount += 1;
@@ -460,7 +460,7 @@ namespace NeoVeldrid.D3D11
             {
                 if (!_mappedResources.TryGetValue(key, out MappedResourceInfo info))
                 {
-                    throw new NeoVeldridException($"The given resource ({resource}) is not mapped.");
+                    throw NeoVeldridMappedResourceException.NotMapped(resource, subresource);
                 }
 
                 info.RefCount -= 1;
