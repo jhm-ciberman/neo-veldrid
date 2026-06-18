@@ -5,6 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Include="$(RootDir)\samples\assets\fonts\Jupiteroid\JupiteroidRegular.ttf"
+                 CopyToOutputDirectory="Always" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <ProjectReference Include="$(RootDir)\src\NeoVeldrid.SPIRV\NeoVeldrid.SPIRV.csproj" />
         <ProjectReference Include="$(RootDir)\src\NeoVeldrid.StartupUtilities\NeoVeldrid.StartupUtilities.csproj" />
         <ProjectReference Include="$(RootDir)\src\NeoVeldrid\NeoVeldrid.csproj" />
