@@ -36,6 +36,11 @@
         <PackageVersion Include="Silk.NET.Assimp" Version="$(SilkNetVersion)" />
     </ItemGroup>
 
+    <!-- FontStashSharp Central Versions -->
+    <ItemGroup>
+        <PackageVersion Include="FontStashSharp.PlatformAgnostic" Version="1.5.6" />
+    </ItemGroup>
+    
     <!-- ImageSharp Central Versions -->
     <ItemGroup>
         <PackageVersion Include="SixLabors.ImageSharp" Version="$(ImageSharpVersion)" />

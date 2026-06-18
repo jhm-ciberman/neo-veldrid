@@ -7,6 +7,9 @@
     <Folder Name="/samples/demos/">
         <Project Path="samples/demos/NeoDemo/NeoDemo.csproj" />
     </Folder>
+    <Folder Name="/samples/integrations/">
+        <Project Path="samples/integrations/FontStashText/FontStashText.csproj" />
+    </Folder>
     <Folder Name="/samples/techniques/">
         <Project Path="samples/techniques/AnimatedMesh/AnimatedMesh.csproj" />
         <Project Path="samples/techniques/ComputeParticles/ComputeParticles.csproj" />

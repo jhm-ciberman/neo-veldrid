@@ -6,6 +6,7 @@
       "samples\\common\\AssetPrimitives\\AssetPrimitives.csproj",
       "samples\\common\\AssetProcessor\\AssetProcessor.csproj",
 	  "samples\\demos\\NeoDemo\\NeoDemo.csproj",
+	  "samples\\integrations\\FontStashText\\FontStashText.csproj",
 	  "samples\\techniques\\AnimatedMesh\\AnimatedMesh.csproj",
       "samples\\techniques\\ComputeParticles\\ComputeParticles.csproj",
       "samples\\techniques\\ComputeTexture\\ComputeTexture.csproj",
