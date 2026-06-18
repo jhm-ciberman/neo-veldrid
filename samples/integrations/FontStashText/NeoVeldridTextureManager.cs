@@ -6,9 +6,9 @@ namespace FontStashText;
 
 public sealed class NeoVeldridTextureManager : ITexture2DManager
 {
-    private readonly GraphicsDevice _gd;
+    private readonly GraphicsDevice _graphicsDevice;
 
-    public NeoVeldridTextureManager(GraphicsDevice gd) => _gd = gd;
+    public NeoVeldridTextureManager(GraphicsDevice graphicsDevice) => _graphicsDevice = graphicsDevice;
 
     public object CreateTexture(int width, int height)
     {
@@ -19,7 +19,7 @@ public sealed class NeoVeldridTextureManager : ITexture2DManager
             1,
             PixelFormat.R8_G8_B8_A8_UNorm,
             TextureUsage.Sampled);
-        return _gd.ResourceFactory.CreateTexture(desc);
+        return _graphicsDevice.ResourceFactory.CreateTexture(desc);
     }
     public System.Drawing.Point GetTextureSize(object texture)
     {
@@ -33,7 +33,7 @@ public sealed class NeoVeldridTextureManager : ITexture2DManager
         {
             fixed (byte* pData = data)
             {
-                _gd.UpdateTexture(
+                _graphicsDevice.UpdateTexture(
                     tex,
                     (IntPtr)pData,
                     (uint)data.Length,
