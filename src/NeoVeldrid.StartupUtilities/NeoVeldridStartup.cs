@@ -17,7 +17,7 @@ namespace NeoVeldrid.StartupUtilities
             => CreateWindowAndGraphicsDevice(
                 windowCI,
                 new GraphicsDeviceOptions(),
-                GetPlatformDefaultBackend(),
+                GraphicsDevice.GetPreferredBackend(),
                 out window,
                 out gd);
 
@@ -26,26 +26,29 @@ namespace NeoVeldrid.StartupUtilities
             GraphicsDeviceOptions deviceOptions,
             out Sdl2Window window,
             out GraphicsDevice gd)
-            => CreateWindowAndGraphicsDevice(windowCI, deviceOptions, GetPlatformDefaultBackend(), out window, out gd);
+            => CreateWindowAndGraphicsDevice(windowCI, deviceOptions, GraphicsDevice.GetPreferredBackend(), out window, out gd);
 
         public static void CreateWindowAndGraphicsDevice(
             WindowCreateInfo windowCI,
             GraphicsDeviceOptions deviceOptions,
-            GraphicsBackend preferredBackend,
+            GraphicsBackend backend,
             out Sdl2Window window,
             out GraphicsDevice gd)
         {
+            if (backend == GraphicsBackend.Preferred)
+                backend = GraphicsDevice.GetPreferredBackend();
+
             Sdl.Init(Silk.NET.SDL.Sdl.InitVideo);
 
 #if !EXCLUDE_OPENGL_BACKEND
-            if (preferredBackend == GraphicsBackend.OpenGL || preferredBackend == GraphicsBackend.OpenGLES)
+            if (backend == GraphicsBackend.OpenGL || backend == GraphicsBackend.OpenGLES)
             {
-                SetSDLGLContextAttributes(deviceOptions, preferredBackend);
+                SetSDLGLContextAttributes(deviceOptions, backend);
             }
 #endif
 
             window = CreateWindow(ref windowCI);
-            gd = CreateGraphicsDevice(window, deviceOptions, preferredBackend);
+            gd = CreateGraphicsDevice(window, deviceOptions, backend);
         }
 
         public static Sdl2Window CreateWindow(WindowCreateInfo windowCI) => CreateWindow(ref windowCI);
@@ -93,17 +96,20 @@ namespace NeoVeldrid.StartupUtilities
         }
 
         public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window)
-            => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), GetPlatformDefaultBackend());
+            => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), GraphicsDevice.GetPreferredBackend());
         public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsDeviceOptions options)
-            => CreateGraphicsDevice(window, options, GetPlatformDefaultBackend());
-        public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsBackend preferredBackend)
-            => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), preferredBackend);
+            => CreateGraphicsDevice(window, options, GraphicsDevice.GetPreferredBackend());
+        public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsBackend backend)
+            => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), backend);
         public static GraphicsDevice CreateGraphicsDevice(
             Sdl2Window window,
             GraphicsDeviceOptions options,
-            GraphicsBackend preferredBackend)
+            GraphicsBackend backend)
         {
-            switch (preferredBackend)
+            if (backend == GraphicsBackend.Preferred)
+                backend = GraphicsDevice.GetPreferredBackend();
+
+            switch (backend)
             {
                 case GraphicsBackend.Direct3D11:
 #if !EXCLUDE_D3D11_BACKEND
@@ -119,18 +125,18 @@ namespace NeoVeldrid.StartupUtilities
 #endif
                 case GraphicsBackend.OpenGL:
 #if !EXCLUDE_OPENGL_BACKEND
-                    return CreateDefaultOpenGLGraphicsDevice(options, window, preferredBackend);
+                    return CreateDefaultOpenGLGraphicsDevice(options, window, backend);
 #else
                     throw new NeoVeldridException("OpenGL support has not been included in this configuration of NeoVeldrid");
 #endif
                 case GraphicsBackend.OpenGLES:
 #if !EXCLUDE_OPENGL_BACKEND
-                    return CreateDefaultOpenGLGraphicsDevice(options, window, preferredBackend);
+                    return CreateDefaultOpenGLGraphicsDevice(options, window, backend);
 #else
                     throw new NeoVeldridException("OpenGL support has not been included in this configuration of NeoVeldrid");
 #endif
                 default:
-                    throw new NeoVeldridException("Invalid GraphicsBackend: " + preferredBackend);
+                    throw new NeoVeldridException("Invalid GraphicsBackend: " + backend);
             }
         }
 
@@ -157,44 +163,6 @@ namespace NeoVeldrid.StartupUtilities
                     return SwapchainSource.CreateNSWindow((nint)sysWmInfo.Info.Cocoa.Window);
                 default:
                     throw new PlatformNotSupportedException("Cannot create a SwapchainSource for " + sysWmInfo.Subsystem + ".");
-            }
-        }
-
-        public static GraphicsBackend GetPlatformDefaultBackend()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-#if !EXCLUDE_D3D11_BACKEND
-                return GraphicsBackend.Direct3D11;
-#elif !EXCLUDE_VULKAN_BACKEND
-                return GraphicsBackend.Vulkan;
-#elif !EXCLUDE_OPENGL_BACKEND
-                return GraphicsBackend.OpenGL;
-#else
-                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
-#endif
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-#if !EXCLUDE_VULKAN_BACKEND
-                return GraphicsBackend.Vulkan; // Via MoltenVK
-#elif !EXCLUDE_OPENGL_BACKEND
-                return GraphicsBackend.OpenGL;
-#else
-                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
-#endif
-            }
-            else
-            {
-#if !EXCLUDE_VULKAN_BACKEND
-                return GraphicsDevice.IsBackendSupported(GraphicsBackend.Vulkan)
-                    ? GraphicsBackend.Vulkan
-                    : GraphicsBackend.OpenGL;
-#elif !EXCLUDE_OPENGL_BACKEND
-                return GraphicsBackend.OpenGL;
-#else
-                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
-#endif
             }
         }
 

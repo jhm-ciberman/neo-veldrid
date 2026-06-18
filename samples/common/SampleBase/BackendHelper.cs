@@ -25,7 +25,7 @@ namespace SampleBase
                         $"Unknown NEOVELDRID_BACKEND value: '{envBackend}'. Use: d3d11, vulkan, opengl, opengles")
                 };
             }
-            return NeoVeldridStartup.GetPlatformDefaultBackend();
+            return GraphicsDevice.GetPreferredBackend();
         }
     }
 }

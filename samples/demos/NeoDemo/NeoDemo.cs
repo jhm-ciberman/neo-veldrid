@@ -60,21 +60,10 @@ namespace NeoVeldrid.NeoDemo
 #if DEBUG
             gdOptions.Debug = true;
 #endif
-            string backendEnv = Environment.GetEnvironmentVariable("NEOVELDRID_BACKEND");
-            GraphicsBackend backend = string.IsNullOrEmpty(backendEnv)
-                ? NeoVeldridStartup.GetPlatformDefaultBackend()
-                : backendEnv.ToLowerInvariant() switch
-                {
-                    "d3d11" or "direct3d11" => GraphicsBackend.Direct3D11,
-                    "vulkan" or "vk" => GraphicsBackend.Vulkan,
-                    "opengl" or "gl" => GraphicsBackend.OpenGL,
-                    "opengles" or "gles" => GraphicsBackend.OpenGLES,
-                    _ => throw new InvalidOperationException($"Unknown NEOVELDRID_BACKEND: '{backendEnv}'")
-                };
             NeoVeldridStartup.CreateWindowAndGraphicsDevice(
                 windowCI,
                 gdOptions,
-                backend,
+                GraphicsDevice.GetPreferredBackend(),
                 out _window,
                 out _gd);
             _window.Resized += () => _windowResized = true;

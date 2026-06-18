@@ -58,18 +58,8 @@ void main()
                 PreferDepthRangeZeroToOne = true
             };
 
-            string backendEnv = Environment.GetEnvironmentVariable("NEOVELDRID_BACKEND");
-            GraphicsBackend backend = string.IsNullOrEmpty(backendEnv)
-                ? NeoVeldridStartup.GetPlatformDefaultBackend()
-                : backendEnv.ToLowerInvariant() switch
-                {
-                    "d3d11" or "direct3d11" => GraphicsBackend.Direct3D11,
-                    "vulkan" or "vk" => GraphicsBackend.Vulkan,
-                    "opengl" or "gl" => GraphicsBackend.OpenGL,
-                    "opengles" or "gles" => GraphicsBackend.OpenGLES,
-                    _ => throw new InvalidOperationException($"Unknown NEOVELDRID_BACKEND: '{backendEnv}'")
-                };
-            NeoVeldridStartup.CreateWindowAndGraphicsDevice(windowCI, options, backend, out Sdl2Window window, out _graphicsDevice);
+            NeoVeldridStartup.CreateWindowAndGraphicsDevice(windowCI, options, GraphicsBackend.Preferred,
+                out Sdl2Window window, out _graphicsDevice);
             window.Title = $"{window.Title} ({_graphicsDevice.BackendType})";
 
             CreateResources();
