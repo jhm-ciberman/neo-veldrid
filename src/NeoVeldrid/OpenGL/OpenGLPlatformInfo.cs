@@ -61,6 +61,16 @@ namespace NeoVeldrid.OpenGL
         public Action<uint, uint> ResizeSwapchain { get; }
 
         /// <summary>
+        /// The initial width of the window managing the OpenGL context.
+        /// </summary>
+        public uint Width { get; }
+
+        /// <summary>
+        /// The initial height of the window managing the OpenGL context.
+        /// </summary>
+        public uint Height { get; }
+
+        /// <summary>
         /// Constructs a new OpenGLPlatformInfo.
         /// </summary>
         /// <param name="openGLContextHandle">The OpenGL context handle.</param>
@@ -74,6 +84,8 @@ namespace NeoVeldrid.OpenGL
         /// context.</param>
         /// <param name="setSyncToVerticalBlank">A delegate which can be used to set the synchronization behavior of the OpenGL
         /// context.</param>
+        /// <param name="width">The initial width of the window managing the OpenGL context.</param>
+        /// <param name="height">The initial height of the window managing the OpenGL context.</param>
         public OpenGLPlatformInfo(
             IntPtr openGLContextHandle,
             Func<string, IntPtr> getProcAddress,
@@ -82,7 +94,9 @@ namespace NeoVeldrid.OpenGL
             Action clearCurrentContext,
             Action<IntPtr> deleteContext,
             Action swapBuffers,
-            Action<bool> setSyncToVerticalBlank)
+            Action<bool> setSyncToVerticalBlank,
+            uint width = 0,
+            uint height = 0)
         {
             OpenGLContextHandle = openGLContextHandle;
             GetProcAddress = getProcAddress;
@@ -92,6 +106,8 @@ namespace NeoVeldrid.OpenGL
             DeleteContext = deleteContext;
             SwapBuffers = swapBuffers;
             SetSyncToVerticalBlank = setSyncToVerticalBlank;
+            Width = width;
+            Height = height;
         }
 
         /// <summary>
@@ -112,6 +128,8 @@ namespace NeoVeldrid.OpenGL
         /// application Swapchain.</param>
         /// <param name="resizeSwapchain">A delegate which is invoked when the main Swapchain is resized. This may be null,
         /// in which case no special action is taken when the Swapchain is resized.</param>
+        /// <param name="width">The initial width of the window managing the OpenGL context.</param>
+        /// <param name="height">The initial height of the window managing the OpenGL context.</param>
         public OpenGLPlatformInfo(
             IntPtr openGLContextHandle,
             Func<string, IntPtr> getProcAddress,
@@ -122,7 +140,9 @@ namespace NeoVeldrid.OpenGL
             Action swapBuffers,
             Action<bool> setSyncToVerticalBlank,
             Action setSwapchainFramebuffer,
-            Action<uint, uint> resizeSwapchain)
+            Action<uint, uint> resizeSwapchain,
+            uint width = 0,
+            uint height = 0)
         {
             OpenGLContextHandle = openGLContextHandle;
             GetProcAddress = getProcAddress;
@@ -134,6 +154,8 @@ namespace NeoVeldrid.OpenGL
             SetSyncToVerticalBlank = setSyncToVerticalBlank;
             SetSwapchainFramebuffer = setSwapchainFramebuffer;
             ResizeSwapchain = resizeSwapchain;
+            Width = width;
+            Height = height;
         }
     }
 }

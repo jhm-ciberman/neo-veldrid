@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -998,6 +998,90 @@ namespace NeoVeldrid
             }
         }
 
+        /// <summary>
+        /// Retrieves the <see cref="GraphicsBackend"/> that is preferred on the executing platform.
+        /// If the environment variable NEOVELDRID_BACKEND is set, the <see cref="GraphicsBackend"/>
+        /// specified in that variable will be used.
+        /// </summary>
+        /// <returns>The <see cref="GraphicsBackend"/> that is preferred on the executing platform.</returns>
+        public static GraphicsBackend GetPreferredBackend()
+        {
+            string envBackend = Environment.GetEnvironmentVariable("NEOVELDRID_BACKEND");
+            if (!string.IsNullOrEmpty(envBackend))
+            {
+                return envBackend.ToLowerInvariant() switch
+                {
+                    "d3d11" or "direct3d11" => GraphicsBackend.Direct3D11,
+                    "vulkan" or "vk" => GraphicsBackend.Vulkan,
+                    "opengl" or "gl" => GraphicsBackend.OpenGL,
+                    "opengles" or "gles" => GraphicsBackend.OpenGLES,
+                    _ => throw new InvalidOperationException(
+                        $"Unknown NEOVELDRID_BACKEND value: '{envBackend}'. Use: d3d11, vulkan, opengl, opengles")
+                };
+            }
+            else
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+#if !EXCLUDE_D3D11_BACKEND
+                    return GraphicsBackend.Direct3D11;
+#elif !EXCLUDE_VULKAN_BACKEND
+                return GraphicsBackend.Vulkan;
+#elif !EXCLUDE_OPENGL_BACKEND
+                return GraphicsBackend.OpenGL;
+#else
+                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
+#endif
+                }
+
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+#if !EXCLUDE_VULKAN_BACKEND
+                    return GraphicsBackend.Vulkan; // Via MoltenVK
+#elif !EXCLUDE_OPENGL_BACKEND
+                return GraphicsBackend.OpenGL;
+#else
+                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
+#endif
+                }
+
+                else
+                {
+#if !EXCLUDE_VULKAN_BACKEND
+                    return GraphicsDevice.IsBackendSupported(GraphicsBackend.Vulkan)
+                        ? GraphicsBackend.Vulkan
+                        : GraphicsBackend.OpenGL;
+#elif !EXCLUDE_OPENGL_BACKEND
+                return GraphicsBackend.OpenGL;
+#else
+                throw new NeoVeldridException("No graphics backend is available. Enable at least one backend.");
+#endif
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> using the specified <see cref="GraphicsBackend"/>.
+        /// </summary>
+        /// <param name="options">Describes several common properties of the GraphicsDevice.</param>
+        /// <param name="backend">The <see cref="GraphicsBackend"/> that should be targeted during
+        /// <see cref="GraphicsDevice"/> creation.</param>
+        /// <returns>A new <see cref="GraphicsDevice"/> using the specified <see cref="GraphicsBackend"/>.</returns>
+        public static GraphicsDevice Create(GraphicsDeviceOptions options, GraphicsBackend backend = GraphicsBackend.Preferred)
+        {
+            if (backend == GraphicsBackend.Preferred)
+                backend = GetPreferredBackend();
+
+            if (backend == GraphicsBackend.Direct3D11)
+                return CreateD3D11(options);
+            else if (backend == GraphicsBackend.Vulkan)
+                return CreateVulkan(options);
+            else
+                return CreateOpenGL(options);
+
+            throw new NeoVeldridException("An unknown exception has occurred during graphics device creation!");
+        }
+
 #if !EXCLUDE_D3D11_BACKEND
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> using Direct3D 11.
@@ -1134,6 +1218,34 @@ namespace NeoVeldrid
 #endif
 
 #if !EXCLUDE_OPENGL_BACKEND
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> using OpenGL or OpenGL ES, with a main Swapchain.
+        /// </summary>
+        /// <param name="options">Describes several common properties of the GraphicsDevice.</param>
+        /// <returns>A new <see cref="GraphicsDevice"/> using the OpenGL or OpenGL ES API.</returns>
+        public static GraphicsDevice CreateOpenGL(GraphicsDeviceOptions options)
+        {
+            if (options.OpenGLPlatformInfo == null)
+                throw new NeoVeldridException("When using CreateOpenGL(GraphicsDeviceOptions), the value of" +
+                    "GraphicsDeviceOptions.OpenGLPlatformInfo cannot be null or empty.");
+
+            return CreateOpenGL(options, options.OpenGLPlatformInfo);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> using OpenGL or OpenGL ES, with a main Swapchain.
+        /// </summary>
+        /// <param name="options">Describes several common properties of the GraphicsDevice.</param>
+        /// <param name="platformInfo">An <see cref="OpenGL.OpenGLPlatformInfo"/> object encapsulating necessary OpenGL context
+        /// information.</param>
+        /// <returns>A new <see cref="GraphicsDevice"/> using the OpenGL or OpenGL ES API.</returns>
+        public static GraphicsDevice CreateOpenGL(
+            GraphicsDeviceOptions options,
+            OpenGL.OpenGLPlatformInfo platformInfo)
+        {
+            return CreateOpenGL(options, platformInfo, platformInfo.Width, platformInfo.Height);
+        }
+
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> using OpenGL or OpenGL ES, with a main Swapchain.
         /// </summary>

@@ -9,41 +9,54 @@
         /// Indicates whether the GraphicsDevice will support debug features, provided they are supported by the host system.
         /// </summary>
         public bool Debug;
+
         /// <summary>
         /// Indicates whether the Graphicsdevice will include a "main" Swapchain. If this value is true, then the GraphicsDevice
         /// must be created with one of the overloads that provides Swapchain source information.
         /// </summary>
         public bool HasMainSwapchain;
+
         /// <summary>
         /// An optional <see cref="PixelFormat"/> to be used for the depth buffer of the swapchain. If this value is null, then
         /// no depth buffer will be present on the swapchain.
         /// </summary>
         public PixelFormat? SwapchainDepthFormat;
+
         /// <summary>
         /// Indicates whether the main Swapchain will be synchronized to the window system's vertical refresh rate.
         /// </summary>
         public bool SyncToVerticalBlank;
+
         /// <summary>
         /// Specifies which model the rendering backend should use for binding resources. This can be overridden per-pipeline
         /// by specifying a value in <see cref="GraphicsPipelineDescription.ResourceBindingModel"/>.
         /// </summary>
         public ResourceBindingModel ResourceBindingModel;
+
         /// <summary>
         /// Indicates whether a 0-to-1 depth range mapping is preferred. For OpenGL, this is not the default, and is not available
         /// on all systems.
         /// </summary>
         public bool PreferDepthRangeZeroToOne;
+
         /// <summary>
         /// Indicates whether a bottom-to-top-increasing clip space Y direction is preferred. For Vulkan, this is not the
         /// default, and may not be available on all systems.
         /// </summary>
         public bool PreferStandardClipSpaceYDirection;
+
         /// <summary>
         /// Indicates whether the main Swapchain should use an sRGB format. This value is only used in cases where the properties
         /// of the main SwapChain are not explicitly specified with a <see cref="SwapchainDescription"/>. If they are, then the
         /// value of <see cref="SwapchainDescription.ColorSrgb"/> will supercede the value specified here.
         /// </summary>
         public bool SwapchainSrgbFormat;
+
+        /// <summary>
+        /// Encapsulates various pieces of OpenGL context, necessary for creating a <see cref="GraphicsDevice"/> using the OpenGL
+        /// API. This will only be used if <see cref="GraphicsBackend.OpenGL"/> is used in <see cref="GraphicsDevice"/> creation.
+        /// </summary>
+        public OpenGL.OpenGLPlatformInfo OpenGLPlatformInfo;
 
         /// <summary>
         /// Constructs a new GraphicsDeviceOptions for a device with no main Swapchain.
@@ -60,6 +73,7 @@
             PreferDepthRangeZeroToOne = false;
             PreferStandardClipSpaceYDirection = false;
             SwapchainSrgbFormat = false;
+            OpenGLPlatformInfo = null;
         }
 
         /// <summary>
@@ -81,6 +95,7 @@
             PreferDepthRangeZeroToOne = false;
             PreferStandardClipSpaceYDirection = false;
             SwapchainSrgbFormat = false;
+            OpenGLPlatformInfo = null;
         }
 
         /// <summary>
@@ -107,6 +122,7 @@
             PreferDepthRangeZeroToOne = false;
             PreferStandardClipSpaceYDirection = false;
             SwapchainSrgbFormat = false;
+            OpenGLPlatformInfo = null;
         }
 
         /// <summary>
@@ -136,6 +152,7 @@
             PreferDepthRangeZeroToOne = preferDepthRangeZeroToOne;
             PreferStandardClipSpaceYDirection = false;
             SwapchainSrgbFormat = false;
+            OpenGLPlatformInfo = null;
         }
 
         /// <summary>
@@ -168,6 +185,7 @@
             PreferDepthRangeZeroToOne = preferDepthRangeZeroToOne;
             PreferStandardClipSpaceYDirection = preferStandardClipSpaceYDirection;
             SwapchainSrgbFormat = false;
+            OpenGLPlatformInfo = null;
         }
 
         /// <summary>
@@ -205,6 +223,7 @@
             PreferDepthRangeZeroToOne = preferDepthRangeZeroToOne;
             PreferStandardClipSpaceYDirection = preferStandardClipSpaceYDirection;
             SwapchainSrgbFormat = swapchainSrgbFormat;
+            OpenGLPlatformInfo = null;
         }
     }
 }
