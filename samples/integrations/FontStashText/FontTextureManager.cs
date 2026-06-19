@@ -1,14 +1,16 @@
 using System;
+using System.Collections.Generic;
 using NeoVeldrid;
 using FontStashSharp.Interfaces;
 
 namespace FontStashText;
 
-public sealed class NeoVeldridTextureManager : ITexture2DManager
+public sealed class FontTextureManager : ITexture2DManager, IDisposable
 {
     private readonly GraphicsDevice _graphicsDevice;
+    private readonly List<Texture> _textures = new();
 
-    public NeoVeldridTextureManager(GraphicsDevice graphicsDevice) => _graphicsDevice = graphicsDevice;
+    public FontTextureManager(GraphicsDevice graphicsDevice) => _graphicsDevice = graphicsDevice;
 
     public object CreateTexture(int width, int height)
     {
@@ -19,13 +21,17 @@ public sealed class NeoVeldridTextureManager : ITexture2DManager
             1,
             PixelFormat.R8_G8_B8_A8_UNorm,
             TextureUsage.Sampled);
-        return _graphicsDevice.ResourceFactory.CreateTexture(desc);
+        var texture = _graphicsDevice.ResourceFactory.CreateTexture(desc);
+        _textures.Add(texture);
+        return texture;
     }
+
     public System.Drawing.Point GetTextureSize(object texture)
     {
         var tex = (Texture)texture;
         return new System.Drawing.Point((int)tex.Width, (int)tex.Height);
     }
+
     public void SetTextureData(object texture, System.Drawing.Rectangle bounds, byte[] data)
     {
         var tex = (Texture)texture;
@@ -48,5 +54,14 @@ public sealed class NeoVeldridTextureManager : ITexture2DManager
                 );
             }
         }
+    }
+
+    public void Dispose()
+    {
+        foreach (Texture texture in _textures)
+        {
+            texture.Dispose();
+        }
+        _textures.Clear();
     }
 }

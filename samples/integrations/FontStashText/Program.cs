@@ -16,15 +16,6 @@ internal class Program
 
     static void Main(string[] args)
     {
-        WindowCreateInfo windowCI = new WindowCreateInfo
-        {
-            X = 100,
-            Y = 100,
-            WindowWidth = 800,
-            WindowHeight = 600,
-            WindowTitle = "FontStashSharp + NeoVeldrid"
-        };
-
         GraphicsDeviceOptions options = new GraphicsDeviceOptions
         {
             PreferStandardClipSpaceYDirection = true,
@@ -43,14 +34,24 @@ internal class Program
                 _ => throw new InvalidOperationException($"Unknown NEOVELDRID_BACKEND: '{backendEnv}'")
             };
 
+        WindowCreateInfo windowCI = new WindowCreateInfo
+        {
+            X = 100,
+            Y = 100,
+            WindowWidth = 800,
+            WindowHeight = 600,
+            WindowTitle = $"FontStashSharp + NeoVeldrid ({backend})",
+        };
+
         NeoVeldridStartup.CreateWindowAndGraphicsDevice(windowCI, options, backend, out _window, out _graphicsDevice);
         _window.Resized += Window_Resized;
 
         _commandList = _graphicsDevice.ResourceFactory.CreateCommandList();
 
         FontSystem fontSystem = new FontSystem();
-        fontSystem.AddFont(File.ReadAllBytes("JupiteroidRegular.ttf"));
-        NeoVeldridFontRenderer fontRenderer = new NeoVeldridFontRenderer(_graphicsDevice);
+        string fontPath = Path.Combine(AppContext.BaseDirectory, "JupiteroidRegular.ttf");
+        fontSystem.AddFont(File.ReadAllBytes(fontPath));
+        FontRenderer fontRenderer = new FontRenderer(_graphicsDevice);
 
         while (_window.Exists)
         {
@@ -71,6 +72,7 @@ internal class Program
         }
 
         fontRenderer.Dispose();
+        _commandList.Dispose();
         _graphicsDevice.Dispose();
     }
 
