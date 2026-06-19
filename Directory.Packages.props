@@ -4,7 +4,7 @@
         
         <SilkNetVersion>2.23.0</SilkNetVersion>
         <ImGuiNetVersion>1.91.6.1</ImGuiNetVersion>
-        <ImageSharpVersion>3.1.12</ImageSharpVersion>
+        <ImageSharpVersion>4.0.0</ImageSharpVersion>
     </PropertyGroup>
     
     <ItemGroup>
