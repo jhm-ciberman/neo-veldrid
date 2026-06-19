@@ -25,6 +25,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 ### Fixed
 
 - [SDL2] `Sdl2Window.Title` now reflects the title the window was created with, instead of returning an empty string until it is next set.
+- [D3D11] Disposing a `Shader` after creating a `Pipeline` from it no longer crashes the graphics device. This makes it behave like the other backends.
 
 ### Internal
 

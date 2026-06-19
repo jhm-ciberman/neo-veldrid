@@ -1,3 +1,6 @@
+using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace NeoVeldrid.Tests
@@ -93,6 +96,76 @@ namespace NeoVeldrid.Tests
             Assert.True(shaders[0].IsDisposed);
             shaders[1].Dispose();
             Assert.True(shaders[1].IsDisposed);
+        }
+
+        // Contract for every backend: a Pipeline keeps its shaders alive for its own lifetime,
+        // so disposing the Shader objects after the Pipeline is built leaves the Pipeline fully
+        // usable. The backends satisfy this differently (Vulkan consumes the shader module at
+        // pipeline creation, D3D11 must hold a COM reference, OpenGL defers shader deletion), but
+        // the observable behavior must be identical: bind the pipeline and render after the
+        // shaders are gone, and the output is still correct.
+        [Fact]
+        public void DisposeShaders_AfterPipelineCreation_PipelineStillRenders()
+        {
+            const uint width = 4;
+            const uint height = 4;
+            using Texture output = RF.CreateTexture(TextureDescription.Texture2D(
+                width, height, 1, 1, PixelFormat.R32_G32_B32_A32_Float, TextureUsage.RenderTarget));
+            using Framebuffer framebuffer = RF.CreateFramebuffer(new FramebufferDescription(null, output));
+
+            float yMod = GD.IsClipSpaceYInverted ? -1.0f : 1.0f;
+            ColoredVertex[] vertices =
+            {
+                new ColoredVertex { Position = new Vector2(-1, 1 * yMod), Color = Vector4.One },
+                new ColoredVertex { Position = new Vector2(1, 1 * yMod), Color = Vector4.One },
+                new ColoredVertex { Position = new Vector2(-1, -1 * yMod), Color = Vector4.One },
+                new ColoredVertex { Position = new Vector2(1, -1 * yMod), Color = Vector4.One },
+            };
+            uint vertexSize = (uint)Unsafe.SizeOf<ColoredVertex>();
+            using DeviceBuffer buffer = RF.CreateBuffer(new BufferDescription(
+                vertexSize * (uint)vertices.Length, BufferUsage.StructuredBufferReadOnly, vertexSize));
+            GD.UpdateBuffer(buffer, 0, vertices);
+
+            using ResourceLayout graphicsLayout = RF.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("InputVertices", ResourceKind.StructuredBufferReadOnly, ShaderStages.Vertex)));
+            using ResourceSet graphicsSet = RF.CreateResourceSet(new ResourceSetDescription(graphicsLayout, buffer));
+
+            Shader[] shaders = TestShaders.LoadVertexFragment(RF, "ColoredQuadRenderer");
+            using Pipeline pipeline = RF.CreateGraphicsPipeline(new GraphicsPipelineDescription(
+                BlendStateDescription.SingleOverrideBlend,
+                DepthStencilStateDescription.Disabled,
+                RasterizerStateDescription.Default,
+                PrimitiveTopology.TriangleStrip,
+                new ShaderSetDescription(Array.Empty<VertexLayoutDescription>(), shaders),
+                graphicsLayout,
+                framebuffer.OutputDescription));
+
+            // Dispose the shaders while the pipeline that was built from them is still alive.
+            foreach (Shader shader in shaders)
+            {
+                shader.Dispose();
+                Assert.True(shader.IsDisposed);
+            }
+
+            using CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            cl.SetFramebuffer(framebuffer);
+            cl.ClearColorTarget(0, RgbaFloat.Clear);
+            cl.SetPipeline(pipeline);
+            cl.SetGraphicsResourceSet(0, graphicsSet);
+            cl.Draw((uint)vertices.Length);
+            cl.End();
+            GD.SubmitCommands(cl);
+            GD.WaitForIdle();
+
+            using Texture readback = GetReadback(output);
+            MappedResourceView<RgbaFloat> readView = GD.Map<RgbaFloat>(readback, MapMode.Read);
+            for (uint y = 0; y < height; y++)
+                for (uint x = 0; x < width; x++)
+                {
+                    Assert.Equal(new RgbaFloat(1, 1, 1, 1), readView[x, y]);
+                }
+            GD.Unmap(readback);
         }
 
         [Fact]

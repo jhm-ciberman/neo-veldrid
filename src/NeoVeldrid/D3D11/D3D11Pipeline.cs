@@ -35,31 +35,39 @@ namespace NeoVeldrid.D3D11
             Shader[] stages = description.ShaderSet.Shaders;
             for (int i = 0; i < description.ShaderSet.Shaders.Length; i++)
             {
+                // AddRef each shader so the pipeline owns its own reference; the caller is then
+                // free to dispose the Shader without destroying the resource this pipeline binds.
                 if (stages[i].Stage == ShaderStages.Vertex)
                 {
                     D3D11Shader d3d11VertexShader = ((D3D11Shader)stages[i]);
                     VertexShader = (ID3D11VertexShader*)d3d11VertexShader.DeviceShader.Handle;
+                    VertexShader->AddRef();
                     vsBytecode = d3d11VertexShader.Bytecode;
                 }
                 if (stages[i].Stage == ShaderStages.Geometry)
                 {
                     GeometryShader = (ID3D11GeometryShader*)((D3D11Shader)stages[i]).DeviceShader.Handle;
+                    GeometryShader->AddRef();
                 }
                 if (stages[i].Stage == ShaderStages.TessellationControl)
                 {
                     HullShader = (ID3D11HullShader*)((D3D11Shader)stages[i]).DeviceShader.Handle;
+                    HullShader->AddRef();
                 }
                 if (stages[i].Stage == ShaderStages.TessellationEvaluation)
                 {
                     DomainShader = (ID3D11DomainShader*)((D3D11Shader)stages[i]).DeviceShader.Handle;
+                    DomainShader->AddRef();
                 }
                 if (stages[i].Stage == ShaderStages.Fragment)
                 {
                     PixelShader = (ID3D11PixelShader*)((D3D11Shader)stages[i]).DeviceShader.Handle;
+                    PixelShader->AddRef();
                 }
                 if (stages[i].Stage == ShaderStages.Compute)
                 {
                     ComputeShader = (ID3D11ComputeShader*)((D3D11Shader)stages[i]).DeviceShader.Handle;
+                    ComputeShader->AddRef();
                 }
             }
 
@@ -112,6 +120,7 @@ namespace NeoVeldrid.D3D11
         {
             IsComputePipeline = true;
             ComputeShader = (ID3D11ComputeShader*)((D3D11Shader)description.ComputeShader).DeviceShader.Handle;
+            ComputeShader->AddRef();
             ResourceLayout[] genericLayouts = description.ResourceLayouts;
             ResourceLayouts = new D3D11ResourceLayout[genericLayouts.Length];
             for (int i = 0; i < ResourceLayouts.Length; i++)
@@ -130,7 +139,16 @@ namespace NeoVeldrid.D3D11
 
         public override void Dispose()
         {
-            _disposed = true;
+            if (!_disposed)
+            {
+                if (VertexShader != null) VertexShader->Release();
+                if (GeometryShader != null) GeometryShader->Release();
+                if (HullShader != null) HullShader->Release();
+                if (DomainShader != null) DomainShader->Release();
+                if (PixelShader != null) PixelShader->Release();
+                if (ComputeShader != null) ComputeShader->Release();
+                _disposed = true;
+            }
         }
     }
 }
