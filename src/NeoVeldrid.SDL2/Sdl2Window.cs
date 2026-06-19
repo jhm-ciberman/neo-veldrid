@@ -57,6 +57,7 @@ namespace NeoVeldrid.Sdl2
         {
             _sdl.SetHint("SDL_MOUSE_FOCUS_CLICKTHROUGH", "1");
             _threadedProcessing = threadedProcessing;
+            _cachedWindowTitle = title;
             if (threadedProcessing)
             {
                 using (ManualResetEvent mre = new ManualResetEvent(false))

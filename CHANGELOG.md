@@ -22,6 +22,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 - [Core] Mobile-only `SwapchainSource.CreateAndroidSurface`, `SwapchainSource.CreateUIView`, and the `GraphicsDevice.CreateOpenGLES(GraphicsDeviceOptions, SwapchainDescription)` overload. NeoVeldrid targets desktop platforms only.
 
+### Fixed
+
+- [SDL2] `Sdl2Window.Title` now reflects the title the window was created with, instead of returning an empty string until it is next set.
+
 ### Internal
 
 - Removed dead Android and iOS code paths left over from the Silk.NET port.
