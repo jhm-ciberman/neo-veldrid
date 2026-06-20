@@ -35,6 +35,8 @@ namespace NeoVeldrid
             SizeInBytes = sizeInBytes;
         }
 
+        readonly bool BindableResource.IsBindable => Buffer != null && !Buffer.IsDisposed;
+
         /// <summary>
         /// Element-wise equality.
         /// </summary>

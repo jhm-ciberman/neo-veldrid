@@ -13,10 +13,12 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 - [Core] `GraphicsDevice.IsDebugRequested` and `GraphicsDevice.IsDebugActive` properties to query whether debug mode was requested and whether the API's debug or validation facilities are actually active.
 - [Core] `NeoVeldridMappedResourceException` (a `NeoVeldridException` subtype) thrown for mapped-resource errors, carrying the offending `Resource`/`Subresource`, so callers can catch and inspect them specifically.
+- [Core] `NeoVeldridDisposedResourceException` (a `NeoVeldridException` subtype) thrown when a `Framebuffer` or `ResourceSet` references a disposed resource, carrying the offending `Resource` so callers can catch and inspect it specifically.
 
 ### Changed
 
 - [OpenGL] Binding a currently-mapped buffer as a vertex or index buffer now throws instead of producing undefined behavior.
+- [Core] Using a `Framebuffer` or `ResourceSet` that references a disposed resource now throws instead of producing undefined behavior.
 
 ### Removed
 

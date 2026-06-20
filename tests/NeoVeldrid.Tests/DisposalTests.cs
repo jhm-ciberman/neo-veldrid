@@ -168,6 +168,124 @@ namespace NeoVeldrid.Tests
             GD.Unmap(readback);
         }
 
+        // Contract for every backend: a Texture must not be disposed while a Framebuffer that
+        // targets it is still in use. Using such a Framebuffer is caught and reported the same way
+        // on every backend (D3D11 would otherwise silently tolerate it because the runtime keeps
+        // the resource alive through the render-target view, while Vulkan and OpenGL destroy it).
+        [Fact]
+        public void UseFramebuffer_AfterColorTargetDisposed_Throws()
+        {
+            Texture target = RF.CreateTexture(TextureDescription.Texture2D(
+                4, 4, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.RenderTarget));
+            Framebuffer framebuffer = RF.CreateFramebuffer(new FramebufferDescription(null, target));
+
+            GD.WaitForIdle(); // Required currently by Vulkan backend.
+            target.Dispose();
+            Assert.True(target.IsDisposed);
+
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            var ex = Assert.Throws<NeoVeldridDisposedResourceException>(() => cl.SetFramebuffer(framebuffer));
+            Assert.Same(target, ex.Resource);
+        }
+
+        // The same contract through a TextureView: a Texture must not be disposed while a ResourceSet
+        // binds a view of it. D3D11 keeps the resource alive through the view's SRV and would
+        // otherwise sample a logically-dead texture; Vulkan and OpenGL destroy it outright.
+        [Fact]
+        public void BindResourceSet_AfterSampledTextureDisposed_Throws()
+        {
+            Texture sampled = RF.CreateTexture(TextureDescription.Texture2D(
+                4, 4, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled));
+            TextureView view = RF.CreateTextureView(sampled);
+
+            ResourceLayout layout = RF.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("Input", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("InputSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
+            ResourceSet set = RF.CreateResourceSet(new ResourceSetDescription(layout, view, GD.PointSampler));
+
+            Pipeline pipeline = RF.CreateGraphicsPipeline(new GraphicsPipelineDescription(
+                BlendStateDescription.SingleOverrideBlend,
+                DepthStencilStateDescription.Disabled,
+                RasterizerStateDescription.CullNone,
+                PrimitiveTopology.TriangleStrip,
+                new ShaderSetDescription(Array.Empty<VertexLayoutDescription>(), TestShaders.LoadVertexFragment(RF, "FullScreenBlit")),
+                layout,
+                new OutputDescription(null, new OutputAttachmentDescription(PixelFormat.R8_G8_B8_A8_UNorm))));
+
+            GD.WaitForIdle(); // Required currently by Vulkan backend.
+            sampled.Dispose();
+            Assert.True(sampled.IsDisposed);
+
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            cl.SetPipeline(pipeline);
+            var ex = Assert.Throws<NeoVeldridDisposedResourceException>(() => cl.SetGraphicsResourceSet(0, set));
+            Assert.Same(view, ex.Resource);
+        }
+
+        [Fact]
+        public void BindResourceSet_AfterBufferDisposed_Throws()
+        {
+            DeviceBuffer buffer = RF.CreateBuffer(new BufferDescription(64, BufferUsage.StructuredBufferReadOnly, 16));
+
+            ResourceLayout layout = RF.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("InputVertices", ResourceKind.StructuredBufferReadOnly, ShaderStages.Vertex)));
+            ResourceSet set = RF.CreateResourceSet(new ResourceSetDescription(layout, buffer));
+
+            Pipeline pipeline = RF.CreateGraphicsPipeline(new GraphicsPipelineDescription(
+                BlendStateDescription.SingleOverrideBlend,
+                DepthStencilStateDescription.Disabled,
+                RasterizerStateDescription.Default,
+                PrimitiveTopology.TriangleStrip,
+                new ShaderSetDescription(Array.Empty<VertexLayoutDescription>(), TestShaders.LoadVertexFragment(RF, "ColoredQuadRenderer")),
+                layout,
+                new OutputDescription(null, new OutputAttachmentDescription(PixelFormat.R8_G8_B8_A8_UNorm))));
+
+            GD.WaitForIdle(); // Required currently by Vulkan backend.
+            buffer.Dispose();
+            Assert.True(buffer.IsDisposed);
+
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            cl.SetPipeline(pipeline);
+            var ex = Assert.Throws<NeoVeldridDisposedResourceException>(() => cl.SetGraphicsResourceSet(0, set));
+            Assert.Same(buffer, ex.Resource);
+        }
+
+        [Fact]
+        public void BindResourceSet_AfterSamplerDisposed_Throws()
+        {
+            Texture sampled = RF.CreateTexture(TextureDescription.Texture2D(
+                4, 4, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled));
+            TextureView view = RF.CreateTextureView(sampled);
+            Sampler sampler = RF.CreateSampler(SamplerDescription.Point);
+
+            ResourceLayout layout = RF.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("Input", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
+                new ResourceLayoutElementDescription("InputSampler", ResourceKind.Sampler, ShaderStages.Fragment)));
+            ResourceSet set = RF.CreateResourceSet(new ResourceSetDescription(layout, view, sampler));
+
+            Pipeline pipeline = RF.CreateGraphicsPipeline(new GraphicsPipelineDescription(
+                BlendStateDescription.SingleOverrideBlend,
+                DepthStencilStateDescription.Disabled,
+                RasterizerStateDescription.CullNone,
+                PrimitiveTopology.TriangleStrip,
+                new ShaderSetDescription(Array.Empty<VertexLayoutDescription>(), TestShaders.LoadVertexFragment(RF, "FullScreenBlit")),
+                layout,
+                new OutputDescription(null, new OutputAttachmentDescription(PixelFormat.R8_G8_B8_A8_UNorm))));
+
+            GD.WaitForIdle(); // Required currently by Vulkan backend.
+            sampler.Dispose();
+            Assert.True(sampler.IsDisposed);
+
+            CommandList cl = RF.CreateCommandList();
+            cl.Begin();
+            cl.SetPipeline(pipeline);
+            var ex = Assert.Throws<NeoVeldridDisposedResourceException>(() => cl.SetGraphicsResourceSet(0, set));
+            Assert.Same(sampler, ex.Resource);
+        }
+
         [Fact]
         public void Dispose_ResourceSet()
         {

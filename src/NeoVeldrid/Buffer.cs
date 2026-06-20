@@ -30,6 +30,8 @@ namespace NeoVeldrid
         /// </summary>
         public abstract bool IsDisposed { get; }
 
+        bool BindableResource.IsBindable => !IsDisposed;
+
         /// <summary>
         /// Frees unmanaged device resources controlled by this instance.
         /// </summary>

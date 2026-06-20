@@ -70,6 +70,8 @@ namespace NeoVeldrid
         /// </summary>
         public abstract bool IsDisposed { get; }
 
+        bool BindableResource.IsBindable => !IsDisposed;
+
         internal TextureView GetFullTextureView(GraphicsDevice gd)
         {
             lock (_fullTextureViewLock)

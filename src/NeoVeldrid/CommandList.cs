@@ -272,6 +272,7 @@ namespace NeoVeldrid
                 }
             }
 
+            ValidateResourceSetNotDisposed(slot, rs);
 #endif
             SetGraphicsResourceSetCore(slot, rs, dynamicOffsetsCount, ref dynamicOffsets);
         }
@@ -354,6 +355,7 @@ namespace NeoVeldrid
                         $"Failed to bind ResourceSet to slot {slot}. Resource element {i} was of the incorrect type. The bound Pipeline expects {pipelineKind}, but the ResourceSet contained {setKind}.");
                 }
             }
+            ValidateResourceSetNotDisposed(slot, rs);
 #endif
             SetComputeResourceSetCore(slot, rs, dynamicOffsetsCount, ref dynamicOffsets);
         }
@@ -367,6 +369,20 @@ namespace NeoVeldrid
         /// <param name="dynamicOffsets"></param>
         private protected abstract void SetComputeResourceSetCore(uint slot, ResourceSet set, uint dynamicOffsetsCount, ref uint dynamicOffsets);
 
+#if VALIDATE_USAGE
+        private static void ValidateResourceSetNotDisposed(uint slot, ResourceSet rs)
+        {
+            BindableResource[] resources = rs.Resources;
+            for (int i = 0; i < resources.Length; i++)
+            {
+                if (!resources[i].IsBindable)
+                {
+                    throw NeoVeldridDisposedResourceException.ResourceSetElement(resources[i], slot, i);
+                }
+            }
+        }
+#endif
+
         /// <summary>
         /// Sets the active <see cref="Framebuffer"/> which will be rendered to.
         /// When drawing, the active <see cref="Framebuffer"/> must be compatible with the active <see cref="Pipeline"/>.
@@ -375,6 +391,7 @@ namespace NeoVeldrid
         /// <param name="fb">The new <see cref="Framebuffer"/>.</param>
         public void SetFramebuffer(Framebuffer fb)
         {
+            ValidateFramebufferTargetsNotDisposed(fb);
             if (_framebuffer != fb)
             {
                 _framebuffer = fb;
@@ -389,6 +406,24 @@ namespace NeoVeldrid
         /// </summary>
         /// <param name="fb"></param>
         private protected abstract void SetFramebufferCore(Framebuffer fb);
+
+        [Conditional("VALIDATE_USAGE")]
+        private static void ValidateFramebufferTargetsNotDisposed(Framebuffer fb)
+        {
+            for (int i = 0; i < fb.ColorTargets.Count; i++)
+            {
+                Texture target = fb.ColorTargets[i].Target;
+                if (target.IsDisposed)
+                {
+                    throw NeoVeldridDisposedResourceException.FramebufferColorTarget(target, i);
+                }
+            }
+
+            if (fb.DepthTarget is FramebufferAttachment depth && depth.Target.IsDisposed)
+            {
+                throw NeoVeldridDisposedResourceException.FramebufferDepthTarget(depth.Target);
+            }
+        }
 
         /// <summary>
         /// Clears the color target at the given index of the active <see cref="Framebuffer"/>.
