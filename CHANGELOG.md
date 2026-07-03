@@ -9,6 +9,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-03
+
+This release is about diagnostics and pre-initialization introspection. You can now query a backend's API version and the platform's default backend before a device exists, ask whether debug or validation facilities are actually active, and catch dedicated exception types for mapped-resource and disposed-resource errors. It also tightens validation so that using a disposed resource fails loudly instead of quietly misbehaving. On the samples side, there's a new FontStashSharp integration that shows how to render text, one of the most common questions from people building on the library.
+
 ### Added
 
 - [Core] `GraphicsDevice.IsDebugRequested` and `GraphicsDevice.IsDebugActive` properties to query whether debug mode was requested and whether the API's debug or validation facilities are actually active.
@@ -36,7 +40,9 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 ### Internal
 
 - Removed dead Android and iOS code paths left over from the Silk.NET port.
-- Simplified and improved the `samples` directory structure in the repository to make it easier to read and navigate. 
+- Refactored the solution and project files, centralizing package versions in `Directory.Packages.props` and adding solution filters.
+- Simplified and improved the `samples` directory structure in the repository to make it easier to read and navigate.
+- [Samples] Added a FontStashSharp text-rendering sample under `samples/integrations`.
 - Fixed spelling issues across XML-docs.
 - Enforced file-scoped namespaces across the codebase.
 - Removed the unused managed OpenGL command-entry-list implementation, superseded by the no-alloc one.
@@ -118,6 +124,7 @@ First release of NeoVeldrid. A maintained, drop-in replacement for [Veldrid](htt
 - [Samples] The AnimatedMesh sample now renders correctly on OpenGL and OpenGL ES.
 - [Samples] The ComputeParticles sample now renders correctly on D3D11.
 
-[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/jhm-ciberman/neo-veldrid/releases/tag/v1.0.0
