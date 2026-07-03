@@ -11,7 +11,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [1.2.0] - 2026-07-03
 
-This release is about diagnostics and pre-initialization introspection. You can now query a backend's API version and the platform's default backend before a device exists, ask whether debug or validation facilities are actually active, and catch dedicated exception types for mapped-resource and disposed-resource errors. It also tightens validation so that using a disposed resource fails loudly instead of quietly misbehaving. On the samples side, there's a new FontStashSharp integration that shows how to render text, one of the most common questions from people building on the library.
+This release adds pre-initialization introspection (query a backend's API version and the platform default before a device exists), debug-state properties, and dedicated exceptions for mapped- and disposed-resource errors. It also ships a new FontStashSharp sample showing how to render text.
 
 ### Added
 
