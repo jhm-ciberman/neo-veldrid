@@ -39,6 +39,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 - Simplified and improved the `samples` directory structure in the repository to make it easier to read and navigate. 
 - Fixed spelling issues across XML-docs.
 - Enforced file-scoped namespaces across the codebase.
+- Removed the unused managed OpenGL command-entry-list implementation, superseded by the no-alloc one.
 
 ## [1.1.0] - 2026-05-25
 
