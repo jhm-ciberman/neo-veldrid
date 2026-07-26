@@ -160,7 +160,7 @@ public static unsafe class NeoVeldridStartup
         }
     }
 
-    [Obsolete("Use GraphicsDevice.GetAvailableBackend() directly instead.")]
+    [Obsolete("Use GraphicsDevice.GetPlatformDefaultBackend() directly instead.")]
     public static GraphicsBackend GetPlatformDefaultBackend() => GraphicsDevice.GetPlatformDefaultBackend();
 
 #if !EXCLUDE_VULKAN_BACKEND
