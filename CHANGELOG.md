@@ -9,6 +9,11 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+### Fixed
+
+- [SDL2] Window creation failures now report the actual SDL error instead of always saying "Invalid window".
+- [SDL2] A failed window creation no longer hangs the `Sdl2Window` constructor when `threadedProcessing` is enabled.
+
 ## [1.2.0] - 2026-07-03
 
 This release adds pre-initialization introspection (query a backend's API version and the platform default before a device exists), debug-state properties, and dedicated exceptions for mapped- and disposed-resource errors. It also ships a new FontStashSharp sample showing how to render text.

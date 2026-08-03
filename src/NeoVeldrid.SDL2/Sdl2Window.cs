@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,11 +76,14 @@ public unsafe class Sdl2Window
 
                 Task.Factory.StartNew(WindowOwnerRoutine, wp, TaskCreationOptions.LongRunning);
                 mre.WaitOne();
+                Rethrow(wp.CreationException);
             }
         }
         else
         {
+            _sdl.ClearError();
             _window = _sdl.CreateWindow(title, x, y, width, height, (uint)flags);
+            ThrowIfCreationFailed(_window);
             WindowID = _sdl.GetWindowID(_window);
             Sdl2WindowRegistry.RegisterWindow(this);
             PostWindowCreated(flags);
@@ -102,14 +106,40 @@ public unsafe class Sdl2Window
 
                 Task.Factory.StartNew(WindowOwnerRoutine, wp, TaskCreationOptions.LongRunning);
                 mre.WaitOne();
+                Rethrow(wp.CreationException);
             }
         }
         else
         {
+            _sdl.ClearError();
             _window = _sdl.CreateWindowFrom((void*)windowHandle);
+            ThrowIfCreationFailed(_window);
             WindowID = _sdl.GetWindowID(_window);
             Sdl2WindowRegistry.RegisterWindow(this);
             PostWindowCreated(0);
+        }
+    }
+
+    private static void ThrowIfCreationFailed(Silk.NET.SDL.Window* window)
+    {
+        if (window == null)
+        {
+            throw new InvalidOperationException("SDL window creation failed: " + GetSdlError());
+        }
+    }
+
+    private static string GetSdlError()
+    {
+        string error = _sdl.GetErrorS();
+        return string.IsNullOrEmpty(error) ? "unknown SDL error" : error;
+    }
+
+    // Preserves the original stack trace of an exception raised on the window's own thread.
+    private static void Rethrow(Exception creationException)
+    {
+        if (creationException != null)
+        {
+            ExceptionDispatchInfo.Capture(creationException).Throw();
         }
     }
 
@@ -344,11 +374,26 @@ public unsafe class Sdl2Window
     private void WindowOwnerRoutine(object state)
     {
         WindowParams wp = (WindowParams)state;
-        _window = wp.Create();
-        WindowID = _sdl.GetWindowID(_window);
-        Sdl2WindowRegistry.RegisterWindow(this);
-        PostWindowCreated(wp.WindowFlags);
-        wp.ResetEvent.Set();
+        try
+        {
+            _sdl.ClearError();
+            _window = wp.Create();
+            ThrowIfCreationFailed(_window);
+            WindowID = _sdl.GetWindowID(_window);
+            Sdl2WindowRegistry.RegisterWindow(this);
+            PostWindowCreated(wp.WindowFlags);
+        }
+        catch (Exception ex)
+        {
+            // Hand the failure back to the constructor, which is blocked on ResetEvent. Without
+            // this the event is never set and the caller waits forever.
+            wp.CreationException = ex;
+            return;
+        }
+        finally
+        {
+            wp.ResetEvent.Set();
+        }
 
         double previousPollTimeMs = 0;
         Stopwatch sw = new Stopwatch();
@@ -1024,6 +1069,8 @@ public unsafe class Sdl2Window
         public IntPtr WindowHandle { get; set; }
 
         public ManualResetEvent ResetEvent { get; set; }
+
+        public Exception CreationException { get; set; }
 
         public Silk.NET.SDL.Window* Create()
         {

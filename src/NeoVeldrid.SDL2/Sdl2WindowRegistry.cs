@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Silk.NET.SDL;
 
 namespace NeoVeldrid.Sdl2;
@@ -22,20 +20,10 @@ internal static class Sdl2WindowRegistry
 
     public static void RegisterWindow(Sdl2Window window)
     {
-        if (window.WindowID == 0)
-        {
-            throw new InvalidOperationException("SDL window creation failed: " + GetSdlError());
-        }
-
         lock (Lock)
         {
             _eventsByWindowID.Add(window.WindowID, window);
         }
-    }
-
-    private static unsafe string GetSdlError()
-    {
-        return Marshal.PtrToStringUTF8((nint)Sdl2Window.SdlInstance.GetError()) ?? "unknown SDL error";
     }
 
     public static void RemoveWindow(Sdl2Window window)
