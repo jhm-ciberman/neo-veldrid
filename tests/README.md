@@ -15,8 +15,8 @@ Tests buffers, textures, framebuffers, compute, rendering, pipelines, resource s
 | Backend | Windows | Linux | macOS |
 |---------|---------|-------|-------|
 | D3D11 | Yes | - | - |
-| Vulkan | Yes | Yes | - |
-| OpenGL | Yes | Yes | Yes |
+| Vulkan | Yes | Yes | Yes (MoltenVK) |
+| OpenGL | Yes | Yes | - |
 | OpenGLES | Yes | Yes | - |
 
 Run all backends for the current platform:
