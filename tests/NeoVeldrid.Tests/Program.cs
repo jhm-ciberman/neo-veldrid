@@ -1,23 +1,22 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NeoVeldrid.Tests;
+using Xunit.MicrosoftTestingPlatform;
+using Xunit.Runner.InProc.SystemConsole;
 
 class Program
 {
     static int Main(string[] args)
     {
-        List<string> newArgs = new List<string>(args);
-        newArgs.Insert(0, typeof(Program).Assembly.Location);
-
         // xUnit runs tests on pool threads, but we want to start our window in the main thread.
         int returnCode = 0;
-        using CancellationTokenSource cts = new CancellationTokenSource();
-        Thread runner = new Thread(() =>
+        using CancellationTokenSource cts = new();
+        Thread runner = new(() =>
         {
             try
             {
-                returnCode = Xunit.ConsoleClient.Program.Main(newArgs.ToArray());
+                returnCode = RunTests(args);
             }
             finally
             {
@@ -29,11 +28,24 @@ class Program
         MainThread.Pump(cts.Token);
         runner.Join();
 
-        Console.WriteLine("Tests finished. Press any key to exit.");
-        if (!Console.IsInputRedirected)
+        if (args.Length == 0 && !Console.IsInputRedirected)
         {
+            Console.WriteLine("Tests finished. Press any key to exit.");
             Console.ReadKey(true);
         }
         return returnCode;
+    }
+
+    private static int RunTests(string[] args)
+    {
+        if (args.Any(arg => arg == "-automated" || arg == "@@"))
+        {
+            return ConsoleRunner.Run(args).GetAwaiter().GetResult();
+        }
+
+        return TestPlatformTestFramework
+            .RunAsync(args, SelfRegisteredExtensions.AddSelfRegisteredExtensions)
+            .GetAwaiter()
+            .GetResult();
     }
 }

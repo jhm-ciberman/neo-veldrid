@@ -791,10 +791,10 @@ public abstract class RenderTests<T> : GraphicsDeviceTestBase<T> where T : Graph
         GD.Unmap(readback);
     }
 
-    [SkippableFact]
+    [Fact]
     public void ComputeGeneratedTexture()
     {
-        Skip.IfNot(GD.Features.ComputeShader);
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
 
         uint width = 4;
         uint height = 1;
@@ -857,12 +857,12 @@ public abstract class RenderTests<T> : GraphicsDeviceTestBase<T> where T : Graph
         GD.Unmap(readback);
     }
 
-    [SkippableTheory]
+    [Theory]
     [InlineData(2)]
     [InlineData(6)]
     public void ComputeBindTextureWithArrayLayersAsWriteable(uint ArrayLayers)
     {
-        Skip.IfNot(GD.Features.ComputeShader);
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
 
         uint TexSize = 32;
         uint MipLevels = 1;
@@ -1301,10 +1301,10 @@ public abstract class RenderTests<T> : GraphicsDeviceTestBase<T> where T : Graph
         GD.Unmap(readback);
     }
 
-    [SkippableFact]
+    [Fact]
     public void UseBlendFactor()
     {
-        Skip.If(GD.BackendType == GraphicsBackend.Vulkan, "Upstream: Vulkan image layout validation error");
+        Assert.SkipWhen(GD.BackendType == GraphicsBackend.Vulkan, "Upstream: Vulkan image layout validation error");
         const uint width = 512;
         const uint height = 512;
         using var output = RF.CreateTexture(

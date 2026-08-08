@@ -181,10 +181,10 @@ void main()
         private uint _padding2;
     }
 
-    [SkippableFact]
+    [Fact]
     public void BasicCompute()
     {
-        Skip.IfNot(GD.Features.ComputeShader);
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
 
         ResourceLayout layout = RF.CreateResourceLayout(new ResourceLayoutDescription(
             new ResourceLayoutElementDescription("Params", ResourceKind.UniformBuffer, ShaderStages.Compute),
@@ -241,11 +241,11 @@ void main()
         GD.Unmap(destinationReadback);
     }
 
-    [SkippableFact]
+    [Fact]
     public void ComputeCubemapGeneration()
     {
-        Skip.IfNot(GD.Features.ComputeShader);
-        Skip.If(GD.GetD3D11Info(out _), "D3D11 doesn't support Storage Cubemaps");
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
+        Assert.SkipWhen(GD.GetD3D11Info(out _), "D3D11 doesn't support Storage Cubemaps");
 
         const int TexSize = 32;
         const uint MipLevels = 1;
@@ -306,11 +306,11 @@ void main()
         }
     }
 
-    [SkippableFact]
+    [Fact]
     public void ComputeCubemapBindSingleTextureMipLevelOutput()
     {
-        Skip.IfNot(GD.Features.ComputeShader);
-        Skip.If(GD.GetD3D11Info(out _), "D3D11 doesn't support Storage Cubemaps");
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
+        Assert.SkipWhen(GD.GetD3D11Info(out _), "D3D11 doesn't support Storage Cubemaps");
 
         const int TexSize = 128;
         const uint MipLevels = 7;
@@ -395,12 +395,15 @@ void main()
         }
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(FillBuffer_WithOffsetsData))]
     public void FillBuffer_WithOffsets(uint srcSetMultiple, uint srcBindingMultiple, uint dstSetMultiple, uint dstBindingMultiple, bool combinedLayout)
     {
-        Skip.IfNot(GD.Features.ComputeShader);
-        Skip.If(!GD.Features.BufferRangeBinding && (srcSetMultiple != 0 || srcBindingMultiple != 0 || dstSetMultiple != 0 || dstBindingMultiple != 0));
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
+        Assert.SkipWhen(
+            !GD.Features.BufferRangeBinding && (srcSetMultiple != 0 || srcBindingMultiple != 0 || dstSetMultiple != 0 || dstBindingMultiple != 0),
+            "Buffer range binding is not supported"
+        );
 
         Debug.Assert((GD.StructuredBufferMinOffsetAlignment % sizeof(uint)) == 0);
 
@@ -525,13 +528,13 @@ void main()
                         }
     }
 
-    [SkippableTheory]
+    [Theory]
     [InlineData(BufferUsage.IndirectBuffer)]
     [InlineData(BufferUsage.IndexBuffer)]
     [InlineData(BufferUsage.VertexBuffer)]
     public unsafe void FillBuffer_CombinedWithStructured(BufferUsage dstUsage)
     {
-        Skip.IfNot(GD.Features.ComputeShader);
+        Assert.SkipUnless(GD.Features.ComputeShader, "Compute shaders are not supported");
 
         uint stride = (uint)sizeof(IndirectDrawIndexedArguments);
 

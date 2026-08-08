@@ -38,7 +38,7 @@ public abstract class DeviceDisposalRegressionTests<T> where T : GraphicsDeviceC
             {
                 MainThread.Invoke(window.Close);
             }
-        });
+        }, TestContext.Current.CancellationToken);
     }
 }
 

@@ -28,22 +28,22 @@ dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj
 Run a specific backend only:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=D3D11"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=Vulkan"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=OpenGL"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=OpenGLES"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=D3D11"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=Vulkan"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=OpenGL"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=OpenGLES"
 ```
 
 Run multiple backends:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=D3D11|Backend=Vulkan"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=D3D11 --filter-trait Backend=Vulkan"
 ```
 
 Run a specific test across all backends:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Map_WrongFlags_Throws"
+dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-method *.Map_WrongFlags_Throws"
 ```
 
 Run only non-GPU tests (for CI or machines without graphics hardware):
@@ -54,7 +54,7 @@ dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:ExcludeGPU=true
 
 ### Skipped tests
 
-Some tests are skipped at runtime via `[SkippableFact]` + `Skip.If`/`Skip.IfNot`:
+Some tests are skipped at runtime via `Assert.SkipWhen`/`Assert.SkipUnless`:
 
 - **UseBlendFactor on Vulkan** - triggers a Vulkan image layout validation error. Same error crashes upstream's process. Our fix to the debug callback turns it into a catchable exception instead.
 
