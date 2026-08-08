@@ -5,7 +5,7 @@
 Tests SPIR-V cross-compilation (HLSL, GLSL, ESSL, MSL), GLSL-to-SPIR-V compilation, shader reflection, and JSON serialization.
 
 ```bash
-dotnet test tests/NeoVeldrid.SPIRV.Tests/NeoVeldrid.SPIRV.Tests.csproj
+dotnet test --project tests/NeoVeldrid.SPIRV.Tests/NeoVeldrid.SPIRV.Tests.csproj
 ```
 
 ## GPU Tests (requires graphics hardware)
@@ -22,34 +22,34 @@ Tests buffers, textures, framebuffers, compute, rendering, pipelines, resource s
 Run all backends for the current platform:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj
 ```
 
 Run a specific backend only:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=D3D11"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=Vulkan"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=OpenGL"
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=OpenGLES"
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=D3D11
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=Vulkan
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=OpenGL
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=OpenGLES
 ```
 
 Run multiple backends:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-trait Backend=D3D11 --filter-trait Backend=Vulkan"
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=D3D11 --filter-trait Backend=Vulkan
 ```
 
 Run a specific test across all backends:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:TestingPlatformCommandLineArguments="--filter-method *.Map_WrongFlags_Throws"
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-method "*.Map_WrongFlags_Throws"
 ```
 
 Run only non-GPU tests (for CI or machines without graphics hardware):
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:ExcludeGPU=true
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -p:ExcludeGPU=true
 ```
 
 ### Skipped tests

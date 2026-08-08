@@ -36,7 +36,7 @@ jobs:
         run: dotnet build NeoVeldrid.slnx -c Release
 
       - name: Run SPIRV tests
-        run: dotnet test tests/NeoVeldrid.SPIRV.Tests/NeoVeldrid.SPIRV.Tests.csproj -c Release
+        run: dotnet test --project tests/NeoVeldrid.SPIRV.Tests/NeoVeldrid.SPIRV.Tests.csproj -c Release
 
       - name: Run non-GPU tests
-        run: dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -c Release -p:ExcludeGPU=true
+        run: dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj -c Release -p:ExcludeGPU=true

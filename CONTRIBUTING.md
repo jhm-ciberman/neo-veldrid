@@ -24,7 +24,7 @@ dotnet test
 To run GPU tests for a specific backend:
 
 ```bash
-dotnet test tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter "Backend=Vulkan"
+dotnet test --project tests/NeoVeldrid.Tests/NeoVeldrid.Tests.csproj --filter-trait Backend=Vulkan
 ```
 
 Available backends: `Vulkan`, `D3D11`, `OpenGL`, `OpenGLES`.
