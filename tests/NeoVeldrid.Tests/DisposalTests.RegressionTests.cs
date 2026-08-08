@@ -34,7 +34,10 @@ public abstract class DeviceDisposalRegressionTests<T> where T : GraphicsDeviceC
             gd.Dispose();
             gd.Dispose();
             Assert.True(gd.IsDisposed);
-            window?.Close();
+            if (window != null)
+            {
+                MainThread.Invoke(window.Close);
+            }
         });
     }
 }

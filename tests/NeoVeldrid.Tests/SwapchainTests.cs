@@ -22,7 +22,7 @@ public abstract class SwapchainTests<T> : GraphicsDeviceTestBase<T> where T : Gr
             WindowInitialState = WindowState.Hidden,
             WindowTitle = "SwapchainTestWindow",
         };
-        Sdl2Window window = NeoVeldridStartup.CreateWindow(ref wci);
+        Sdl2Window window = MainThread.Invoke(() => NeoVeldridStartup.CreateWindow(wci));
         SwapchainSource source = NeoVeldridStartup.GetSwapchainSource(window);
         SwapchainDescription swapchainDesc = new SwapchainDescription(source, 100, 100, depthFormat, syncToVerticalBlank);
         Swapchain swapchain = RF.CreateSwapchain(ref swapchainDesc);
@@ -39,7 +39,7 @@ public abstract class SwapchainTests<T> : GraphicsDeviceTestBase<T> where T : Gr
 
         Assert.Equal(syncToVerticalBlank, swapchain.SyncToVerticalBlank);
 
-        window.Close();
+        MainThread.Invoke(window.Close);
     }
 }
 

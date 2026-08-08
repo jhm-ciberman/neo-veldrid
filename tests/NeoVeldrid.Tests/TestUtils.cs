@@ -14,16 +14,26 @@ public static class TestUtils
 
     public static void CreateVulkanDeviceWithSwapchain(out Sdl2Window window, out GraphicsDevice gd)
     {
-        WindowCreateInfo wci = new WindowCreateInfo
+        (window, gd) = CreateDeviceWithSwapchain(GraphicsBackend.Vulkan);
+    }
+
+    // macOS only allows SDL windows on the main thread, so every windowed device goes through here.
+    private static (Sdl2Window Window, GraphicsDevice Device) CreateDeviceWithSwapchain(GraphicsBackend backend)
+    {
+        return MainThread.Invoke(() =>
         {
-            WindowWidth = 200,
-            WindowHeight = 200,
-            WindowInitialState = WindowState.Hidden,
-        };
+            WindowCreateInfo wci = new WindowCreateInfo
+            {
+                WindowWidth = 200,
+                WindowHeight = 200,
+                WindowInitialState = WindowState.Hidden,
+            };
 
-        GraphicsDeviceOptions options = new GraphicsDeviceOptions(true, PixelFormat.R16_UNorm, false);
+            GraphicsDeviceOptions options = new GraphicsDeviceOptions(true, PixelFormat.R16_UNorm, false);
 
-        NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, GraphicsBackend.Vulkan, out window, out gd);
+            NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, backend, out Sdl2Window window, out GraphicsDevice gd);
+            return (window, gd);
+        });
     }
 
 #if TEST_D3D11
@@ -34,45 +44,18 @@ public static class TestUtils
 
     public static void CreateD3D11DeviceWithSwapchain(out Sdl2Window window, out GraphicsDevice gd)
     {
-        WindowCreateInfo wci = new WindowCreateInfo
-        {
-            WindowWidth = 200,
-            WindowHeight = 200,
-            WindowInitialState = WindowState.Hidden,
-        };
-
-        GraphicsDeviceOptions options = new GraphicsDeviceOptions(true, PixelFormat.R16_UNorm, false);
-
-        NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, GraphicsBackend.Direct3D11, out window, out gd);
+        (window, gd) = CreateDeviceWithSwapchain(GraphicsBackend.Direct3D11);
     }
 #endif
 
     internal static void CreateOpenGLDevice(out Sdl2Window window, out GraphicsDevice gd)
     {
-        WindowCreateInfo wci = new WindowCreateInfo
-        {
-            WindowWidth = 200,
-            WindowHeight = 200,
-            WindowInitialState = WindowState.Hidden,
-        };
-
-        GraphicsDeviceOptions options = new GraphicsDeviceOptions(true, PixelFormat.R16_UNorm, false);
-
-        NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, GraphicsBackend.OpenGL, out window, out gd);
+        (window, gd) = CreateDeviceWithSwapchain(GraphicsBackend.OpenGL);
     }
 
     internal static void CreateOpenGLESDevice(out Sdl2Window window, out GraphicsDevice gd)
     {
-        WindowCreateInfo wci = new WindowCreateInfo
-        {
-            WindowWidth = 200,
-            WindowHeight = 200,
-            WindowInitialState = WindowState.Hidden,
-        };
-
-        GraphicsDeviceOptions options = new GraphicsDeviceOptions(true, PixelFormat.R16_UNorm, false);
-
-        NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, GraphicsBackend.OpenGLES, out window, out gd);
+        (window, gd) = CreateDeviceWithSwapchain(GraphicsBackend.OpenGLES);
     }
 
 }
@@ -156,7 +139,10 @@ public abstract class GraphicsDeviceTestBase<T> : IDisposable where T : Graphics
         GD.WaitForIdle();
         _factory.DisposeCollector.DisposeAll();
         GD.Dispose();
-        _window?.Close();
+        if (_window != null)
+        {
+            MainThread.Invoke(_window.Close);
+        }
     }
 }
 

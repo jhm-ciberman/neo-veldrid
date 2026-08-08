@@ -70,7 +70,11 @@ public class SwapchainRegressionTests
         GraphicsDevice gd = null;
         try
         {
-            NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, backend, out window, out gd);
+            (window, gd) = MainThread.Invoke(() =>
+            {
+                NeoVeldridStartup.CreateWindowAndGraphicsDevice(wci, options, backend, out Sdl2Window w, out GraphicsDevice d);
+                return (w, d);
+            });
 
             PixelFormat colorFormat = gd.MainSwapchain.Framebuffer.ColorTargets[0].Target.Format;
 
@@ -79,7 +83,10 @@ public class SwapchainRegressionTests
         finally
         {
             gd?.Dispose();
-            window?.Close();
+            if (window != null)
+            {
+                MainThread.Invoke(window.Close);
+            }
         }
     }
 }
