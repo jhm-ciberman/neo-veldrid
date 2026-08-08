@@ -177,7 +177,7 @@ internal unsafe static class VulkanUtil
         else if (oldLayout == ImageLayout.Preinitialized && newLayout == ImageLayout.General)
         {
             barrier.SrcAccessMask = AccessFlags.None;
-            barrier.DstAccessMask = AccessFlags.ShaderReadBit;
+            barrier.DstAccessMask = AccessFlags.ShaderReadBit | AccessFlags.ShaderWriteBit;
             srcStageFlags = PipelineStageFlags.TopOfPipeBit;
             dstStageFlags = PipelineStageFlags.ComputeShaderBit;
         }
@@ -190,9 +190,9 @@ internal unsafe static class VulkanUtil
         }
         else if (oldLayout == ImageLayout.General && newLayout == ImageLayout.ShaderReadOnlyOptimal)
         {
-            barrier.SrcAccessMask = AccessFlags.TransferReadBit;
+            barrier.SrcAccessMask = AccessFlags.ShaderWriteBit;
             barrier.DstAccessMask = AccessFlags.ShaderReadBit;
-            srcStageFlags = PipelineStageFlags.TransferBit;
+            srcStageFlags = PipelineStageFlags.ComputeShaderBit;
             dstStageFlags = PipelineStageFlags.FragmentShaderBit;
         }
         else if (oldLayout == ImageLayout.ShaderReadOnlyOptimal && newLayout == ImageLayout.General)

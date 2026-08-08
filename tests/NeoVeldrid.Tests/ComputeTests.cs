@@ -196,6 +196,8 @@ void main()
         DeviceBuffer paramsBuffer = RF.CreateBuffer(new BufferDescription((uint)Unsafe.SizeOf<BasicComputeTestParams>(), BufferUsage.UniformBuffer));
         DeviceBuffer sourceBuffer = RF.CreateBuffer(new BufferDescription(width * height * 4, BufferUsage.StructuredBufferReadWrite, 4));
         DeviceBuffer destinationBuffer = RF.CreateBuffer(new BufferDescription(width * height * 4, BufferUsage.StructuredBufferReadWrite, 4));
+        DeviceBuffer sourceReadback = RF.CreateBuffer(new BufferDescription(sourceBuffer.SizeInBytes, BufferUsage.Staging));
+        DeviceBuffer destinationReadback = RF.CreateBuffer(new BufferDescription(destinationBuffer.SizeInBytes, BufferUsage.Staging));
 
         GD.UpdateBuffer(paramsBuffer, 0, new BasicComputeTestParams { Width = width, Height = height });
 
@@ -220,12 +222,12 @@ void main()
         cl.SetPipeline(pipeline);
         cl.SetComputeResourceSet(0, rs);
         cl.Dispatch(width / 16, width / 16, 1);
+        // Keep the copies in this command list to cover compute-to-transfer synchronization.
+        cl.CopyBuffer(sourceBuffer, 0, sourceReadback, 0, sourceBuffer.SizeInBytes);
+        cl.CopyBuffer(destinationBuffer, 0, destinationReadback, 0, destinationBuffer.SizeInBytes);
         cl.End();
         GD.SubmitCommands(cl);
         GD.WaitForIdle();
-
-        DeviceBuffer sourceReadback = GetReadback(sourceBuffer);
-        DeviceBuffer destinationReadback = GetReadback(destinationBuffer);
 
         MappedResourceView<float> sourceReadView = GD.Map<float>(sourceReadback, MapMode.Read);
         MappedResourceView<float> destinationReadView = GD.Map<float>(destinationReadback, MapMode.Read);

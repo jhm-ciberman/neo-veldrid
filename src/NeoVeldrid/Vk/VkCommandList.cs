@@ -42,6 +42,7 @@ internal unsafe class VkCommandList : CommandList
     private VkPipeline _currentComputePipeline;
     private BoundResourceSetInfo[] _currentComputeResourceSets = Array.Empty<BoundResourceSetInfo>();
     private bool[] _computeResourceSetsChanged;
+    private bool _computeWritesPending;
     private string _name;
 
     private readonly object _commandBufferListLock = new object();
@@ -180,6 +181,7 @@ internal unsafe class VkCommandList : CommandList
 
         _currentComputePipeline = null;
         ClearSets(_currentComputeResourceSets);
+        _computeWritesPending = false;
     }
 
     private protected override void ClearColorTargetCore(uint index, RgbaFloat clearColor)
@@ -285,6 +287,11 @@ internal unsafe class VkCommandList : CommandList
 
     private void PreDrawCommand()
     {
+        FlushComputeWrites(
+            PipelineStageFlags.AllGraphicsBit,
+            AccessFlags.IndirectCommandReadBit | AccessFlags.IndexReadBit |
+            AccessFlags.VertexAttributeReadBit | AccessFlags.UniformReadBit | AccessFlags.ShaderReadBit);
+
         TransitionImages(_preDrawSampledImages, ImageLayout.ShaderReadOnlyOptimal);
         _preDrawSampledImages.Clear();
 
@@ -375,11 +382,16 @@ internal unsafe class VkCommandList : CommandList
         PreDispatchCommand();
 
         _gd.Vk.CmdDispatch(_cb, groupCountX, groupCountY, groupCountZ);
+        _computeWritesPending = true;
     }
 
     private void PreDispatchCommand()
     {
         EnsureNoRenderPass();
+
+        FlushComputeWrites(
+            PipelineStageFlags.DrawIndirectBit | PipelineStageFlags.ComputeShaderBit,
+            AccessFlags.IndirectCommandReadBit | AccessFlags.UniformReadBit | AccessFlags.ShaderReadBit);
 
         for (uint currentSlot = 0; currentSlot < _currentComputePipeline.ResourceSetCount; currentSlot++)
         {
@@ -413,6 +425,33 @@ internal unsafe class VkCommandList : CommandList
         VkBuffer vkBuffer = Util.AssertSubtype<DeviceBuffer, VkBuffer>(indirectBuffer);
         _currentStagingInfo.Resources.Add(vkBuffer.RefCount);
         _gd.Vk.CmdDispatchIndirect(_cb, vkBuffer.DeviceBuffer, offset);
+        _computeWritesPending = true;
+    }
+
+    private void FlushComputeWrites(PipelineStageFlags dstStages, AccessFlags dstAccess)
+    {
+        if (!_computeWritesPending)
+        {
+            return;
+        }
+
+        _computeWritesPending = false;
+        Debug.Assert(_activeRenderPass.Handle == default);
+
+        MemoryBarrier barrier = new MemoryBarrier
+        {
+            SType = StructureType.MemoryBarrier,
+            SrcAccessMask = AccessFlags.ShaderWriteBit,
+            DstAccessMask = dstAccess
+        };
+        _gd.Vk.CmdPipelineBarrier(
+            _cb,
+            PipelineStageFlags.ComputeShaderBit,
+            dstStages,
+            0,
+            1, in barrier,
+            0, null,
+            0, null);
     }
 
     protected override void ResolveTextureCore(Texture source, Texture destination)
@@ -757,6 +796,10 @@ internal unsafe class VkCommandList : CommandList
         uint sizeInBytes)
     {
         EnsureNoRenderPass();
+
+        FlushComputeWrites(
+            PipelineStageFlags.TransferBit,
+            AccessFlags.TransferReadBit | AccessFlags.TransferWriteBit);
 
         VkBuffer srcVkBuffer = Util.AssertSubtype<DeviceBuffer, VkBuffer>(source);
         _currentStagingInfo.Resources.Add(srcVkBuffer.RefCount);
