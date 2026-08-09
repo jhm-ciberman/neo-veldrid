@@ -2,6 +2,8 @@
   items:
   - name: Introduction
     href: prologue/intro.md
+  - name: Versioning
+    href: prologue/versioning.md
   - name: Migration from Veldrid
     href: prologue/migration.md
 
