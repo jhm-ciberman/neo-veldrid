@@ -18,7 +18,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Removed
 
-- [Vulkan] Removed the broken legacy `VkSurfaceSource` API. Use `SwapchainSource` and `SwapchainDescription` to create a Vulkan graphics device with a swapchain.
+- [Vulkan] Removed the broken legacy `VkSurfaceSource` API. This API never worked in NeoVeldrid and was already a legacy API in Veldrid. Use `SwapchainSource` and `SwapchainDescription` to create a Vulkan graphics device with a swapchain.
 
 ### Internal
 
