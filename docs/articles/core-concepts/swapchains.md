@@ -21,9 +21,7 @@ Resizing a Swapchain is accomplished by calling [Resize(UInt32, UInt32)](xref:Ne
 NeoVeldrid has the notion of a "main Swapchain" (see [GraphicsDevice.MainSwapchain](xref:NeoVeldrid.GraphicsDevice#NeoVeldrid_GraphicsDevice_MainSwapchain)), which is the Swapchain created along with the GraphicsDevice itself. The main Swapchain is only created when certain GraphicsDevice.Create overloads are used:
 
 * Overloads accepting a [SwapchainDescription](xref:NeoVeldrid.SwapchainDescription)
-* Overloads accepting platform-specific window information, for example:
-  * [GraphicsDevice.CreateD3D11(GraphicsDeviceOptions, IntPtr, UInt32, UInt32)](xref:NeoVeldrid.GraphicsDevice#NeoVeldrid_GraphicsDevice_CreateD3D11_NeoVeldrid_GraphicsDeviceOptions_System_IntPtr_System_UInt32_System_UInt32_)
-  * [GraphicsDevice.CreateVulkan(GraphicsDeviceOptions, VkSurfaceSource, UInt32, UInt32)](xref:NeoVeldrid.GraphicsDevice#NeoVeldrid_GraphicsDevice_CreateVulkan_NeoVeldrid_GraphicsDeviceOptions_NeoVeldrid_Vk_VkSurfaceSource_System_UInt32_System_UInt32_)
+* Overloads accepting platform-specific window information, such as [GraphicsDevice.CreateD3D11(GraphicsDeviceOptions, IntPtr, UInt32, UInt32)](xref:NeoVeldrid.GraphicsDevice#NeoVeldrid_GraphicsDevice_CreateD3D11_NeoVeldrid_GraphicsDeviceOptions_System_IntPtr_System_UInt32_System_UInt32_)
 
 Overloads that only accept a [GraphicsDeviceOptions](xref:NeoVeldrid.GraphicsDeviceOptions) parameter do NOT create a main Swapchain. When no main Swapchain has been created, it is not valid to use the GraphicsDevice.MainSwapchain property, or to call the methods which implicitly operate on the main Swapchain:
 

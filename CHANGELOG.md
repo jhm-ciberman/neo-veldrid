@@ -16,6 +16,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 - [Vulkan] Fixed stale reads when draws, dispatches, or buffer copies consume compute shader output in the same command list.
 - [Vulkan] Fixed flashing and repeated swapchain recreation when presenting to high-DPI GLFW windows on macOS.
 
+### Removed
+
+- [Vulkan] Removed the broken legacy `VkSurfaceSource` API. Use `SwapchainSource` and `SwapchainDescription` to create a Vulkan graphics device with a swapchain.
+
 ### Internal
 
 - Migrated the test projects to xUnit v3.

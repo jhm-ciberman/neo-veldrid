@@ -2,10 +2,7 @@
 
 The Vulkan backend is a multi-platform backend implemented using the Vulkan API. Vulkan is supported on Windows, Linux, and macOS (via MoltenVK). Vulkan's API is very close to NeoVeldrid's and as such this is a fairly simple, straightforward backend.
 
-Vulkan [GraphicsDevices](xref:NeoVeldrid.GraphicsDevice) are created from a [VkSurfaceSource](xref:NeoVeldrid.Vk.VkSurfaceSource), which is a platform-specific object used to create a Vulkan surface (VkSurfaceKHR). The following helper functions are available:
-
-* [CreateWin32](xref:NeoVeldrid.Vk.VkSurfaceSource#NeoVeldrid_Vk_VkSurfaceSource_CreateWin32_System_IntPtr_System_IntPtr_): Creates a VkSurfaceSource for the given Win32 instance and window handle.
-* CreateXlib: Creates a VkSurfaceSource for the given Xlib display and window.
+Vulkan [GraphicsDevices](xref:NeoVeldrid.GraphicsDevice) can be created with a [SwapchainDescription](xref:NeoVeldrid.SwapchainDescription), whose [SwapchainSource](xref:NeoVeldrid.SwapchainSource) identifies the platform-specific window or view.
 
 ## API Concept Map
 

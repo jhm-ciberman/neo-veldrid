@@ -11,65 +11,49 @@ internal static unsafe class VkSurfaceUtil
 {
     internal static SurfaceKHR CreateSurface(VkGraphicsDevice gd, Instance instance, SwapchainSource swapchainSource)
     {
-        // TODO a null GD is passed from VkSurfaceSource.CreateSurface for compatibility
-        //      when VkSurfaceInfo is removed we do not have to handle gd == null anymore
-        var doCheck = gd != null;
-
-        if (doCheck && !gd.HasSurfaceExtension(CommonStrings.VK_KHR_SURFACE_EXTENSION_NAME))
+        if (!gd.HasSurfaceExtension(CommonStrings.VK_KHR_SURFACE_EXTENSION_NAME))
             throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_SURFACE_EXTENSION_NAME}");
 
         switch (swapchainSource)
         {
             case XlibSwapchainSource xlibSource:
-                if (doCheck && !gd.HasSurfaceExtension(CommonStrings.VK_KHR_XLIB_SURFACE_EXTENSION_NAME))
+                if (!gd.HasSurfaceExtension(CommonStrings.VK_KHR_XLIB_SURFACE_EXTENSION_NAME))
                 {
                     throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_XLIB_SURFACE_EXTENSION_NAME}");
                 }
                 return CreateXlib(gd, instance, xlibSource);
             case WaylandSwapchainSource waylandSource:
-                if (doCheck && !gd.HasSurfaceExtension(CommonStrings.VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME))
+                if (!gd.HasSurfaceExtension(CommonStrings.VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME))
                 {
                     throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME}");
                 }
                 return CreateWayland(gd, instance, waylandSource);
             case Win32SwapchainSource win32Source:
-                if (doCheck && !gd.HasSurfaceExtension(CommonStrings.VK_KHR_WIN32_SURFACE_EXTENSION_NAME))
+                if (!gd.HasSurfaceExtension(CommonStrings.VK_KHR_WIN32_SURFACE_EXTENSION_NAME))
                 {
                     throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_KHR_WIN32_SURFACE_EXTENSION_NAME}");
                 }
                 return CreateWin32(gd, instance, win32Source);
             case NSWindowSwapchainSource nsWindowSource:
-                if (doCheck)
+            {
+                bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
+                if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
                 {
-                    bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-                    if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
-                    {
-                        return CreateNSWindowSurface(gd, instance, nsWindowSource, hasMetalExtension);
-                    }
-                    else
-                    {
-                        throw new NeoVeldridException($"Neither macOS surface extension was available: " +
-                            $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
-                    }
+                    return CreateNSWindowSurface(gd, instance, nsWindowSource, hasMetalExtension);
                 }
-
-                return CreateNSWindowSurface(gd, instance, nsWindowSource, false);
+                throw new NeoVeldridException($"Neither macOS surface extension was available: " +
+                    $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
+            }
             case NSViewSwapchainSource nsViewSource:
-                if (doCheck)
+            {
+                bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
+                if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
                 {
-                    bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-                    if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
-                    {
-                        return CreateNSViewSurface(gd, instance, nsViewSource, hasMetalExtension);
-                    }
-                    else
-                    {
-                        throw new NeoVeldridException($"Neither macOS surface extension was available: " +
-                            $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
-                    }
+                    return CreateNSViewSurface(gd, instance, nsViewSource, hasMetalExtension);
                 }
-
-                return CreateNSViewSurface(gd, instance, nsViewSource, false);
+                throw new NeoVeldridException($"Neither macOS surface extension was available: " +
+                    $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
+            }
             default:
                 throw new NeoVeldridException($"The provided SwapchainSource cannot be used to create a Vulkan surface.");
         }
