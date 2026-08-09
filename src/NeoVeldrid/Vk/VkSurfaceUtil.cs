@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace NeoVeldrid.Vk;
 
-internal static unsafe class VkSurfaceUtil
+internal static unsafe partial class VkSurfaceUtil
 {
     internal static SurfaceKHR CreateSurface(VkGraphicsDevice gd, Instance instance, SwapchainSource swapchainSource)
     {
@@ -121,7 +121,7 @@ internal static unsafe class VkSurfaceUtil
 
     private static unsafe SurfaceKHR CreateNSWindowSurface(VkGraphicsDevice gd, Instance instance, NSWindowSwapchainSource nsWindowSource, bool hasExtMetalSurface)
     {
-        IntPtr contentView = ObjC.MsgSend(nsWindowSource.NSWindow, ObjC.Sel("contentView"));
+        IntPtr contentView = ObjC.MsgSendIntPtr(nsWindowSource.NSWindow, ObjC.Sel("contentView"));
         return CreateNSViewSurface(gd, instance, new NSViewSwapchainSource(contentView), hasExtMetalSurface);
     }
 
@@ -171,64 +171,63 @@ internal static unsafe class VkSurfaceUtil
 
     private static IntPtr GetOrCreateMetalLayer(IntPtr nsView)
     {
-        IntPtr layer = ObjC.MsgSend(nsView, ObjC.Sel("layer"));
+        IntPtr layer = ObjC.MsgSendIntPtr(nsView, ObjC.Sel("layer"));
         IntPtr caMetalLayerClass = ObjC.GetClass("CAMetalLayer");
 
-        if (layer == IntPtr.Zero || !ObjC.MsgSendBool_Ret(layer, ObjC.Sel("isKindOfClass:"), caMetalLayerClass))
+        if (layer == IntPtr.Zero || !ObjC.MsgSendBoolIntPtr(layer, ObjC.Sel("isKindOfClass:"), caMetalLayerClass))
         {
-            layer = ObjC.MsgSend(caMetalLayerClass, ObjC.Sel("alloc"));
-            layer = ObjC.MsgSend(layer, ObjC.Sel("init"));
+            layer = ObjC.MsgSendIntPtr(caMetalLayerClass, ObjC.Sel("alloc"));
+            layer = ObjC.MsgSendIntPtr(layer, ObjC.Sel("init"));
 
-            if (ObjC.MsgSendBool_Ret(nsView, ObjC.Sel("wantsBestResolutionOpenGLSurface")))
+            if (ObjC.MsgSendBool(nsView, ObjC.Sel("wantsBestResolutionOpenGLSurface")))
             {
-                IntPtr window = ObjC.MsgSend(nsView, ObjC.Sel("window"));
+                IntPtr window = ObjC.MsgSendIntPtr(nsView, ObjC.Sel("window"));
                 if (window != IntPtr.Zero)
                 {
-                    double contentsScale = ObjC.MsgSendDouble_Ret(window, ObjC.Sel("backingScaleFactor"));
-                    ObjC.MsgSendDouble(layer, ObjC.Sel("setContentsScale:"), contentsScale);
+                    double contentsScale = ObjC.MsgSendDouble(window, ObjC.Sel("backingScaleFactor"));
+                    ObjC.MsgSendVoidDouble(layer, ObjC.Sel("setContentsScale:"), contentsScale);
                 }
             }
 
-            ObjC.MsgSendPtr(nsView, ObjC.Sel("setLayer:"), layer);
+            ObjC.MsgSendVoidIntPtr(nsView, ObjC.Sel("setLayer:"), layer);
         }
 
-        ObjC.MsgSendBool(nsView, ObjC.Sel("setWantsLayer:"), 1);
+        ObjC.MsgSendVoidBool(nsView, ObjC.Sel("setWantsLayer:"), 1);
         return layer;
     }
 
     // Minimal ObjC runtime P/Invoke for macOS surface creation.
-    // Replaces the former NeoVeldrid.MetalBindings library (only the calls needed here).
-    private static class ObjC
+    private static partial class ObjC
     {
         private const string Lib = "/usr/lib/libobjc.A.dylib";
 
-        [DllImport(Lib, EntryPoint = "sel_registerName")]
-        public static extern IntPtr Sel(string name);
+        [LibraryImport(Lib, EntryPoint = "sel_registerName", StringMarshalling = StringMarshalling.Utf8)]
+        public static partial IntPtr Sel(string name);
 
-        [DllImport(Lib, EntryPoint = "objc_getClass")]
-        public static extern IntPtr GetClass(string name);
+        [LibraryImport(Lib, EntryPoint = "objc_getClass", StringMarshalling = StringMarshalling.Utf8)]
+        public static partial IntPtr GetClass(string name);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
-        public static extern IntPtr MsgSend(IntPtr receiver, IntPtr selector);
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
+        public static partial IntPtr MsgSendIntPtr(IntPtr receiver, IntPtr selector);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
-        public static extern void MsgSendPtr(IntPtr receiver, IntPtr selector, IntPtr arg);
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
+        public static partial void MsgSendVoidIntPtr(IntPtr receiver, IntPtr selector, IntPtr arg);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
-        public static extern void MsgSendBool(IntPtr receiver, IntPtr selector, byte arg);
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
+        public static partial void MsgSendVoidBool(IntPtr receiver, IntPtr selector, byte arg);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
-        public static extern void MsgSendDouble(IntPtr receiver, IntPtr selector, double arg);
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
+        public static partial void MsgSendVoidDouble(IntPtr receiver, IntPtr selector, double arg);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
-        public static extern double MsgSendDouble_Ret(IntPtr receiver, IntPtr selector);
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
+        public static partial double MsgSendDouble(IntPtr receiver, IntPtr selector);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool MsgSendBool_Ret(IntPtr receiver, IntPtr selector);
+        public static partial bool MsgSendBool(IntPtr receiver, IntPtr selector);
 
-        [DllImport(Lib, EntryPoint = "objc_msgSend")]
+        [LibraryImport(Lib, EntryPoint = "objc_msgSend")]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool MsgSendBool_Ret(IntPtr receiver, IntPtr selector, IntPtr arg);
+        public static partial bool MsgSendBoolIntPtr(IntPtr receiver, IntPtr selector, IntPtr arg);
     }
 }
