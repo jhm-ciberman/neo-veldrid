@@ -608,7 +608,7 @@ public class NeoDemo
 
             _window.Close();
 
-            _window = NeoVeldridStartup.CreateWindow(ref windowCI);
+            _window = NeoVeldridStartup.CreateWindow(ref windowCI, backend);
             _window.Resized += () => _windowResized = true;
         }
 

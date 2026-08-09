@@ -9,6 +9,11 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+### Changed
+
+- [StartupUtilities] Added backend-aware `CreateWindow` overloads that only request OpenGL support from SDL when strictly necessary.
+- [StartupUtilities] `CreateWindowAndGraphicsDevice` now requests OpenGL support from SDL only for OpenGL and OpenGL ES.
+
 ## [1.2.1] - 2026-08-09
 
 NeoVeldrid now feels properly at home on macOS. If you target macOS, make sure you update to this release.

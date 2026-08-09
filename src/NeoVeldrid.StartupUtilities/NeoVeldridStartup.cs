@@ -31,29 +31,76 @@ public static unsafe class NeoVeldridStartup
     public static void CreateWindowAndGraphicsDevice(
         WindowCreateInfo windowCI,
         GraphicsDeviceOptions deviceOptions,
-        GraphicsBackend preferredBackend,
+        GraphicsBackend backend,
         out Sdl2Window window,
         out GraphicsDevice gd)
     {
         Sdl.Init(Silk.NET.SDL.Sdl.InitVideo);
 
 #if !EXCLUDE_OPENGL_BACKEND
-        if (preferredBackend == GraphicsBackend.OpenGL || preferredBackend == GraphicsBackend.OpenGLES)
+        if (backend == GraphicsBackend.OpenGL || backend == GraphicsBackend.OpenGLES)
         {
-            SetSDLGLContextAttributes(deviceOptions, preferredBackend);
+            SetSDLGLContextAttributes(deviceOptions, backend);
         }
 #endif
 
-        window = CreateWindow(ref windowCI);
-        gd = CreateGraphicsDevice(window, deviceOptions, preferredBackend);
+        window = CreateWindow(ref windowCI, backend);
+        gd = CreateGraphicsDevice(window, deviceOptions, backend);
     }
 
+    /// <summary>
+    /// Creates an SDL window with OpenGL support enabled.
+    /// </summary>
+    /// <param name="windowCI">The window properties.</param>
+    /// <returns>The created window.</returns>
     public static Sdl2Window CreateWindow(WindowCreateInfo windowCI) => CreateWindow(ref windowCI);
 
+    /// <summary>
+    /// Creates an SDL window with OpenGL support enabled.
+    /// </summary>
+    /// <param name="windowCI">The window properties.</param>
+    /// <returns>The created window.</returns>
     public static Sdl2Window CreateWindow(ref WindowCreateInfo windowCI)
+        => CreateWindow(ref windowCI, requestOpenGL: true);
+
+    /// <summary>
+    /// Creates an SDL window configured for the specified graphics backend.
+    /// </summary>
+    /// <param name="windowCI">The window properties.</param>
+    /// <param name="backend">The graphics backend the window will be used with.</param>
+    /// <returns>The created window.</returns>
+    public static Sdl2Window CreateWindow(WindowCreateInfo windowCI, GraphicsBackend backend)
+        => CreateWindow(ref windowCI, backend);
+
+    /// <summary>
+    /// Creates an SDL window configured for the specified graphics backend.
+    /// </summary>
+    /// <param name="windowCI">The window properties.</param>
+    /// <param name="backend">The graphics backend the window will be used with.</param>
+    /// <returns>The created window.</returns>
+    public static Sdl2Window CreateWindow(ref WindowCreateInfo windowCI, GraphicsBackend backend)
     {
-        SDL_WindowFlags flags = SDL_WindowFlags.OpenGL | SDL_WindowFlags.Resizable
-                | GetWindowFlags(windowCI.WindowInitialState);
+        bool requestOpenGL = backend switch
+        {
+            GraphicsBackend.Direct3D11 => false,
+            GraphicsBackend.Vulkan => false,
+            GraphicsBackend.OpenGL => true,
+            GraphicsBackend.OpenGLES => true,
+            _ => throw new NeoVeldridException("Invalid GraphicsBackend: " + backend)
+        };
+
+        return CreateWindow(ref windowCI, requestOpenGL);
+    }
+
+    private static Sdl2Window CreateWindow(ref WindowCreateInfo windowCI, bool requestOpenGL)
+    {
+        SDL_WindowFlags flags = SDL_WindowFlags.Resizable | GetWindowFlags(windowCI.WindowInitialState);
+
+        if (requestOpenGL)
+        {
+            flags |= SDL_WindowFlags.OpenGL;
+        }
+
         if (windowCI.WindowInitialState != WindowState.Hidden)
         {
             flags |= SDL_WindowFlags.Shown;
@@ -96,14 +143,14 @@ public static unsafe class NeoVeldridStartup
         => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), GraphicsDevice.GetPlatformDefaultBackend());
     public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsDeviceOptions options)
         => CreateGraphicsDevice(window, options, GraphicsDevice.GetPlatformDefaultBackend());
-    public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsBackend preferredBackend)
-        => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), preferredBackend);
+    public static GraphicsDevice CreateGraphicsDevice(Sdl2Window window, GraphicsBackend backend)
+        => CreateGraphicsDevice(window, new GraphicsDeviceOptions(), backend);
     public static GraphicsDevice CreateGraphicsDevice(
         Sdl2Window window,
         GraphicsDeviceOptions options,
-        GraphicsBackend preferredBackend)
+        GraphicsBackend backend)
     {
-        switch (preferredBackend)
+        switch (backend)
         {
             case GraphicsBackend.Direct3D11:
 #if !EXCLUDE_D3D11_BACKEND
@@ -119,18 +166,18 @@ public static unsafe class NeoVeldridStartup
 #endif
             case GraphicsBackend.OpenGL:
 #if !EXCLUDE_OPENGL_BACKEND
-                return CreateDefaultOpenGLGraphicsDevice(options, window, preferredBackend);
+                return CreateDefaultOpenGLGraphicsDevice(options, window, backend);
 #else
                 throw new NeoVeldridException("OpenGL support has not been included in this configuration of NeoVeldrid");
 #endif
             case GraphicsBackend.OpenGLES:
 #if !EXCLUDE_OPENGL_BACKEND
-                return CreateDefaultOpenGLGraphicsDevice(options, window, preferredBackend);
+                return CreateDefaultOpenGLGraphicsDevice(options, window, backend);
 #else
                 throw new NeoVeldridException("OpenGL support has not been included in this configuration of NeoVeldrid");
 #endif
             default:
-                throw new NeoVeldridException("Invalid GraphicsBackend: " + preferredBackend);
+                throw new NeoVeldridException("Invalid GraphicsBackend: " + backend);
         }
     }
 
