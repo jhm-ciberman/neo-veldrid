@@ -35,25 +35,17 @@ internal static unsafe partial class VkSurfaceUtil
                 }
                 return CreateWin32(gd, instance, win32Source);
             case NSWindowSwapchainSource nsWindowSource:
-            {
-                bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-                if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
+                if (!gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME))
                 {
-                    return CreateNSWindowSurface(gd, instance, nsWindowSource, hasMetalExtension);
+                    throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
                 }
-                throw new NeoVeldridException($"Neither macOS surface extension was available: " +
-                    $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
-            }
+                return CreateNSWindowSurface(gd, instance, nsWindowSource);
             case NSViewSwapchainSource nsViewSource:
-            {
-                bool hasMetalExtension = gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-                if (hasMetalExtension || gd.HasSurfaceExtension(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
+                if (!gd.HasSurfaceExtension(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME))
                 {
-                    return CreateNSViewSurface(gd, instance, nsViewSource, hasMetalExtension);
+                    throw new NeoVeldridException($"The required instance extension was not available: {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
                 }
-                throw new NeoVeldridException($"Neither macOS surface extension was available: " +
-                    $"{CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME}, {CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME}");
-            }
+                return CreateNSViewSurface(gd, instance, nsViewSource);
             default:
                 throw new NeoVeldridException($"The provided SwapchainSource cannot be used to create a Vulkan surface.");
         }
@@ -119,54 +111,30 @@ internal static unsafe partial class VkSurfaceUtil
         return surface;
     }
 
-    private static unsafe SurfaceKHR CreateNSWindowSurface(VkGraphicsDevice gd, Instance instance, NSWindowSwapchainSource nsWindowSource, bool hasExtMetalSurface)
+    private static unsafe SurfaceKHR CreateNSWindowSurface(VkGraphicsDevice gd, Instance instance, NSWindowSwapchainSource nsWindowSource)
     {
         IntPtr contentView = ObjC.MsgSendIntPtr(nsWindowSource.NSWindow, ObjC.Sel("contentView"));
-        return CreateNSViewSurface(gd, instance, new NSViewSwapchainSource(contentView), hasExtMetalSurface);
+        return CreateNSViewSurface(gd, instance, new NSViewSwapchainSource(contentView));
     }
 
-    private static unsafe SurfaceKHR CreateNSViewSurface(VkGraphicsDevice gd, Instance instance, NSViewSwapchainSource nsViewSource, bool hasExtMetalSurface)
+    private static unsafe SurfaceKHR CreateNSViewSurface(VkGraphicsDevice gd, Instance instance, NSViewSwapchainSource nsViewSource)
     {
         IntPtr metalLayer = GetOrCreateMetalLayer(nsViewSource.NSView);
 
-        if (hasExtMetalSurface)
+        MetalSurfaceCreateInfoEXT surfaceCI = new MetalSurfaceCreateInfoEXT
         {
-            MetalSurfaceCreateInfoEXT surfaceCI = new MetalSurfaceCreateInfoEXT
-            {
-                SType = StructureType.MetalSurfaceCreateInfoExt,
-                PLayer = (nint*)metalLayer
-            };
+            SType = StructureType.MetalSurfaceCreateInfoExt,
+            PLayer = (nint*)metalLayer
+        };
 
-            if (!gd.Vk.TryGetInstanceExtension(instance, out ExtMetalSurface extMetalSurface))
-            {
-                throw new NeoVeldridException("VK_EXT_metal_surface extension not available.");
-            }
-
-            SurfaceKHR surface;
-            Result result = extMetalSurface.CreateMetalSurface(instance, in surfaceCI, null, out surface);
-            CheckResult(result);
-            return surface;
-        }
-        else
+        if (!gd.Vk.TryGetInstanceExtension(instance, out ExtMetalSurface extMetalSurface))
         {
-            // Legacy path: VK_MVK_macos_surface
-            MacOSSurfaceCreateInfoMVK surfaceCI = new MacOSSurfaceCreateInfoMVK
-            {
-                SType = StructureType.MacosSurfaceCreateInfoMvk,
-                PView = nsViewSource.NSView.ToPointer()
-            };
-
-            var createMacOSSurface = gd.GetInstanceProcAddr<vkCreateMacOSSurfaceMVK_t>("vkCreateMacOSSurfaceMVK");
-            if (createMacOSSurface == null)
-            {
-                throw new NeoVeldridException("vkCreateMacOSSurfaceMVK function not found.");
-            }
-
-            SurfaceKHR surface;
-            Result result = createMacOSSurface(instance, &surfaceCI, null, &surface);
-            CheckResult(result);
-            return surface;
+            throw new NeoVeldridException("VK_EXT_metal_surface extension not available.");
         }
+
+        Result result = extMetalSurface.CreateMetalSurface(instance, in surfaceCI, null, out SurfaceKHR surface);
+        CheckResult(result);
+        return surface;
     }
 
     private static IntPtr GetOrCreateMetalLayer(IntPtr nsView)

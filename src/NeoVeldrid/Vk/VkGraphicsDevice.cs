@@ -535,13 +535,6 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
             {
                 _surfaceExtensions.Add(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
             }
-            else // Legacy MoltenVK extensions
-            {
-                if (availableInstanceExtensions.Contains(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME))
-                {
-                    _surfaceExtensions.Add(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME);
-                }
-            }
         }
 
         foreach (var ext in _surfaceExtensions)
@@ -1504,7 +1497,7 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return instanceExtensions.Contains(CommonStrings.VK_MVK_MACOS_SURFACE_EXTENSION_NAME);
+            return instanceExtensions.Contains(CommonStrings.VK_EXT_METAL_SURFACE_EXTENSION_NAME);
         }
 
         return false;
@@ -1657,13 +1650,6 @@ internal unsafe delegate void vkGetBufferMemoryRequirements2_t(Device device, Bu
 internal unsafe delegate void vkGetImageMemoryRequirements2_t(Device device, ImageMemoryRequirementsInfo2KHR* pInfo, MemoryRequirements2KHR* pMemoryRequirements);
 
 internal unsafe delegate void vkGetPhysicalDeviceProperties2_t(PhysicalDevice physicalDevice, void* properties);
-
-// VK_MVK_macos_surface (legacy, no Silk.NET extension class available)
-internal unsafe delegate Result vkCreateMacOSSurfaceMVK_t(
-    Instance instance,
-    MacOSSurfaceCreateInfoMVK* pCreateInfo,
-    AllocationCallbacks* pAllocator,
-    SurfaceKHR* pSurface);
 
 internal unsafe struct VkPhysicalDeviceDriverProperties
 {
