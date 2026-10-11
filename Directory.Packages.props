@@ -8,7 +8,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
     </ItemGroup>
     
     <!-- Silk.NET Central Versions -->
