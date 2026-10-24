@@ -15,7 +15,7 @@ namespace NeoVeldrid.Sdl2;
 
 public unsafe class Sdl2Window
 {
-    private static readonly Sdl _sdl = Sdl.GetApi();
+    private static readonly Sdl _sdl = new(SilkNativeContext.Create("SDL2.dll", "libSDL2-2.0.so", "libSDL2-2.0.dylib"));
 
     private readonly List<Event> _events = new List<Event>();
     private Silk.NET.SDL.Window* _window;

@@ -3,14 +3,9 @@
     <PropertyGroup>
         <RootNamespace>NeoVeldrid</RootNamespace>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>RenderDoc integration for NeoVeldrid. Provides access to RenderDoc's in-application API.</Description>
         <PackageTags>Debug Profile 3D Graphics Direct3D DirectX Vulkan OpenGL Core Game</PackageTags>
-        <!-- NativeLibraryLoader pulls old Newtonsoft.Json; transitive vulnerability, not exploitable here -->
-        <NoWarn>$(NoWarn);NU1903</NoWarn>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="NativeLibraryLoader" />
-    </ItemGroup>
 
 </Project>

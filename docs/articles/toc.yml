@@ -52,6 +52,8 @@
     href: advanced/api-validation.md
   - name: Backend Differences
     href: advanced/backend-differences.md
+  - name: Native AOT
+    href: advanced/native-aot.md
   - name: Implementation Overview
     href: advanced/implementation/overview.md
   - name: Public Interface

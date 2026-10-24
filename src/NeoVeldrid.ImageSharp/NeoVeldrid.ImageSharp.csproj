@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>ImageSharp integration for NeoVeldrid. Provides functionality for loading GPU Textures with ImageSharp.</Description>
         <PackageTags>3D Graphics Direct3D DirectX Vulkan OpenGL Core Game ImageSharp</PackageTags>
     </PropertyGroup>

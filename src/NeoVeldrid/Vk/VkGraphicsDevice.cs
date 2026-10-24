@@ -23,7 +23,7 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
     private static readonly FixedUtf8String s_name = "NeoVeldrid-VkGraphicsDevice";
     private static readonly Lazy<bool> s_isSupported = new Lazy<bool>(CheckIsSupported, isThreadSafe: true);
 
-    private readonly VkApi _vk = VkApi.GetApi();
+    private readonly VkApi _vk = CreateApi();
 
     private Instance _instance;
     private PhysicalDevice _physicalDevice;
@@ -656,7 +656,7 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
         if (!IsSupported())
             return result;
 
-        using (var vk = VkApi.GetApi())
+        using (var vk = CreateApi())
         {
             try
             {
@@ -1455,7 +1455,7 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
             return false;
         }
 
-        using var vk = VkApi.GetApi();
+        using var vk = CreateApi();
         InstanceCreateInfo instanceCI = new InstanceCreateInfo(sType: StructureType.InstanceCreateInfo);
         ApplicationInfo applicationInfo = new ApplicationInfo(sType: StructureType.ApplicationInfo);
         applicationInfo.ApiVersion = new Version32(1, 0, 0);

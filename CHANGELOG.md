@@ -9,10 +9,19 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-24
+
+Native AOT is here. Your NeoVeldrid game can now ship as a single native binary that starts in a blink.
+
+### Added
+
+- All NeoVeldrid packages now support Native AOT and trimming. See the [Native AOT](https://jhm-ciberman.github.io/neo-veldrid/articles/advanced/native-aot.html) article for details.
+
 ### Changed
 
 - [StartupUtilities] Added backend-aware `CreateWindow` overloads that only request OpenGL support from SDL when strictly necessary.
 - [StartupUtilities] `CreateWindowAndGraphicsDevice` now requests OpenGL support from SDL only for OpenGL and OpenGL ES.
+- Native libraries bundled with the app now take precedence over system-installed copies.
 
 ## [1.2.1] - 2026-08-09
 
@@ -152,7 +161,8 @@ First release of NeoVeldrid. A maintained, drop-in replacement for [Veldrid](htt
 - [Samples] The AnimatedMesh sample now renders correctly on OpenGL and OpenGL ES.
 - [Samples] The ComputeParticles sample now renders correctly on D3D11.
 
-[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.0.0...v1.1.0

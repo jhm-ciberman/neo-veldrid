@@ -3,6 +3,7 @@
     <PropertyGroup>
         <RootNamespace>NeoVeldrid</RootNamespace>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>ImGui integration for NeoVeldrid. Provides a simple interface for rendering and interacting with ImGui.NET.</Description>
         <PackageTags>3D Graphics Direct3D DirectX Vulkan OpenGL Core Game ImGui</PackageTags>
     </PropertyGroup>

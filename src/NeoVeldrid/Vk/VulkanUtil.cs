@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Silk.NET.Core.Contexts;
 using Silk.NET.Vulkan;
 using VkApi = Silk.NET.Vulkan.Vk;
 
@@ -38,7 +39,7 @@ internal unsafe static class VulkanUtil
 
     public static string[] EnumerateInstanceLayers()
     {
-        using var vk = VkApi.GetApi();
+        using var vk = CreateApi();
         uint propCount = 0;
         Result result = vk.EnumerateInstanceLayerProperties(ref propCount, null);
         CheckResult(result);
@@ -74,7 +75,7 @@ internal unsafe static class VulkanUtil
             return Array.Empty<string>();
         }
 
-        using var vk = VkApi.GetApi();
+        using var vk = CreateApi();
         uint propCount = 0;
         Result result = vk.EnumerateInstanceExtensionProperties((byte*)null, ref propCount, null);
         if (result != Result.Success)
@@ -105,12 +106,42 @@ internal unsafe static class VulkanUtil
         return ret;
     }
 
+    /// <summary>
+    /// Loads the Vulkan library and creates a new API instance for it.
+    /// </summary>
+    /// <exception cref="System.IO.FileNotFoundException">The Vulkan library could not be loaded.</exception>
+    public static VkApi CreateApi()
+    {
+        // Mirrors Vk.GetApi(): functions the loader doesn't export are resolved through the current device or
+        // instance.
+        var ctx = new MultiNativeContext(
+            SilkNativeContext.Create(
+                ["vulkan-1.dll"],
+                ["libvulkan.so.1", "libvulkan.so"],
+                ["libvulkan.dylib", "libMoltenVK.dylib"]
+            ),
+            null
+        );
+        var vk = new VkApi(ctx);
+        ctx.Contexts[1] = new LamdaNativeContext(name =>
+        {
+            if (name.EndsWith("ProcAddr"))
+            {
+                return 0;
+            }
+
+            nint ptr = vk.GetDeviceProcAddr(vk.CurrentDevice.GetValueOrDefault(), name);
+            return ptr != 0 ? ptr : vk.GetInstanceProcAddr(vk.CurrentInstance.GetValueOrDefault(), name);
+        });
+        return vk;
+    }
+
     public static bool IsVulkanLoaded() => s_isVulkanLoaded.Value;
     private static bool TryLoadVulkan()
     {
         try
         {
-            using var vk = VkApi.GetApi();
+            using var vk = CreateApi();
             uint propCount;
             vk.EnumerateInstanceExtensionProperties((byte*)null, &propCount, null);
             return true;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using NativeLibrary = NativeLibraryLoader.NativeLibrary;
 
 namespace NeoVeldrid;
 
@@ -14,12 +13,12 @@ namespace NeoVeldrid;
 public unsafe class RenderDoc
 {
     private readonly RENDERDOC_API_1_4_0 _api;
-    private readonly NativeLibrary _nativeLib;
 
-    private unsafe RenderDoc(NativeLibrary lib)
+    private unsafe RenderDoc(nint libHandle)
     {
-        _nativeLib = lib;
-        pRENDERDOC_GetAPI getApiFunc = _nativeLib.LoadFunction<pRENDERDOC_GetAPI>("RENDERDOC_GetAPI");
+        pRENDERDOC_GetAPI getApiFunc = Marshal.GetDelegateForFunctionPointer<pRENDERDOC_GetAPI>(
+            NativeLibrary.GetExport(libHandle, "RENDERDOC_GetAPI")
+        );
         void* apiPointers;
         int result = getApiFunc(RENDERDOC_Version.API_Version_1_2_0, &apiPointers);
         if (result != 1)
@@ -360,15 +359,22 @@ public unsafe class RenderDoc
     {
         try
         {
-            NativeLibrary lib = new NativeLibrary(renderDocLibPaths);
-            renderDoc = new RenderDoc(lib);
-            return true;
+            foreach (string path in renderDocLibPaths)
+            {
+                if (NativeLibrary.TryLoad(path, typeof(RenderDoc).Assembly, null, out nint libHandle))
+                {
+                    renderDoc = new RenderDoc(libHandle);
+                    return true;
+                }
+            }
         }
         catch
         {
-            renderDoc = null;
-            return false;
+            // The library loaded but doesn't expose a usable RenderDoc API.
         }
+
+        renderDoc = null;
+        return false;
     }
 
     private static string[] GetLibNames()

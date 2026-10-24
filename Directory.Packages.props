@@ -21,7 +21,6 @@
         
         <PackageVersion Include="Silk.NET.Direct3D11" Version="$(SilkNetVersion)" />
         <PackageVersion Include="Silk.NET.DXGI" Version="$(SilkNetVersion)" />
-        <PackageVersion Include="Silk.NET.Direct3D.Compilers" Version="$(SilkNetVersion)" />
         
         <PackageVersion Include="Silk.NET.OpenGL" Version="$(SilkNetVersion)" />
         <PackageVersion Include="Silk.NET.OpenGL.Extensions.EXT" Version="$(SilkNetVersion)" />
@@ -50,11 +49,6 @@
     <!-- ImGui Central Versions -->
     <ItemGroup>
         <PackageVersion Include="ImGui.NET" Version="$(ImGuiNetVersion)" />
-    </ItemGroup>
-
-    <!-- Mellinoe Central Versions -->
-    <ItemGroup>
-        <PackageVersion Include="NativeLibraryLoader" Version="1.0.13" />
     </ItemGroup>
 
     <!-- Unit Testing Central Versions -->

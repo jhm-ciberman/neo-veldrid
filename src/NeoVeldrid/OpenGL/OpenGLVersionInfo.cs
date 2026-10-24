@@ -152,7 +152,7 @@ internal static class OpenGLWglVersionProber
 
             PIXELFORMATDESCRIPTOR pfd = new PIXELFORMATDESCRIPTOR
             {
-                nSize = (ushort)Marshal.SizeOf(typeof(PIXELFORMATDESCRIPTOR)),
+                nSize = (ushort)Marshal.SizeOf<PIXELFORMATDESCRIPTOR>(),
                 nVersion = 1,
                 dwFlags = 0x00000004 |              // PFD_DRAW_TO_WINDOW
                           0x00000020,               // PFD_SUPPORT_OPENGL
@@ -221,7 +221,7 @@ internal static class OpenGLWglVersionProber
 
             PIXELFORMATDESCRIPTOR pfd = new PIXELFORMATDESCRIPTOR
             {
-                nSize = (ushort)Marshal.SizeOf(typeof(PIXELFORMATDESCRIPTOR)),
+                nSize = (ushort)Marshal.SizeOf<PIXELFORMATDESCRIPTOR>(),
                 nVersion = 1,
                 dwFlags = 0x00000004 |              // PFD_DRAW_TO_WINDOW
                           0x00000020,               // PFD_SUPPORT_OPENGL

@@ -19,7 +19,9 @@ namespace NeoVeldrid.SPIRV;
 /// </summary>
 internal static unsafe class SpirvCrossCompiler
 {
-    private static readonly Cross s_cross = Cross.GetApi();
+    private static readonly Cross s_cross = new(
+        SilkNativeContext.Create("spirv-cross.dll", "libspirv-cross.so", "libspirv-cross.dylib")
+    );
 
     internal static VertexFragmentCompilationResult CompileVertexFragment(
         byte[] vsSpirv, byte[] fsSpirv, CrossCompileTarget target, CrossCompileOptions options)

@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>SDL2 windowing support for NeoVeldrid via Silk.NET.SDL.</Description>
         <PackageTags>SDL2 Window Input</PackageTags>
     </PropertyGroup>
@@ -9,6 +10,10 @@
     <ItemGroup>
         <ProjectReference Include="..\NeoVeldrid\NeoVeldrid.csproj" />
         <PackageReference Include="Silk.NET.SDL" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="$(RootDir)src\Shared\SilkNativeContext.cs" Link="Shared\SilkNativeContext.cs" />
     </ItemGroup>
 
 </Project>

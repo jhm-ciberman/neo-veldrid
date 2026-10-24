@@ -1,12 +1,12 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 using Silk.NET.Core.Native;
-using Silk.NET.Direct3D.Compilers;
 using Silk.NET.Direct3D11;
 
 namespace NeoVeldrid.D3D11;
 
-internal unsafe class D3D11Shader : Shader
+internal unsafe partial class D3D11Shader : Shader
 {
     private string _name;
 
@@ -119,27 +119,20 @@ internal unsafe class D3D11Shader : Shader
         // D3DCOMPILE_DEBUG = 0x1, D3DCOMPILE_OPTIMIZATION_LEVEL3 = 0x8000
         uint flags = description.Debug ? 0x1u : 0x8000u;
 
-        D3DCompiler compiler = D3DCompiler.GetApi();
         ID3D10Blob* pResult = null;
         ID3D10Blob* pError = null;
 
         fixed (byte* pSource = description.ShaderBytes)
         {
-            nint pEntryPoint = SilkMarshal.StringToPtr(description.EntryPoint);
-            nint pProfile = SilkMarshal.StringToPtr(profile);
-
-            int hr = compiler.Compile(
+            D3DCompile(
                 pSource, (nuint)description.ShaderBytes.Length,
-                (byte*)null,
                 null,
                 null,
-                (byte*)pEntryPoint,
-                (byte*)pProfile,
+                null,
+                description.EntryPoint,
+                profile,
                 flags, 0,
                 &pResult, &pError);
-
-            SilkMarshal.Free(pEntryPoint);
-            SilkMarshal.Free(pProfile);
 
             if (pResult == null)
             {
@@ -165,6 +158,23 @@ internal unsafe class D3D11Shader : Shader
             return bytecode;
         }
     }
+
+    // Imported directly: Silk.NET's D3DCompiler class reaches its default native library resolver from its static
+    // constructor, which produces Native AOT warnings.
+    [LibraryImport("d3dcompiler_47.dll", StringMarshalling = StringMarshalling.Utf8)]
+    private static partial int D3DCompile(
+        void* pSrcData,
+        nuint srcDataSize,
+        string pSourceName,
+        void* pDefines,
+        void* pInclude,
+        string pEntrypoint,
+        string pTarget,
+        uint flags1,
+        uint flags2,
+        ID3D10Blob** ppCode,
+        ID3D10Blob** ppErrorMsgs
+    );
 
     public override string Name
     {
