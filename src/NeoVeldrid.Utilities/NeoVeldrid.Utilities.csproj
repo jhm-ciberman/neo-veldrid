@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>Miscellaneous utility functions useful for NeoVeldrid.</Description>
         <PackageTags>Core Game Graphics</PackageTags>
     </PropertyGroup>

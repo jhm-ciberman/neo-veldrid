@@ -10,7 +10,9 @@ namespace NeoVeldrid.SPIRV;
 /// </summary>
 public static unsafe class SpirvCompilation
 {
-    private static readonly Shaderc s_shaderc = Shaderc.GetApi();
+    private static readonly Shaderc s_shaderc = new(
+        SilkNativeContext.Create("shaderc_shared.dll", "libshaderc_shared.so", "libshaderc_shared.dylib")
+    );
     private static readonly unsafe Silk.NET.Shaderc.Compiler* s_compiler = s_shaderc.CompilerInitialize();
 
     /// <summary>

@@ -10,13 +10,6 @@ namespace NeoVeldrid.SPIRV;
 /// </summary>
 public class SpirvReflection
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new()
-    {
-        WriteIndented = true,
-        IncludeFields = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
-
     /// <summary>
     /// An array containing a description of each vertex element that is used by the compiled shader set.
     /// This array will be empty for compute shaders.
@@ -58,6 +51,6 @@ public class SpirvReflection
     /// <returns>A new <see cref="SpirvReflection"/> object, deserialized from the stream.</returns>
     public static SpirvReflection LoadFromJson(Stream jsonStream)
     {
-        return JsonSerializer.Deserialize<SpirvReflection>(jsonStream, s_jsonOptions);
+        return JsonSerializer.Deserialize(jsonStream, SpirvReflectionJsonContext.Default.SpirvReflection);
     }
 }

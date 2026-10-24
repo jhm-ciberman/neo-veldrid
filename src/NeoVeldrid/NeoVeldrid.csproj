@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>A low-level, hardware-accelerated graphics and compute library for .NET, with backends for Vulkan, Direct3D 11, and OpenGL. NeoVeldrid can be used to create high-performance 2D and 3D games, simulations, tools, and other graphical applications.</Description>
         <PackageTags>3D Graphics Direct3D DirectX Vulkan OpenGL Core Game</PackageTags>
     </PropertyGroup>
@@ -25,7 +26,6 @@
         <!-- Silk.NET Direct3D 11 -->
         <PackageReference Include="Silk.NET.Direct3D11" Condition="'$(ExcludeD3D11)' != 'true'" />
         <PackageReference Include="Silk.NET.DXGI" Condition="'$(ExcludeD3D11)' != 'true'" />
-        <PackageReference Include="Silk.NET.Direct3D.Compilers" Condition="'$(ExcludeD3D11)' != 'true'" />
 
         <!-- Silk.NET OpenGL -->
         <PackageReference Include="Silk.NET.OpenGL" Condition="'$(ExcludeOpenGL)' != 'true'" />
@@ -33,6 +33,10 @@
 
         <!-- MoltenVK for macOS (provides Vulkan on Apple platforms via Metal translation) -->
         <PackageReference Include="Silk.NET.MoltenVK.Native" Condition="'$(ExcludeVulkan)' != 'true'" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="$(RootDir)src\Shared\SilkNativeContext.cs" Link="Shared\SilkNativeContext.cs" />
     </ItemGroup>
 
     <!-- Exclude backends by compile removal -->

@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
         <Description>Helper classes for creating and managing application windows and user input.</Description>
         <PackageTags>Core Game Window Input</PackageTags>
     </PropertyGroup>

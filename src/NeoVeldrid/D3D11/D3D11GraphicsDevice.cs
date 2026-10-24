@@ -78,11 +78,7 @@ internal unsafe class D3D11GraphicsDevice : GraphicsDevice
 
     public D3D11GraphicsDevice(D3D11DeviceOptions options, SwapchainDescription? swapchainDesc)
     {
-#pragma warning disable CS0618
-        _d3d11Api = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? Silk.NET.Direct3D11.D3D11.GetApi(DXSwapchainProvider.Win32)
-            : Silk.NET.Direct3D11.D3D11.GetApi(DXSwapchainProvider.Sdl2);
-#pragma warning restore CS0618
+        _d3d11Api = CreateD3D11Api();
 
         var flags = (CreateDeviceFlag)options.DeviceCreationFlags;
         IsDebugRequested = (flags & CreateDeviceFlag.Debug) != 0;
@@ -240,6 +236,14 @@ internal unsafe class D3D11GraphicsDevice : GraphicsDevice
         PostDeviceCreated();
     }
 
+    private static Silk.NET.Direct3D11.D3D11 CreateD3D11Api()
+    {
+        // The non-Windows names are DXVK's, matching what Silk.NET loads for its SDL2 swapchain provider.
+        return new Silk.NET.Direct3D11.D3D11(
+            SilkNativeContext.Create(["d3d11.dll"], ["sdl2-libdxvk_d3d11.so", "libd3d11.so"], ["libd3d11.dylib"])
+        );
+    }
+
     private static bool SdkLayersAvailable(Silk.NET.Direct3D11.D3D11 d3d11)
     {
         // Try creating a null device with debug flag to check if SDK layers are installed
@@ -271,7 +275,7 @@ internal unsafe class D3D11GraphicsDevice : GraphicsDevice
     {
         GraphicsApiVersion result = GraphicsApiVersion.Unknown;
 
-        using (var d3d11 = Silk.NET.Direct3D11.D3D11.GetApi(null))
+        using (var d3d11 = CreateD3D11Api())
         {
             D3DFeatureLevel[] featureLevels = new[]
             {
@@ -828,9 +832,7 @@ internal unsafe class D3D11GraphicsDevice : GraphicsDevice
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
             try
             {
-#pragma warning disable CS0618
-                using var dxgi = DXGI.GetApi();
-#pragma warning restore CS0618
+                using var dxgi = new DXGI(SilkNativeContext.Create("DXGI.dll", "libDXGI.so", "libDXGI.dylib"));
                 IDXGIDebug1* pDxgiDebug;
                 var dxgiDebugGuid = IDXGIDebug1.Guid;
                 if (dxgi.GetDebugInterface1(0, &dxgiDebugGuid, (void**)&pDxgiDebug) >= 0 && pDxgiDebug != null)
