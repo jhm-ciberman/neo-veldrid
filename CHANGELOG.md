@@ -9,6 +9,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+### Fixed
+
+- [Vulkan] `GraphicsDevice.UpdateBuffer` no longer throws "An item with the same key has already been added" when it is called from several threads at the same time.
+
 ## [1.3.0] - 2026-10-24
 
 Native AOT is here. Your NeoVeldrid game can now ship as a single native binary that starts in a blink.
