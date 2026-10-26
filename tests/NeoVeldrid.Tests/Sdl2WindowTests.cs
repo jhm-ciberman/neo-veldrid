@@ -59,6 +59,7 @@ public class Sdl2WindowTests
         Task close = Task.Run(window.Close, cancellationToken);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => close.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken));
+        window.Close();
     }
 
     private static Sdl2Window CreateThreadedWindow()

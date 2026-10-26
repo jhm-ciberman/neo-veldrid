@@ -381,7 +381,9 @@ public unsafe class Sdl2Window
                 }
             }
 
-            Rethrow(_ownerException);
+            Exception ownerException = _ownerException;
+            _ownerException = null;
+            Rethrow(ownerException);
         }
     }
 
