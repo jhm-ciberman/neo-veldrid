@@ -89,7 +89,7 @@ public abstract class MainSwapchainTests<T> : GraphicsDeviceTestBase<T> where T 
     }
 
     [Fact]
-    public void SwapBuffers_WhileWindowMinimized_KeepsPresenting()
+    public void SwapBuffers_WhileWindowMinimized_DoesNotPresentUnacquiredImage()
     {
         CommandList cl = RF.CreateCommandList();
         MainThread.Invoke(() =>
