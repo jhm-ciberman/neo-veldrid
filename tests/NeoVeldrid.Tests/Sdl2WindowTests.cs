@@ -2,13 +2,14 @@
 #if TEST_VULKAN || TEST_D3D11 || TEST_OPENGL
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NeoVeldrid.Sdl2;
 using Silk.NET.SDL;
 using Xunit;
 
 namespace NeoVeldrid.Tests;
 
-public unsafe class Sdl2WindowTests
+public class Sdl2WindowTests
 {
     // Regression test for a bug where a threaded window destroyed itself on its event thread as
     // soon as SDL asked it to close (e.g. its close button), while the main thread could still be
@@ -25,8 +26,12 @@ public unsafe class Sdl2WindowTests
             bool destroyedWithoutPump = SpinWait.SpinUntil(() => !window.Exists, TimeSpan.FromMilliseconds(500));
             Assert.False(destroyedWithoutPump);
 
-            window.PumpEvents();
-            Assert.False(window.Exists);
+            bool destroyedByPump = SpinWait.SpinUntil(() =>
+            {
+                window.PumpEvents();
+                return !window.Exists;
+            }, TimeSpan.FromSeconds(5));
+            Assert.True(destroyedByPump);
         }
         finally
         {
@@ -44,6 +49,18 @@ public unsafe class Sdl2WindowTests
         Assert.False(window.Exists);
     }
 
+    [Fact]
+    public async Task ThreadedWindow_Close_ReturnsWhenAHandlerThrows()
+    {
+        Sdl2Window window = CreateThreadedWindow();
+        window.Closing += () => throw new InvalidOperationException("Closing handler failed.");
+
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        Task close = Task.Run(window.Close, cancellationToken);
+
+        await close.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
+    }
+
     private static Sdl2Window CreateThreadedWindow()
     {
         // macOS only allows windows on the process main thread.
@@ -52,7 +69,7 @@ public unsafe class Sdl2WindowTests
         return new Sdl2Window("Sdl2WindowTests", 0, 0, 200, 200, SDL_WindowFlags.Hidden, threadedProcessing: true);
     }
 
-    private static void PushCloseEvent(Sdl2Window window)
+    private static unsafe void PushCloseEvent(Sdl2Window window)
     {
         Sdl sdl = Sdl2Window.SdlInstance;
         Event ev = default;

@@ -31,8 +31,9 @@ public unsafe class Sdl2Window
 
     private int _ownerThreadId;
     private readonly object _closeLock = new object();
-    private volatile bool _closeRequested;
+    private int _closeRequested;
     private volatile bool _shouldClose;
+    private bool _ownerExited;
     public bool LimitPollRate { get; set; }
     public float PollIntervalInMs { get; set; }
 
@@ -349,8 +350,11 @@ public unsafe class Sdl2Window
     /// Destroys the window, unless the close-requested handler cancels it.
     /// </summary>
     /// <remarks>
-    /// With threaded processing, a call from the window's event thread (such as from one of its
-    /// events) is deferred to the next <see cref="PumpEvents()"/>.
+    /// With threaded processing, the window's event thread performs the close and raises
+    /// <see cref="Closing"/> and <see cref="Closed"/>. A call from another thread blocks until it
+    /// finishes, so those handlers must not wait on the calling thread. A call from the event
+    /// thread itself (such as from one of the window's events) is deferred to the next
+    /// <see cref="PumpEvents()"/>.
     /// </remarks>
     public void Close()
     {
@@ -360,7 +364,7 @@ public unsafe class Sdl2Window
         }
         else if (Environment.CurrentManagedThreadId == _ownerThreadId)
         {
-            _closeRequested = true;
+            Volatile.Write(ref _closeRequested, 1);
         }
         else
         {
@@ -374,13 +378,13 @@ public unsafe class Sdl2Window
     {
         lock (_closeLock)
         {
-            if (!_exists)
+            if (!_exists || _ownerExited)
             {
                 return;
             }
 
             _shouldClose = true;
-            while (_shouldClose)
+            while (_shouldClose && !_ownerExited)
             {
                 Monitor.Wait(_closeLock);
             }
@@ -432,33 +436,45 @@ public unsafe class Sdl2Window
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        while (_exists)
+        try
         {
-            if (_shouldClose)
+            while (_exists)
             {
-                bool closed = CloseCore();
-                lock (_closeLock)
+                if (_shouldClose)
                 {
-                    _shouldClose = false;
-                    Monitor.PulseAll(_closeLock);
+                    bool closed = CloseCore();
+                    lock (_closeLock)
+                    {
+                        _shouldClose = false;
+                        Monitor.PulseAll(_closeLock);
+                    }
+
+                    if (closed)
+                    {
+                        return;
+                    }
                 }
 
-                if (closed)
+                double currentTick = sw.ElapsedTicks;
+                double currentTimeMs = sw.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
+                if (LimitPollRate && currentTimeMs - previousPollTimeMs < PollIntervalInMs)
                 {
-                    return;
+                    System.Threading.Thread.Sleep(0);
+                }
+                else
+                {
+                    previousPollTimeMs = currentTimeMs;
+                    ProcessEvents(null);
                 }
             }
-
-            double currentTick = sw.ElapsedTicks;
-            double currentTimeMs = sw.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
-            if (LimitPollRate && currentTimeMs - previousPollTimeMs < PollIntervalInMs)
+        }
+        finally
+        {
+            // An event handler that throws ends this thread. Release any Close() waiting on it.
+            lock (_closeLock)
             {
-                System.Threading.Thread.Sleep(0);
-            }
-            else
-            {
-                previousPollTimeMs = currentTimeMs;
-                ProcessEvents(null);
+                _ownerExited = true;
+                Monitor.PulseAll(_closeLock);
             }
         }
     }
@@ -498,10 +514,9 @@ public unsafe class Sdl2Window
             snapshot.CopyTo(_publicSnapshot);
             snapshot.Clear();
 
-            if (_closeRequested)
+            if (Interlocked.Exchange(ref _closeRequested, 0) == 1)
             {
-                _closeRequested = false;
-                CloseOnOwnerThread();
+                Close();
             }
         }
         else
