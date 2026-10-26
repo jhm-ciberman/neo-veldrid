@@ -44,6 +44,7 @@ internal unsafe class VkSwapchain : Swapchain
 
     public SwapchainKHR DeviceSwapchain => _deviceSwapchain;
     public uint ImageIndex => _currentImageIndex;
+    public bool HasAcquiredImage { get; private set; }
     public VkFenceHandle ImageAvailableFence => _imageAvailableFence;
     public SurfaceKHR Surface => _surface;
     public Queue PresentQueue => _presentQueue;
@@ -102,6 +103,8 @@ internal unsafe class VkSwapchain : Swapchain
 
     public bool AcquireNextImage(Device device, VkSemaphore semaphore, VkFenceHandle fence)
     {
+        HasAcquiredImage = false;
+
         if (_newSyncToVBlank != null)
         {
             _syncToVBlank = _newSyncToVBlank.Value;
@@ -132,11 +135,14 @@ internal unsafe class VkSwapchain : Swapchain
         // A suboptimal image is still acquired and usable. The swapchain is recreated once presenting reports it.
         _currentImageIndex = imageIndex;
         _framebuffer.SetImageIndex(_currentImageIndex);
+        HasAcquiredImage = true;
         return true;
     }
 
     public void RecreateAndReacquire(uint width, uint height)
     {
+        HasAcquiredImage = false;
+
         if (CreateSwapchain(width, height))
         {
             if (AcquireNextImage(_gd.Device, default, _imageAvailableFence))

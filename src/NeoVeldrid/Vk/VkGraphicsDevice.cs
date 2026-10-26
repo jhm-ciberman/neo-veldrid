@@ -378,6 +378,13 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
         object presentLock = vkSC.PresentQueueIndex == _graphicsQueueIndex ? _graphicsQueueLock : vkSC;
         lock (presentLock)
         {
+            if (!vkSC.HasAcquiredImage)
+            {
+                // The swapchain could not be recreated earlier, e.g. because the window is minimized.
+                vkSC.RecreateAndReacquire(vkSC.Framebuffer.Width, vkSC.Framebuffer.Height);
+                return;
+            }
+
             Result presentResult = _khrSwapchain.QueuePresent(vkSC.PresentQueue, &presentInfo);
             if (presentResult == Result.ErrorOutOfDateKhr || presentResult == Result.SuboptimalKhr)
             {

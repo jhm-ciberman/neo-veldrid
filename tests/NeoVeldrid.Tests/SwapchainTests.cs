@@ -89,6 +89,29 @@ public abstract class MainSwapchainTests<T> : GraphicsDeviceTestBase<T> where T 
     }
 
     [Fact]
+    public void SwapBuffers_WhileWindowMinimized_KeepsPresenting()
+    {
+        CommandList cl = RF.CreateCommandList();
+        MainThread.Invoke(() =>
+        {
+            Window.WindowState = WindowState.Normal;
+            Window.PumpEvents();
+        });
+        RenderFrames(cl, 2);
+
+        MainThread.Invoke(() =>
+        {
+            Window.WindowState = WindowState.Minimized;
+            Window.PumpEvents();
+        });
+
+        // A minimized window has no size to recreate the swapchain at, so frames rendered while it
+        // stays minimized must not present an image they never acquired.
+        RenderFrames(cl, 3);
+        GD.WaitForIdle();
+    }
+
+    [Fact]
     public void Framebuffer_AfterWindowResizeWithoutSwapchainResize_MatchesColorTargetSize()
     {
         CommandList cl = RF.CreateCommandList();
