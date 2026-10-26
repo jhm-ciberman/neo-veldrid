@@ -9,6 +9,10 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-26
+
+A stability release with fixes for threaded SDL2 windows and for Vulkan swapchains and buffer updates.
+
 ### Fixed
 
 - [SDL2] When you close a window created with `threadedProcessing`, rendering no longer fails with errors like Vulkan's "surface has been lost".
@@ -168,7 +172,8 @@ First release of NeoVeldrid. A maintained, drop-in replacement for [Veldrid](htt
 - [Samples] The AnimatedMesh sample now renders correctly on OpenGL and OpenGL ES.
 - [Samples] The ComputeParticles sample now renders correctly on D3D11.
 
-[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/jhm-ciberman/neo-veldrid/compare/v1.1.0...v1.2.0
