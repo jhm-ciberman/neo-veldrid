@@ -1270,11 +1270,11 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
             };
             _vk.CmdCopyBuffer(cb, copySrcVkBuffer.DeviceBuffer, vkBuffer.DeviceBuffer, 1, in copyRegion);
 
-            pool.EndAndSubmit(cb);
             lock (_stagingResourcesLock)
             {
                 _submittedStagingBuffers.Add(cb, copySrcVkBuffer);
             }
+            pool.EndAndSubmit(cb);
         }
     }
 
@@ -1614,11 +1614,12 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
         {
             Result result = _gd._vk.EndCommandBuffer(cb);
             CheckResult(result);
-            _gd.SubmitCommandBuffer(null, cb, 0, null, 0, null, null);
+            // Registered before the submit, so the fence cleanup on another thread always finds the entry.
             lock (_gd._stagingResourcesLock)
             {
                 _gd._submittedSharedCommandPools.Add(cb, this);
             }
+            _gd.SubmitCommandBuffer(null, cb, 0, null, 0, null, null);
         }
 
         internal void Destroy()

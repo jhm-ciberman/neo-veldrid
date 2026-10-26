@@ -6,7 +6,7 @@ using Xunit;
 
 namespace NeoVeldrid.Tests;
 
-public abstract class BufferTestBase<T> : GraphicsDeviceTestBase<T> where T : GraphicsDeviceCreator
+public abstract partial class BufferTestBase<T> : GraphicsDeviceTestBase<T> where T : GraphicsDeviceCreator
 {
     [Fact]
     public void CreateBuffer_Succeeds()
