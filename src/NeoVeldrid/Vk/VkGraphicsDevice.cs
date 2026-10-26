@@ -378,8 +378,12 @@ internal unsafe class VkGraphicsDevice : GraphicsDevice
         object presentLock = vkSC.PresentQueueIndex == _graphicsQueueIndex ? _graphicsQueueLock : vkSC;
         lock (presentLock)
         {
-            _khrSwapchain.QueuePresent(vkSC.PresentQueue, &presentInfo);
-            if (vkSC.AcquireNextImage(_device, default(VkSemaphore), vkSC.ImageAvailableFence))
+            Result presentResult = _khrSwapchain.QueuePresent(vkSC.PresentQueue, &presentInfo);
+            if (presentResult == Result.ErrorOutOfDateKhr || presentResult == Result.SuboptimalKhr)
+            {
+                vkSC.RecreateAndReacquire(vkSC.Framebuffer.Width, vkSC.Framebuffer.Height);
+            }
+            else if (vkSC.AcquireNextImage(_device, default(VkSemaphore), vkSC.ImageAvailableFence))
             {
                 VkFenceHandle fence = vkSC.ImageAvailableFence;
                 _vk.WaitForFences(_device, 1, &fence, true, ulong.MaxValue);

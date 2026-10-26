@@ -85,10 +85,12 @@ internal unsafe class VkSwapchain : Swapchain
         };
         _gd.Vk.CreateFence(_gd.Device, &fenceCI, null, out _imageAvailableFence);
 
-        AcquireNextImage(_gd.Device, default, _imageAvailableFence);
-        VkFenceHandle iaf = _imageAvailableFence;
-        _gd.Vk.WaitForFences(_gd.Device, 1, &iaf, true, ulong.MaxValue);
-        _gd.Vk.ResetFences(_gd.Device, 1, &iaf);
+        if (AcquireNextImage(_gd.Device, default, _imageAvailableFence))
+        {
+            VkFenceHandle iaf = _imageAvailableFence;
+            _gd.Vk.WaitForFences(_gd.Device, 1, &iaf, true, ulong.MaxValue);
+            _gd.Vk.ResetFences(_gd.Device, 1, &iaf);
+        }
 
         RefCount = new ResourceRefCount(DisposeCore);
     }
@@ -116,22 +118,24 @@ internal unsafe class VkSwapchain : Swapchain
             semaphore,
             fence,
             &imageIndex);
-        _currentImageIndex = imageIndex;
-        _framebuffer.SetImageIndex(_currentImageIndex);
-        if (result == Result.ErrorOutOfDateKhr || result == Result.SuboptimalKhr)
+        if (result == Result.ErrorOutOfDateKhr)
         {
-            CreateSwapchain(_framebuffer.Width, _framebuffer.Height);
+            // No image was acquired, so the new swapchain has to acquire one itself.
+            RecreateAndReacquire(_framebuffer.Width, _framebuffer.Height);
             return false;
         }
-        else if (result != Result.Success)
+        else if (result != Result.Success && result != Result.SuboptimalKhr)
         {
             throw new NeoVeldridException("Could not acquire next image from the Vulkan swapchain.");
         }
 
+        // A suboptimal image is still acquired and usable. The swapchain is recreated once presenting reports it.
+        _currentImageIndex = imageIndex;
+        _framebuffer.SetImageIndex(_currentImageIndex);
         return true;
     }
 
-    private void RecreateAndReacquire(uint width, uint height)
+    public void RecreateAndReacquire(uint width, uint height)
     {
         if (CreateSwapchain(width, height))
         {
@@ -274,7 +278,7 @@ internal unsafe class VkSwapchain : Swapchain
             _gd.KhrSwapchain.DestroySwapchain(_gd.Device, oldSwapchain, null);
         }
 
-        _framebuffer.SetNewSwapchain(_deviceSwapchain, width, height, surfaceFormat, swapchainCI.ImageExtent);
+        _framebuffer.SetNewSwapchain(_deviceSwapchain, surfaceFormat, swapchainCI.ImageExtent);
         return true;
     }
 

@@ -22,8 +22,6 @@ internal unsafe class VkSwapchainFramebuffer : VkFramebufferBase
     private FramebufferAttachment[][] _scColorTextures;
 
     private FramebufferAttachment? _depthAttachment;
-    private uint _desiredWidth;
-    private uint _desiredHeight;
     private bool _destroyed;
     private string _name;
     private OutputDescription _outputDescription;
@@ -41,8 +39,8 @@ internal unsafe class VkSwapchainFramebuffer : VkFramebufferBase
     public override uint RenderableWidth => _scExtent.Width;
     public override uint RenderableHeight => _scExtent.Height;
 
-    public override uint Width => _desiredWidth;
-    public override uint Height => _desiredHeight;
+    public override uint Width => _scExtent.Width;
+    public override uint Height => _scExtent.Height;
 
     public uint ImageIndex => _currentImageIndex;
 
@@ -78,14 +76,9 @@ internal unsafe class VkSwapchainFramebuffer : VkFramebufferBase
 
     internal void SetNewSwapchain(
         SwapchainKHR deviceSwapchain,
-        uint width,
-        uint height,
         SurfaceFormatKHR surfaceFormat,
         Extent2D swapchainExtent)
     {
-        _desiredWidth = width;
-        _desiredHeight = height;
-
         // Get the images
         uint scImageCount = 0;
         Result result = _gd.KhrSwapchain.GetSwapchainImages(_gd.Device, deviceSwapchain, ref scImageCount, null);

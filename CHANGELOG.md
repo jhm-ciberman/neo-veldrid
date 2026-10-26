@@ -12,6 +12,8 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 ### Fixed
 
 - [Vulkan] `GraphicsDevice.UpdateBuffer` no longer throws "An item with the same key has already been added" when it is called from several threads at the same time.
+- [Vulkan] The swapchain keeps presenting after its window is resized without a call to `Swapchain.Resize`, instead of presenting an image it never acquired.
+- [Vulkan] `Swapchain.Framebuffer.Width` and `Height` now report the size of the swapchain images, matching the other backends, instead of the last size passed to `Resize`.
 
 ## [1.3.0] - 2026-10-24
 
