@@ -50,7 +50,7 @@ public class Sdl2WindowTests
     }
 
     [Fact]
-    public async Task ThreadedWindow_Close_ReturnsWhenAHandlerThrows()
+    public async Task ThreadedWindow_Close_RethrowsHandlerException()
     {
         Sdl2Window window = CreateThreadedWindow();
         window.Closing += () => throw new InvalidOperationException("Closing handler failed.");
@@ -58,7 +58,7 @@ public class Sdl2WindowTests
         CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         Task close = Task.Run(window.Close, cancellationToken);
 
-        await close.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
+        await Assert.ThrowsAsync<InvalidOperationException>(() => close.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken));
     }
 
     private static Sdl2Window CreateThreadedWindow()

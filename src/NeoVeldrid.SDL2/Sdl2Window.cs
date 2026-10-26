@@ -34,6 +34,7 @@ public unsafe class Sdl2Window
     private int _closeRequested;
     private volatile bool _shouldClose;
     private bool _ownerExited;
+    private Exception _ownerException;
     public bool LimitPollRate { get; set; }
     public float PollIntervalInMs { get; set; }
 
@@ -347,15 +348,8 @@ public unsafe class Sdl2Window
     }
 
     /// <summary>
-    /// Destroys the window, unless the close-requested handler cancels it.
+    /// Closes the window.
     /// </summary>
-    /// <remarks>
-    /// With threaded processing, the window's event thread performs the close and raises
-    /// <see cref="Closing"/> and <see cref="Closed"/>. A call from another thread blocks until it
-    /// finishes, so those handlers must not wait on the calling thread. A call from the event
-    /// thread itself (such as from one of the window's events) is deferred to the next
-    /// <see cref="PumpEvents()"/>.
-    /// </remarks>
     public void Close()
     {
         if (!_threadedProcessing)
@@ -378,16 +372,16 @@ public unsafe class Sdl2Window
     {
         lock (_closeLock)
         {
-            if (!_exists || _ownerExited)
+            if (_exists && !_ownerExited)
             {
-                return;
+                _shouldClose = true;
+                while (_shouldClose && !_ownerExited)
+                {
+                    Monitor.Wait(_closeLock);
+                }
             }
 
-            _shouldClose = true;
-            while (_shouldClose && !_ownerExited)
-            {
-                Monitor.Wait(_closeLock);
-            }
+            Rethrow(_ownerException);
         }
     }
 
@@ -468,9 +462,13 @@ public unsafe class Sdl2Window
                 }
             }
         }
+        catch (Exception ex)
+        {
+            // An event handler threw, which ends this thread. Close() rethrows it.
+            _ownerException = ex;
+        }
         finally
         {
-            // An event handler that throws ends this thread. Release any Close() waiting on it.
             lock (_closeLock)
             {
                 _ownerExited = true;
@@ -500,10 +498,6 @@ public unsafe class Sdl2Window
     /// <summary>
     /// Processes the window's pending events and returns the input received since the previous call.
     /// </summary>
-    /// <remarks>
-    /// With threaded processing, a close the window requested itself, such as from its close
-    /// button, is carried out during this call.
-    /// </remarks>
     /// <returns>The input received since the previous call.</returns>
     public InputSnapshot PumpEvents()
     {

@@ -11,7 +11,7 @@ In addition to SemVer defaults, an "Internal" section is used to denote changes 
 
 ### Fixed
 
-- [SDL2] With `threadedProcessing` enabled, closing the window no longer destroys it while the app may still be rendering to it. A close the window requests itself, such as from its close button, now happens during `PumpEvents`, and `Close` called from another thread waits until the close finishes.
+- [SDL2] When you close a window created with `threadedProcessing`, rendering no longer fails with errors like Vulkan's "surface has been lost".
 - [Vulkan] `GraphicsDevice.UpdateBuffer` no longer throws "An item with the same key has already been added" when it is called from several threads at the same time.
 - [Vulkan] The swapchain no longer presents an image it never acquired after its window is resized without a call to `Swapchain.Resize`, or while its window is minimized.
 - [Vulkan] `Swapchain.Framebuffer.Width` and `Height` now report the size of the swapchain images, matching the other backends, instead of the last size passed to `Resize`.
