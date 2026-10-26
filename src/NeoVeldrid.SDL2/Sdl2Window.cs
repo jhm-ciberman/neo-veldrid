@@ -29,7 +29,12 @@ public unsafe class Sdl2Window
     // Threaded Sdl2Window flags
     private readonly bool _threadedProcessing;
 
-    private bool _shouldClose;
+    private int _ownerThreadId;
+    private readonly object _closeLock = new object();
+    private int _closeRequested;
+    private volatile bool _shouldClose;
+    private bool _ownerExited;
+    private Exception _ownerException;
     public bool LimitPollRate { get; set; }
     public float PollIntervalInMs { get; set; }
 
@@ -342,15 +347,43 @@ public unsafe class Sdl2Window
         _closeRequestedHandler = handler;
     }
 
+    /// <summary>
+    /// Closes the window.
+    /// </summary>
     public void Close()
     {
-        if (_threadedProcessing)
+        if (!_threadedProcessing)
         {
-            _shouldClose = true;
+            CloseCore();
+        }
+        else if (Environment.CurrentManagedThreadId == _ownerThreadId)
+        {
+            Volatile.Write(ref _closeRequested, 1);
         }
         else
         {
-            CloseCore();
+            CloseOnOwnerThread();
+        }
+    }
+
+    // The window must be destroyed by the thread that created it, so this hands the close to the
+    // event thread and waits for it.
+    private void CloseOnOwnerThread()
+    {
+        lock (_closeLock)
+        {
+            if (_exists && !_ownerExited)
+            {
+                _shouldClose = true;
+                while (_shouldClose && !_ownerExited)
+                {
+                    Monitor.Wait(_closeLock);
+                }
+            }
+
+            Exception ownerException = _ownerException;
+            _ownerException = null;
+            Rethrow(ownerException);
         }
     }
 
@@ -358,7 +391,6 @@ public unsafe class Sdl2Window
     {
         if (_closeRequestedHandler?.Invoke() ?? false)
         {
-            _shouldClose = false;
             return false;
         }
 
@@ -374,6 +406,7 @@ public unsafe class Sdl2Window
     private void WindowOwnerRoutine(object state)
     {
         WindowParams wp = (WindowParams)state;
+        _ownerThreadId = Environment.CurrentManagedThreadId;
         try
         {
             _sdl.ClearError();
@@ -399,23 +432,49 @@ public unsafe class Sdl2Window
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        while (_exists)
+        try
         {
-            if (_shouldClose && CloseCore())
+            while (_exists)
             {
-                return;
-            }
+                if (_shouldClose)
+                {
+                    bool closed = CloseCore();
+                    lock (_closeLock)
+                    {
+                        _shouldClose = false;
+                        Monitor.PulseAll(_closeLock);
+                    }
 
-            double currentTick = sw.ElapsedTicks;
-            double currentTimeMs = sw.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
-            if (LimitPollRate && currentTimeMs - previousPollTimeMs < PollIntervalInMs)
-            {
-                System.Threading.Thread.Sleep(0);
+                    if (closed)
+                    {
+                        return;
+                    }
+                }
+
+                double currentTick = sw.ElapsedTicks;
+                double currentTimeMs = sw.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
+                if (LimitPollRate && currentTimeMs - previousPollTimeMs < PollIntervalInMs)
+                {
+                    System.Threading.Thread.Sleep(0);
+                }
+                else
+                {
+                    previousPollTimeMs = currentTimeMs;
+                    ProcessEvents(null);
+                }
             }
-            else
+        }
+        catch (Exception ex)
+        {
+            // An event handler threw, which ends this thread. Close() rethrows it.
+            _ownerException = ex;
+        }
+        finally
+        {
+            lock (_closeLock)
             {
-                previousPollTimeMs = currentTimeMs;
-                ProcessEvents(null);
+                _ownerExited = true;
+                Monitor.PulseAll(_closeLock);
             }
         }
     }
@@ -438,6 +497,10 @@ public unsafe class Sdl2Window
         _events.Add(ev);
     }
 
+    /// <summary>
+    /// Processes the window's pending events and returns the input received since the previous call.
+    /// </summary>
+    /// <returns>The input received since the previous call.</returns>
     public InputSnapshot PumpEvents()
     {
         _currentMouseDelta = new Vector2();
@@ -446,6 +509,11 @@ public unsafe class Sdl2Window
             SimpleInputSnapshot snapshot = Interlocked.Exchange(ref _privateSnapshot, _privateBackbuffer);
             snapshot.CopyTo(_publicSnapshot);
             snapshot.Clear();
+
+            if (Interlocked.Exchange(ref _closeRequested, 0) == 1)
+            {
+                Close();
+            }
         }
         else
         {
