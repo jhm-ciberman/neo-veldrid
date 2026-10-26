@@ -29,7 +29,10 @@ public unsafe class Sdl2Window
     // Threaded Sdl2Window flags
     private readonly bool _threadedProcessing;
 
-    private bool _shouldClose;
+    private int _ownerThreadId;
+    private readonly object _closeLock = new object();
+    private volatile bool _closeRequested;
+    private volatile bool _shouldClose;
     public bool LimitPollRate { get; set; }
     public float PollIntervalInMs { get; set; }
 
@@ -342,15 +345,45 @@ public unsafe class Sdl2Window
         _closeRequestedHandler = handler;
     }
 
+    /// <summary>
+    /// Destroys the window, unless the close-requested handler cancels it.
+    /// </summary>
+    /// <remarks>
+    /// With threaded processing, a call from the window's event thread (such as from one of its
+    /// events) is deferred to the next <see cref="PumpEvents()"/>.
+    /// </remarks>
     public void Close()
     {
-        if (_threadedProcessing)
+        if (!_threadedProcessing)
         {
-            _shouldClose = true;
+            CloseCore();
+        }
+        else if (Environment.CurrentManagedThreadId == _ownerThreadId)
+        {
+            _closeRequested = true;
         }
         else
         {
-            CloseCore();
+            CloseOnOwnerThread();
+        }
+    }
+
+    // The window must be destroyed by the thread that created it, so this hands the close to the
+    // event thread and waits for it.
+    private void CloseOnOwnerThread()
+    {
+        lock (_closeLock)
+        {
+            if (!_exists)
+            {
+                return;
+            }
+
+            _shouldClose = true;
+            while (_shouldClose)
+            {
+                Monitor.Wait(_closeLock);
+            }
         }
     }
 
@@ -358,7 +391,6 @@ public unsafe class Sdl2Window
     {
         if (_closeRequestedHandler?.Invoke() ?? false)
         {
-            _shouldClose = false;
             return false;
         }
 
@@ -374,6 +406,7 @@ public unsafe class Sdl2Window
     private void WindowOwnerRoutine(object state)
     {
         WindowParams wp = (WindowParams)state;
+        _ownerThreadId = Environment.CurrentManagedThreadId;
         try
         {
             _sdl.ClearError();
@@ -401,9 +434,19 @@ public unsafe class Sdl2Window
 
         while (_exists)
         {
-            if (_shouldClose && CloseCore())
+            if (_shouldClose)
             {
-                return;
+                bool closed = CloseCore();
+                lock (_closeLock)
+                {
+                    _shouldClose = false;
+                    Monitor.PulseAll(_closeLock);
+                }
+
+                if (closed)
+                {
+                    return;
+                }
             }
 
             double currentTick = sw.ElapsedTicks;
@@ -438,6 +481,14 @@ public unsafe class Sdl2Window
         _events.Add(ev);
     }
 
+    /// <summary>
+    /// Processes the window's pending events and returns the input received since the previous call.
+    /// </summary>
+    /// <remarks>
+    /// With threaded processing, a close the window requested itself, such as from its close
+    /// button, is carried out during this call.
+    /// </remarks>
+    /// <returns>The input received since the previous call.</returns>
     public InputSnapshot PumpEvents()
     {
         _currentMouseDelta = new Vector2();
@@ -446,6 +497,12 @@ public unsafe class Sdl2Window
             SimpleInputSnapshot snapshot = Interlocked.Exchange(ref _privateSnapshot, _privateBackbuffer);
             snapshot.CopyTo(_publicSnapshot);
             snapshot.Clear();
+
+            if (_closeRequested)
+            {
+                _closeRequested = false;
+                CloseOnOwnerThread();
+            }
         }
         else
         {
