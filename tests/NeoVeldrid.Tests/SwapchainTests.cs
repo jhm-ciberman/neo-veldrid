@@ -68,6 +68,83 @@ public abstract class MainSwapchainTests<T> : GraphicsDeviceTestBase<T> where T 
         Assert.Equal(TextureUsage.DepthStencil, depthTarget.Usage);
         Assert.Equal(TextureSampleCount.Count1, depthTarget.SampleCount);
     }
+
+    [Fact]
+    public void SwapBuffers_AfterWindowResizeWithoutSwapchainResize_KeepsPresenting()
+    {
+        CommandList cl = RF.CreateCommandList();
+        RenderFrames(cl, 3);
+
+        MainThread.Invoke(() =>
+        {
+            Window.Width = 300;
+            Window.Height = 260;
+            Window.PumpEvents();
+        });
+
+        // The first present after the resize finds the swapchain out of date. Frames rendered after that
+        // must present an image acquired from the recreated swapchain.
+        RenderFrames(cl, 6);
+        GD.WaitForIdle();
+    }
+
+    [Fact]
+    public void SwapBuffers_WhileWindowMinimized_DoesNotPresentUnacquiredImage()
+    {
+        CommandList cl = RF.CreateCommandList();
+        MainThread.Invoke(() =>
+        {
+            Window.WindowState = WindowState.Normal;
+            Window.PumpEvents();
+        });
+        RenderFrames(cl, 2);
+
+        MainThread.Invoke(() =>
+        {
+            Window.WindowState = WindowState.Minimized;
+            Window.PumpEvents();
+        });
+
+        // A minimized window has no size to recreate the swapchain at, so frames rendered while it
+        // stays minimized must not present an image they never acquired.
+        RenderFrames(cl, 3);
+        GD.WaitForIdle();
+    }
+
+    [Fact]
+    public void Framebuffer_AfterWindowResizeWithoutSwapchainResize_MatchesColorTargetSize()
+    {
+        CommandList cl = RF.CreateCommandList();
+        RenderFrames(cl, 1);
+
+        MainThread.Invoke(() =>
+        {
+            Window.Width = 300;
+            Window.Height = 260;
+            Window.PumpEvents();
+        });
+
+        RenderFrames(cl, 3);
+        GD.WaitForIdle();
+
+        Framebuffer framebuffer = GD.MainSwapchain.Framebuffer;
+        Texture colorTarget = framebuffer.ColorTargets[0].Target;
+        Assert.Equal(colorTarget.Width, framebuffer.Width);
+        Assert.Equal(colorTarget.Height, framebuffer.Height);
+    }
+
+    private void RenderFrames(CommandList cl, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            cl.Begin();
+            cl.SetFramebuffer(GD.MainSwapchain.Framebuffer);
+            cl.ClearColorTarget(0, RgbaFloat.Red);
+            cl.End();
+            GD.SubmitCommands(cl);
+            GD.SwapBuffers();
+        }
+    }
 }
 
 #if TEST_VULKAN
