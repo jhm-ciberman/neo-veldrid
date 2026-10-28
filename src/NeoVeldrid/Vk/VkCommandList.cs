@@ -815,7 +815,8 @@ internal unsafe class VkCommandList : CommandList
 
         _gd.Vk.CmdCopyBuffer(_cb, srcVkBuffer.DeviceBuffer, dstVkBuffer.DeviceBuffer, 1, in region);
 
-        bool needToProtectUniform = destination.Usage.HasFlag(BufferUsage.UniformBuffer);
+        // Use bit operations to avoid boxing
+        bool needToProtectUniform = (destination.Usage & BufferUsage.UniformBuffer) != 0;
 
         MemoryBarrier barrier = new MemoryBarrier
         {

@@ -961,7 +961,8 @@ internal unsafe class OpenGLCommandExecutor
                     glTexViewRW.EnsureResourcesCreated();
                     if (pipeline.GetTextureBindingInfo(slot, element, out OpenGLTextureBindingSlotInfo imageBindingInfo))
                     {
-                        var layered = texViewRW.Target.Usage.HasFlag(TextureUsage.Cubemap) || texViewRW.ArrayLayers > 1;
+                        // Use bit operations to avoid boxing
+                        var layered = (texViewRW.Target.Usage & TextureUsage.Cubemap) != 0 || texViewRW.ArrayLayers > 1;
 
                         if (layered && (texViewRW.BaseArrayLayer > 0
                             || (texViewRW.ArrayLayers > 1 && texViewRW.ArrayLayers < texViewRW.Target.ArrayLayers)))
