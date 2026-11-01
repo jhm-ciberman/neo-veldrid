@@ -38,7 +38,7 @@
 
     <!-- FontStashSharp Central Versions -->
     <ItemGroup>
-        <PackageVersion Include="FontStashSharp.PlatformAgnostic" Version="1.6.1" />
+        <PackageVersion Include="FontStashSharp.PlatformAgnostic" Version="1.6.2" />
     </ItemGroup>
     
     <!-- ImageSharp Central Versions -->
